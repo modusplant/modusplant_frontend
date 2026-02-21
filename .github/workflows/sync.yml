@@ -19,7 +19,7 @@ jobs:
         env:
           PERSONAL_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
         run: |
-          git remote add target https://x-access-token:${PERSONAL_TOKEN}@github.com/kang-byeongguk/frontend_modusplant.git
+          git remote add target https://kang-byeongguk:${PERSONAL_TOKEN}@github.com/kang-byeongguk/frontend_modusplant.git
           git push target HEAD:refs/heads/${GITHUB_REF_NAME} --force
 
-    
+        
