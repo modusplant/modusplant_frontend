@@ -1,0 +1,26 @@
+name: Sync to Personal Repo
+
+on:
+  push:
+    # branches 속성을 지우거나 아래처럼 모든 브랜치에 반응하도록 설정합니다.
+    branches:
+      - '**' 
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 조직 레포지토리 체크아웃
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 개인 레포지토리로 자동 푸시 (브랜치 동기화)
+        env:
+          PERSONAL_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
+        run: |
+          git remote add target https://${PERSONAL_TOKEN}@github.com/kang-byeongguk/frontend_modusplant.git
+          
+          # 💡 핵심: 현재 푸시된 브랜치 이름(${GITHUB_REF_NAME})을 그대로 본따서 개인 레포에 덮어씁니다.
+          # 예: develop 푸시 -> 개인 레포의 develop으로 푸시
+          git push target HEAD:refs/heads/${GITHUB_REF_NAME} --force

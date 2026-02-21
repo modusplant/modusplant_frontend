@@ -45,6 +45,6 @@ dependency-graph*.html
 dependency-graph*.mmd
 dependency-graph*.svg
 
-.github
+#.github
 .vscode
 /docs
