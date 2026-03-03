@@ -48,3 +48,5 @@ dependency-graph*.svg
 #.github
 .vscode
 /docs
+
+.eslintcache
