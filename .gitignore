@@ -50,3 +50,5 @@ dependency-graph*.svg
 /docs
 
 .eslintcache
+*storybook.log
+storybook-static
