@@ -1,8 +1,8 @@
-import Link from "next/link";
-import Image from "next/image";
-import LoginForm from "@/components/auth/login/loginForm";
-import { cn } from "@/lib/utils/tailwindHelper";
-import { loginMetadata as metadata } from "@/lib/metadata/auth";
+import Link from 'next/link';
+import Image from 'next/image';
+import LoginForm from '@/components/auth/login/loginForm';
+import { cn } from '@/lib/utils/tailwindHelper';
+import { loginMetadata as metadata } from '@/lib/metadata/auth';
 
 export { metadata };
 
@@ -12,9 +12,9 @@ export default function LoginPage() {
       {/* 로그인 카드 */}
       <div
         className={cn(
-          "border-surface-stroke border bg-white/70",
-          "rounded-[20px] md:rounded-[28px]",
-          "w-full max-w-120 p-8 md:p-12"
+          'border-surface-stroke border bg-white/70',
+          'rounded-[20px] md:rounded-[28px]',
+          'w-full max-w-120 p-8 md:p-12'
         )}
       >
         {/* 로고 영역 */}
