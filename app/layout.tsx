@@ -7,8 +7,6 @@ import QueryProvider from '@/components/_layout/queryProvider';
 import ModalProvider from '@/components/_layout/modalProvider';
 import { getInitialAuthState } from '@/lib/utils/getInitialAuthState';
 import { layoutMetadata } from '@/lib/metadata/layout';
-import { SpeedInsights } from '@vercel/speed-insights/next';
-import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 
 export { layoutMetadata as metadata };
@@ -75,8 +73,6 @@ export default async function RootLayout({
           </ConditionalLayout>
           <ModalProvider />
         </QueryProvider>
-        <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );
