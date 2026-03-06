@@ -16,6 +16,19 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 24.14.0
+      # 1. pnpm 설치하기
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      # 2. Node.js 환경 세팅 및 pnpm 캐시 설정
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.14.0'
+          cache: 'pnpm'
+          
       - name: Install dependencies
         # ⚠️ See your package manager's documentation for the correct command to install dependencies in a CI environment.
         run: pnpm ci
