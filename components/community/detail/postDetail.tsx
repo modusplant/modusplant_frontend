@@ -1,7 +1,7 @@
 import PostContent from './postContent';
 import PostActions from './postActions';
 import CommentSection from '../../comment/commentSection';
-import PostDetailHeader from './PostDetailHeader';
+import PostDetailHeader from './postDetailHeader';
 import { PostDetail as PostDetailType } from '@/lib/types/post';
 
 interface PostDetailProps {

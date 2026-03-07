@@ -1,5 +1,5 @@
+import HeroBanner from '@/components/home/heroBanner';
 import PostList from '@/components/home/postList';
-import HeroBanner from '@/components/home/HeroBanner';
 import ScrollToTop from '@/components/home/scrollToTop';
 import { serverPostApi } from '@/lib/api/server/post';
 import { homeMetadata } from '@/lib/metadata/home';

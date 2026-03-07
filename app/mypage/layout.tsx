@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
-import Sidebar from "@/components/mypage/sidebar/sidebar";
-import { mypageMetadata } from "@/lib/metadata/mypage";
+import { ReactNode } from 'react';
+import { mypageMetadata } from '@/lib/metadata/mypage';
+import Sidebar from '@/components/mypage/sidebar/sidebar';
 
 export { mypageMetadata as metadata };
 
