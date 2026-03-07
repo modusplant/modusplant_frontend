@@ -3,7 +3,7 @@ import localFont from 'next/font/local';
 import AuthInitializer from '@/components/_layout/authInitializer';
 import AuthGuard from '@/components/_layout/authGuard';
 import ConditionalLayout from '@/components/_layout/conditionalLayout';
-import QueryProvider from '@/components/_layout/queryProvider';
+import QueryProvider from '@/components/_layout/QueryProvider';
 import ModalProvider from '@/components/_layout/modalProvider';
 import { getInitialAuthState } from '@/lib/utils/getInitialAuthState';
 import { layoutMetadata } from '@/lib/metadata/layout';
