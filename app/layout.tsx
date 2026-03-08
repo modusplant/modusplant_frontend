@@ -3,11 +3,11 @@ import localFont from 'next/font/local';
 import AuthInitializer from '@/components/_layout/authInitializer';
 import AuthGuard from '@/components/_layout/authGuard';
 import ConditionalLayout from '@/components/_layout/conditionalLayout';
-import QueryProvider from '@/components/_layout/queryProvider';
 import ModalProvider from '@/components/_layout/modalProvider';
 import { getInitialAuthState } from '@/lib/utils/getInitialAuthState';
 import { layoutMetadata } from '@/lib/metadata/layout';
 import './globals.css';
+import QueryProvider from '@/components/_layout/queryProvider';
 
 export { layoutMetadata as metadata };
 
