@@ -1,5 +1,7 @@
+import ReportSection from '@/components/mypage/report/ReportSection';
+
 const Page = () => {
-  return <div>건의/버그제보</div>;
+  return <ReportSection />;
 };
 
 export default Page;
