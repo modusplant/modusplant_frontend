@@ -33,9 +33,6 @@ export const MYPAGE_MENU_SECTIONS: MenuSection[] = [
   },
   {
     title: '설정',
-    items: [
-      { label: '건의/버그제보', href: '/mypage/report' },
-      // { label: '로그아웃', href: '/' },
-    ],
+    items: [{ label: '건의/버그제보', href: '/mypage/report' }],
   },
 ];
