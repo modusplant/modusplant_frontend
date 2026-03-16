@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useQueryClient } from "@tanstack/react-query";
-import Button from "@/components/_common/button";
-import { Input } from "@/components/_common/input";
-import { useEmailVerification } from "@/lib/hooks/auth/useEmailVerification";
-import { cn } from "@/lib/utils/tailwindHelper";
-import { emailSchema, verificationCodeSchema } from "@/lib/constants/schema";
-import { showModal } from "@/lib/store/modalStore";
-import { authApi } from "@/lib/api/client/auth";
-import { useAuthStore } from "@/lib/store/authStore";
-import { useRouter } from "next/navigation";
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useQueryClient } from '@tanstack/react-query';
+import Button from '@/components/_common/button';
+import { Input } from '@/components/_common/input';
+import { useEmailVerification } from '@/lib/hooks/auth/useEmailVerification';
+import { cn } from '@/lib/utils/tailwindHelper';
+import { emailSchema, verificationCodeSchema } from '@/lib/constants/schema';
+import { showModal } from '@/lib/store/modalStore';
+import { authApi } from '@/lib/api/client/auth';
+import { useAuthStore } from '@/lib/store/authStore';
+import { useRouter } from 'next/navigation';
 
 interface ChangeEmailModalProps {
   userId?: string;
@@ -45,7 +45,7 @@ export default function ChangeEmailModal({
   const router = useRouter();
   const { logout } = useAuthStore();
   const queryClient = useQueryClient();
-  const watchedNewEmail = watch("newEmail");
+  const watchedNewEmail = watch('newEmail');
 
   const {
     isCodeSent,
@@ -62,13 +62,13 @@ export default function ChangeEmailModal({
   const handleButtonClick = async () => {
     if (!isCodeSent) {
       // 인증 코드 발송 - 유효성 검증 먼저 수행
-      const isValid = await trigger("newEmail");
+      const isValid = await trigger('newEmail');
       if (!isValid) return;
 
       if (watchedNewEmail === email) {
-        setError("newEmail", {
-          type: "manual",
-          message: "현재 이메일과 동일합니다.",
+        setError('newEmail', {
+          type: 'manual',
+          message: '현재 이메일과 동일합니다.',
         });
         return;
       }
@@ -85,7 +85,7 @@ export default function ChangeEmailModal({
 
     if (isCodeSent && !isVerified) {
       // 인증 코드 확인 - 유효성 검증 먼저 수행
-      const isValid = await trigger("verificationCode");
+      const isValid = await trigger('verificationCode');
       if (!isValid) return;
 
       await handleVerifyCode(watchedNewEmail);
@@ -98,17 +98,17 @@ export default function ChangeEmailModal({
 
       // 회원 인증 정보 refetch
       queryClient.invalidateQueries({
-        queryKey: ["member", "authInfo", userId],
+        queryKey: ['member', 'authInfo', userId],
       });
 
       close?.();
       showModal({
-        type: "one-button",
-        title: "이메일이 변경 되었습니다.",
-        description: "변경된 이메일로 다시 로그인 해주세요.",
-        buttonText: "로그인 하기",
+        type: 'one-button',
+        title: '이메일이 변경 되었습니다.',
+        description: '변경된 이메일로 다시 로그인 해주세요.',
+        buttonText: '로그인 하기',
         onConfirm: () => {
-          router.push("/login");
+          router.push('/login');
           setTimeout(() => {
             logout();
           }, 1000);
@@ -137,13 +137,13 @@ export default function ChangeEmailModal({
           <div className="flex flex-col gap-2">
             <p className="text-neutral-20">새 이메일</p>
             <Input
-              {...register("newEmail")}
+              {...register('newEmail')}
               type="email"
               placeholder="새 이메일 주소를 입력해주세요."
               disabled={isVerified}
               className={cn(
-                errors.newEmail && "border-system-alert",
-                isVerified && "border-primary-50"
+                errors.newEmail && 'border-system-alert',
+                isVerified && 'border-primary-50'
               )}
             />
             {errors.newEmail && (
@@ -157,7 +157,7 @@ export default function ChangeEmailModal({
             <div className="flex flex-col gap-2">
               <p className="text-neutral-20">인증 코드</p>
               <Input
-                {...register("verificationCode")}
+                {...register('verificationCode')}
                 type="text"
                 placeholder="인증 코드를 입력해주세요."
               />
@@ -187,12 +187,12 @@ export default function ChangeEmailModal({
             disabled={isSubmitting}
           >
             {isVerified
-              ? "이메일 변경하기"
+              ? '이메일 변경하기'
               : canResend
-                ? "인증 코드 재발송"
+                ? '인증 코드 재발송'
                 : isCodeSent
-                  ? "확인"
-                  : "인증 코드 발송"}
+                  ? '확인'
+                  : '인증 코드 발송'}
           </Button>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { Comment } from "@/lib/types/comment";
+import { Comment } from '@/lib/types/comment';
 
 /**
  * 플랫 배열로 받은 댓글을 계층 구조(트리)로 변환
@@ -41,13 +41,13 @@ export function buildCommentTree(flatComments: Comment[]): Comment[] {
     commentMap.set(comment.path, {
       ...comment,
       children: [],
-      depth: comment.path.split(".").length - 1,
+      depth: comment.path.split('.').length - 1,
     });
   });
 
   // 2단계: 부모-자식 관계 설정
   flatComments.forEach((comment) => {
-    const pathSegments = comment.path.split(".");
+    const pathSegments = comment.path.split('.');
     const currentComment = commentMap.get(comment.path)!;
 
     if (pathSegments.length === 1) {
@@ -55,7 +55,7 @@ export function buildCommentTree(flatComments: Comment[]): Comment[] {
       rootComments.push(currentComment);
     } else {
       // 답글: 부모 찾아서 children에 추가
-      const parentPath = pathSegments.slice(0, -1).join(".");
+      const parentPath = pathSegments.slice(0, -1).join('.');
       const parentComment = commentMap.get(parentPath);
 
       if (parentComment) {
@@ -104,7 +104,7 @@ export function generateCommentPath(
  * getRootPath("3") // "3"
  */
 export function getRootPath(path: string): string {
-  return path.split(".")[0];
+  return path.split('.')[0];
 }
 
 /**
@@ -118,5 +118,5 @@ export function getRootPath(path: string): string {
  * getCommentDepth("1.1.1") // 2
  */
 export function getCommentDepth(path: string): number {
-  return path.split(".").length - 1;
+  return path.split('.').length - 1;
 }

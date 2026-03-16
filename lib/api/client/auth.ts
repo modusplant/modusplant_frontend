@@ -1,4 +1,4 @@
-import { ApiResponse } from "@/lib/types/common";
+import { ApiResponse } from '@/lib/types/common';
 import {
   LoginRequest,
   LoginResponseData,
@@ -6,9 +6,9 @@ import {
   SignupRequest,
   EmailVerificationResponseData,
   NicknameCheckResponseData,
-} from "@/lib/types/auth";
-import { clientApiInstance } from "../instances/clientInstance";
-import { AUTH_ENDPOINTS } from "@/lib/constants/endpoints";
+} from '@/lib/types/auth';
+import { clientApiInstance } from '../instances/clientInstance';
+import { AUTH_ENDPOINTS } from '@/lib/constants/endpoints';
 
 /**
  * 인증 API
@@ -59,13 +59,13 @@ export const authApi = {
         success: response.status === 200,
         message:
           response.status === 200
-            ? "인증 메일이 발송되었습니다."
+            ? '인증 메일이 발송되었습니다.'
             : response.message,
       };
     } catch (error: any) {
       return {
         success: false,
-        message: error.message || "인증 메일 발송에 실패했습니다.",
+        message: error.message || '인증 메일 발송에 실패했습니다.',
       };
     }
   },
@@ -89,13 +89,13 @@ export const authApi = {
       return {
         success: isVerified,
         message: isVerified
-          ? "이메일 인증이 완료되었습니다."
-          : "인증에 실패했습니다.",
+          ? '이메일 인증이 완료되었습니다.'
+          : '인증에 실패했습니다.',
       };
     } catch (error: any) {
       return {
         success: false,
-        message: error.message || "인증 코드 확인에 실패했습니다.",
+        message: error.message || '인증 코드 확인에 실패했습니다.',
       };
     }
   },
@@ -117,14 +117,14 @@ export const authApi = {
         success: true,
         available: !isExisted,
         message: isExisted
-          ? "이미 사용중인 닉네임입니다."
-          : "사용 가능한 닉네임입니다.",
+          ? '이미 사용중인 닉네임입니다.'
+          : '사용 가능한 닉네임입니다.',
       };
     } catch (error: any) {
       return {
         success: false,
         available: false,
-        message: error.message || "닉네임 확인에 실패했습니다.",
+        message: error.message || '닉네임 확인에 실패했습니다.',
       };
     }
   },

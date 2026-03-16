@@ -8,7 +8,7 @@ export interface CookieOptions {
   path?: string;
   domain?: string;
   secure?: boolean;
-  sameSite?: "Strict" | "Lax" | "None";
+  sameSite?: 'Strict' | 'Lax' | 'None';
 }
 
 export interface CookieEntry {
@@ -20,10 +20,10 @@ export interface CookieEntry {
  * 클라이언트에서 쿠키 값 읽기
  */
 export function getCookie(name: string): string | null {
-  if (typeof document === "undefined") return null;
+  if (typeof document === 'undefined') return null;
 
-  const nameEQ = name + "=";
-  const cookies = document.cookie.split(";");
+  const nameEQ = name + '=';
+  const cookies = document.cookie.split(';');
 
   for (const cookie of cookies) {
     const trimmed = cookie.trim();
@@ -43,14 +43,14 @@ export function setCookie(
   value: string,
   options: CookieOptions = {}
 ): void {
-  if (typeof document === "undefined") return;
+  if (typeof document === 'undefined') return;
 
   const {
     maxAge = 30 * 60,
-    path = "/",
+    path = '/',
     domain,
     secure = true,
-    sameSite = "Lax",
+    sameSite = 'Lax',
   } = options;
 
   let cookieString = `${name}=${encodeURIComponent(value)}`;
@@ -68,7 +68,7 @@ export function setCookie(
   }
 
   if (secure) {
-    cookieString += "; Secure";
+    cookieString += '; Secure';
   }
 
   if (sameSite) {
@@ -82,9 +82,9 @@ export function setCookie(
  * 클라이언트에서 쿠키 삭제
  */
 export function deleteCookie(name: string, options: CookieOptions = {}): void {
-  if (typeof document === "undefined") return;
+  if (typeof document === 'undefined') return;
 
-  const { path = "/", domain, secure = true, sameSite = "Lax" } = options;
+  const { path = '/', domain, secure = true, sameSite = 'Lax' } = options;
 
   let cookieString = `${name}=`;
 
@@ -97,14 +97,14 @@ export function deleteCookie(name: string, options: CookieOptions = {}): void {
   }
 
   if (secure) {
-    cookieString += "; Secure";
+    cookieString += '; Secure';
   }
 
   if (sameSite) {
     cookieString += `; SameSite=${sameSite}`;
   }
 
-  cookieString += "; Max-Age=-1";
+  cookieString += '; Max-Age=-1';
 
   document.cookie = cookieString;
 }
@@ -113,13 +113,13 @@ export function deleteCookie(name: string, options: CookieOptions = {}): void {
  * 클라이언트에서 모든 쿠키 가져오기
  */
 export function getAllCookies(): CookieEntry[] {
-  if (typeof document === "undefined") return [];
+  if (typeof document === 'undefined') return [];
   if (!document.cookie) return [];
 
-  return document.cookie.split(";").reduce<CookieEntry[]>((acc, raw) => {
-    const [name, ...rest] = raw.trim().split("=");
+  return document.cookie.split(';').reduce<CookieEntry[]>((acc, raw) => {
+    const [name, ...rest] = raw.trim().split('=');
     if (!name) return acc;
-    const value = rest.join("=");
+    const value = rest.join('=');
     acc.push({ name, value: decodeURIComponent(value) });
     return acc;
   }, []);
@@ -129,7 +129,7 @@ export function getAllCookies(): CookieEntry[] {
  * 클라이언트에서 모든 쿠키 삭제
  */
 export function deleteAllCookies(): void {
-  if (typeof document === "undefined") return;
+  if (typeof document === 'undefined') return;
   const cookies = getAllCookies();
   cookies.forEach((cookie) => {
     deleteCookie(cookie.name);

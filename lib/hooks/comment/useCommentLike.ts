@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { commentApi } from "@/lib/api/client/comment";
-import { useAuthStore } from "@/lib/store/authStore";
-import { Comment } from "@/lib/types/comment";
-import { showModal } from "@/lib/store/modalStore";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { commentApi } from '@/lib/api/client/comment';
+import { useAuthStore } from '@/lib/store/authStore';
+import { Comment } from '@/lib/types/comment';
+import { showModal } from '@/lib/store/modalStore';
 
 interface UseCommentLikeProps {
   postId: string;
@@ -31,7 +31,7 @@ export function useCommentLike({
   const likeMutation = useMutation({
     mutationFn: async (isCurrentlyLiked: boolean) => {
       if (!isAuthenticated || !user) {
-        throw new Error("로그인이 필요합니다.");
+        throw new Error('로그인이 필요합니다.');
       }
 
       if (isCurrentlyLiked) {
@@ -44,16 +44,16 @@ export function useCommentLike({
     },
     onMutate: async (isCurrentlyLiked) => {
       // 낙관적 업데이트: 이전 쿼리 취소
-      await queryClient.cancelQueries({ queryKey: ["comments", postId] });
+      await queryClient.cancelQueries({ queryKey: ['comments', postId] });
 
       // 이전 데이터 스냅샷
       const previousComments = queryClient.getQueryData<Comment[]>([
-        "comments",
+        'comments',
         postId,
       ]);
 
       // 낙관적 업데이트
-      queryClient.setQueryData<Comment[]>(["comments", postId], (old) => {
+      queryClient.setQueryData<Comment[]>(['comments', postId], (old) => {
         if (!old) return old;
         return old.map((comment) =>
           comment.path === commentPath
@@ -72,24 +72,24 @@ export function useCommentLike({
       // 에러 시 롤백
       if (context?.previousComments) {
         queryClient.setQueryData(
-          ["comments", postId],
+          ['comments', postId],
           context.previousComments
         );
       }
-      console.error("댓글 좋아요 처리 실패:", error);
+      console.error('댓글 좋아요 처리 실패:', error);
       showModal({
-        type: "snackbar",
+        type: 'snackbar',
         description: error.message,
       });
     },
     onSettled: () => {
       // 항상 최신 데이터로 리페치
-      queryClient.invalidateQueries({ queryKey: ["comments", postId] });
+      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
     },
   });
 
   // 현재 댓글 데이터 가져오기
-  const comments = queryClient.getQueryData<Comment[]>(["comments", postId]);
+  const comments = queryClient.getQueryData<Comment[]>(['comments', postId]);
   const currentComment = comments?.find((c) => c.path === commentPath);
 
   return {

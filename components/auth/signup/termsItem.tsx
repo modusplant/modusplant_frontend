@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Checkbox } from "@/components/_common/checkbox";
-import { UseFormRegisterReturn } from "react-hook-form";
+import { Checkbox } from '@/components/_common/checkbox';
+import { UseFormRegisterReturn } from 'react-hook-form';
 
 interface TermsItemProps {
   id: string;
@@ -42,7 +42,7 @@ export default function TermsItem({
           onClick={onToggle}
           className="text-neutral-60 ml-2 cursor-pointer text-sm whitespace-nowrap underline"
         >
-          {isExpanded ? "접기" : "보기"}
+          {isExpanded ? '접기' : '보기'}
         </button>
       </div>
       {isExpanded && (

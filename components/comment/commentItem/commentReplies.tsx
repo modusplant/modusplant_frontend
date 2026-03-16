@@ -1,4 +1,4 @@
-import { Comment } from "@/lib/types/comment";
+import { Comment } from '@/lib/types/comment';
 
 interface CommentRepliesProps {
   children: Comment[];

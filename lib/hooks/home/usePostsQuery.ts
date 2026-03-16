@@ -1,6 +1,6 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { postApi } from "@/lib/api/client/post";
-import { GetPostsRequest, GetPostsResponseData } from "@/lib/types/post";
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { postApi } from '@/lib/api/client/post';
+import { GetPostsRequest, GetPostsResponseData } from '@/lib/types/post';
 
 interface UsePostsQueryParams {
   size?: number;
@@ -22,7 +22,7 @@ export function usePostsQuery({
   initialData,
 }: UsePostsQueryParams = {}) {
   return useInfiniteQuery({
-    queryKey: ["posts", { primaryCategoryId, secondaryCategoryId }],
+    queryKey: ['posts', { primaryCategoryId, secondaryCategoryId }],
     queryFn: async ({ pageParam }) => {
       const params: GetPostsRequest = {
         size,
@@ -34,7 +34,7 @@ export function usePostsQuery({
       const response = await postApi.getPosts(params);
 
       if (!(response.status === 200)) {
-        throw new Error(response.message || "게시글 조회에 실패했습니다");
+        throw new Error(response.message || '게시글 조회에 실패했습니다');
       }
 
       return response.data;

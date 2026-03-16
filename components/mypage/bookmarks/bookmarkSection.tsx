@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import PostCardGrid from "@/components/mypage/common/postCardGrid";
-import EmptyBookmarks from "@/components/mypage/bookmarks/emptyBookmarks";
-import { useBookmarkedPostsQuery } from "@/lib/hooks/mypage/useBookmarkedPostsQuery";
+import PostCardGrid from '@/components/mypage/common/postCardGrid';
+import EmptyBookmarks from '@/components/mypage/bookmarks/emptyBookmarks';
+import { useBookmarkedPostsQuery } from '@/lib/hooks/mypage/useBookmarkedPostsQuery';
 
 export default function BookmarkSection() {
   return (

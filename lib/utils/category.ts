@@ -2,7 +2,7 @@ import {
   PRIMARY_CATEGORIES,
   SECONDARY_CATEGORIES,
   type Category,
-} from "@/lib/constants/categories";
+} from '@/lib/constants/categories';
 
 /**
  * 카테고리 ID로 이름 조회
@@ -12,8 +12,8 @@ export function getCategoryNameById(
   primaryCategoryId?: string
 ): string {
   // "전체" 처리
-  if (categoryId === "all") {
-    return "전체";
+  if (categoryId === 'all') {
+    return '전체';
   }
 
   // 1차 카테고리에서 검색
@@ -35,7 +35,7 @@ export function getCategoryNameById(
     }
   }
 
-  return "";
+  return '';
 }
 
 /**
@@ -50,8 +50,8 @@ export function getCategoryNamesByIds(categoryIds: string[]): string[] {
  */
 export function getCategoryIdByName(categoryName: string): string {
   // "전체" 처리
-  if (categoryName === "전체") {
-    return "all";
+  if (categoryName === '전체') {
+    return 'all';
   }
 
   // 1차 카테고리에서 검색
@@ -70,5 +70,5 @@ export function getCategoryIdByName(categoryName: string): string {
     }
   }
 
-  return "";
+  return '';
 }

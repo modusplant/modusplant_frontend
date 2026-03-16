@@ -8,9 +8,9 @@ export interface HeroBannerContentProps {
  * 히어로 배너 텍스트 컨텐츠
  */
 export default function HeroBannerContent({
-  title = "ModusPlant",
-  subtitle = "당신의 공간에 스며든 초록빛 평화",
-  description = "모두의식물에서 함께 가꾸는 특별한 일상을 시작하세요.",
+  title = 'ModusPlant',
+  subtitle = '당신의 공간에 스며든 초록빛 평화',
+  description = '모두의식물에서 함께 가꾸는 특별한 일상을 시작하세요.',
 }: HeroBannerContentProps) {
   return (
     <div className="absolute inset-x-0 top-1/2 -translate-y-1/2">

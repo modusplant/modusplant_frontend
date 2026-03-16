@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import useMyCommentsQuery from "@/lib/hooks/mypage/useMyCommentsQuery";
-import MyCommentItem from "@/components/mypage/comments/myCommentItem";
-import EmptyMyComments from "@/components/mypage/comments/emptyMyComments";
-import Pagination from "@/components/mypage/common/pagination";
-import { useAuthStore } from "@/lib/store/authStore";
+import { useState } from 'react';
+import useMyCommentsQuery from '@/lib/hooks/mypage/useMyCommentsQuery';
+import MyCommentItem from '@/components/mypage/comments/myCommentItem';
+import EmptyMyComments from '@/components/mypage/comments/emptyMyComments';
+import Pagination from '@/components/mypage/common/pagination';
+import { useAuthStore } from '@/lib/store/authStore';
 
 export default function MyCommentList() {
   const [currentPage, setCurrentPage] = useState(1);

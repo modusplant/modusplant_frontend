@@ -1,10 +1,10 @@
-import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/_common/button";
-import Profile from "@/components/_common/profileImage";
-import Dropdown from "@/components/_common/dropdown";
-import { User } from "@/lib/types/auth";
+import { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/_common/button';
+import Profile from '@/components/_common/profileImage';
+import Dropdown from '@/components/_common/dropdown';
+import { User } from '@/lib/types/auth';
 
 interface HeaderAuthActionsProps {
   user: User;
@@ -42,19 +42,19 @@ export default function HeaderAuthActions({
         }
         items={[
           {
-            label: "마이페이지",
-            onClick: () => router.push("/mypage"),
-            textAlign: "left",
+            label: '마이페이지',
+            onClick: () => router.push('/mypage'),
+            textAlign: 'left',
           },
           {
-            label: "내 활동",
-            onClick: () => router.push("/mypage/recent"),
-            textAlign: "left",
+            label: '내 활동',
+            onClick: () => router.push('/mypage/recent'),
+            textAlign: 'left',
           },
           {
-            label: "로그아웃",
+            label: '로그아웃',
             onClick: handleLogout,
-            textAlign: "left",
+            textAlign: 'left',
           },
         ]}
         position="center"

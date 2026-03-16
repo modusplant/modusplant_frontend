@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { Button } from "@/components/_common/button";
+import Link from 'next/link';
+import { Button } from '@/components/_common/button';
 
 /**
  * 비밀번호 변경 섹션

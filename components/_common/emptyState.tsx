@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import Link from "next/link";
+import Image from 'next/image';
+import Link from 'next/link';
 
 interface EmptyStateProps {
   /**
@@ -41,7 +41,7 @@ interface EmptyStateProps {
  * ```
  */
 export default function EmptyState({
-  imageSrc = "/character.svg",
+  imageSrc = '/character.svg',
   title,
   description,
   buttonText,
@@ -66,7 +66,7 @@ export default function EmptyState({
           {title}
         </h3>
         <p className="text-neutral-40 text-center text-[15px] leading-normal font-normal tracking-[-0.02em]">
-          {description.split("\\n").map((line, index) => (
+          {description.split('\\n').map((line, index) => (
             <span key={index}>
               {line}
               <br />

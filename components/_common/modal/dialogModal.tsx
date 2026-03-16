@@ -1,9 +1,9 @@
-import Button from "@/components/_common/button";
+import Button from '@/components/_common/button';
 
 interface DialogModalProps {
   title: string;
   description: string;
-  type: "one-button" | "two-button";
+  type: 'one-button' | 'two-button';
   buttonText?: string;
   onConfirm?: () => void;
   hideModal: () => void;
@@ -33,7 +33,7 @@ export default function DialogModal({
           <p className="text-neutral-30 text-[16px]">{description}</p>
         </div>
         <div className="flex h-10 justify-center gap-2.5 font-medium">
-          {type === "two-button" && (
+          {type === 'two-button' && (
             <Button
               variant="default"
               size="lg"
@@ -52,7 +52,7 @@ export default function DialogModal({
             }}
             className="min-w-20 rounded-[7px] px-5 py-3 text-[15px] text-neutral-100"
           >
-            {buttonText || "OK"}
+            {buttonText || 'OK'}
           </Button>
         </div>
       </div>

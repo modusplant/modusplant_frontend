@@ -1,9 +1,8 @@
-import React, { forwardRef, useState } from "react";
-import { cn } from "@/lib/utils/tailwindHelper";
-import { Eye, EyeOff } from "lucide-react";
+import React, { forwardRef, useState } from 'react';
+import { cn } from '@/lib/utils/tailwindHelper';
+import { Eye, EyeOff } from 'lucide-react';
 
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
   showPasswordToggle?: boolean;
 }
@@ -12,27 +11,27 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, error, showPasswordToggle = false, ...props }, ref) => {
     const [showPassword, setShowPassword] = useState(false);
     const inputType =
-      showPasswordToggle && type === "password"
+      showPasswordToggle && type === 'password'
         ? showPassword
-          ? "text"
-          : "password"
+          ? 'text'
+          : 'password'
         : type;
 
     const isError = !!error;
 
-    if (showPasswordToggle && type === "password") {
+    if (showPasswordToggle && type === 'password') {
       // 비밀번호 토글이 필요한 경우만 wrapper div 사용
       return (
         <div className="relative flex items-center">
           <input
             type={inputType}
             className={cn(
-              "text-neutral-0 placeholder:text-neutral-70 w-full bg-transparent text-base",
-              "rounded-lg border px-4 py-3 outline-none",
-              isError ? "border-system-alert" : "border-surface-stroke-2",
-              "focus:border-primary-50",
-              "disabled:cursor-not-allowed disabled:opacity-50",
-              "transition-colors",
+              'text-neutral-0 placeholder:text-neutral-70 w-full bg-transparent text-base',
+              'rounded-lg border px-4 py-3 outline-none',
+              isError ? 'border-system-alert' : 'border-surface-stroke-2',
+              'focus:border-primary-50',
+              'disabled:cursor-not-allowed disabled:opacity-50',
+              'transition-colors',
               className
             )}
             ref={ref}
@@ -59,12 +58,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       <input
         type={inputType}
         className={cn(
-          "text-neutral-0 placeholder:text-neutral-70 w-full bg-transparent text-base",
-          "rounded-lg border px-4 py-3 outline-none",
-          isError ? "border-system-alert" : "border-surface-stroke-2",
-          "focus:border-primary-50",
-          "disabled:cursor-not-allowed disabled:opacity-50",
-          "transition-colors",
+          'text-neutral-0 placeholder:text-neutral-70 w-full bg-transparent text-base',
+          'rounded-lg border px-4 py-3 outline-none',
+          isError ? 'border-system-alert' : 'border-surface-stroke-2',
+          'focus:border-primary-50',
+          'disabled:cursor-not-allowed disabled:opacity-50',
+          'transition-colors',
           className
         )}
         ref={ref}
@@ -74,6 +73,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   }
 );
 
-Input.displayName = "Input";
+Input.displayName = 'Input';
 
 export { Input };

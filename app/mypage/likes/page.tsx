@@ -1,4 +1,4 @@
-import LikeSection from "@/components/mypage/likes/likeSection";
+import LikeSection from '@/components/mypage/likes/likeSection';
 
 /**
  * 좋아요한 게시글 목록 페이지

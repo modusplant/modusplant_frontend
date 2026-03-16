@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import PostCardGrid from "@/components/mypage/common/postCardGrid";
-import EmptyLikes from "@/components/mypage/likes/emptyLikes";
-import { useLikedPostsQuery } from "@/lib/hooks/mypage/useLikedPostsQuery";
+import PostCardGrid from '@/components/mypage/common/postCardGrid';
+import EmptyLikes from '@/components/mypage/likes/emptyLikes';
+import { useLikedPostsQuery } from '@/lib/hooks/mypage/useLikedPostsQuery';
 
 export default function LikeSection() {
   return (

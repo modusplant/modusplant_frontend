@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { memo } from "react";
-import ImageUploader from "./imageUploader";
+import { memo } from 'react';
+import ImageUploader from './imageUploader';
 
 interface ContentEditorProps {
   textContent: string;

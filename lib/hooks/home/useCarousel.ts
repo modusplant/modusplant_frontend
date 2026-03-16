@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import { StaticImageData } from "next/image";
+import { useState, useEffect, useCallback } from 'react';
+import { StaticImageData } from 'next/image';
 
 export interface UseCarouselOptions {
   totalSlides: number;
@@ -31,7 +31,7 @@ export function useCarousel(
   {
     autoPlayInterval = 3000,
     autoPlay = true,
-  }: Omit<UseCarouselOptions, "totalSlides"> = {}
+  }: Omit<UseCarouselOptions, 'totalSlides'> = {}
 ): UseCarouselReturn {
   const [currentIndex, setCurrentIndex] = useState(1); // 복제된 마지막 이미지부터 시작
   const [isPlaying, setIsPlaying] = useState(autoPlay);

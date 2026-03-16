@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { PostData } from "@/lib/types/post";
-import { formatRelativeTime } from "@/lib/utils/formatTime";
-import { Bookmark, Heart, MessageSquare } from "lucide-react";
-import { cn } from "@/lib/utils/tailwindHelper";
+import { PostData } from '@/lib/types/post';
+import { formatRelativeTime } from '@/lib/utils/formatTime';
+import { Bookmark, Heart, MessageSquare } from 'lucide-react';
+import { cn } from '@/lib/utils/tailwindHelper';
 
 export interface PostListItemMetadataProps {
   post: PostData;
@@ -32,8 +32,8 @@ export default function PostListItemMetadata({
         <span className="flex items-center gap-1.5 md:gap-1">
           <Heart
             className="h-3 w-3 md:h-4 md:w-4"
-            color={post.isLiked ? "red" : "currentColor"}
-            fill={post.isLiked ? "red" : "none"}
+            color={post.isLiked ? 'red' : 'currentColor'}
+            fill={post.isLiked ? 'red' : 'none'}
           />
           <span>{post.likeCount}</span>
         </span>
@@ -46,10 +46,10 @@ export default function PostListItemMetadata({
 
         {/* 북마크 */}
         <Bookmark
-          fill={post.isBookmarked ? "currentColor" : "none"}
+          fill={post.isBookmarked ? 'currentColor' : 'none'}
           className={cn(
-            "h-3 w-3 md:h-4 md:w-4",
-            post.isBookmarked ? "text-primary-50" : "text-neutral-60"
+            'h-3 w-3 md:h-4 md:w-4',
+            post.isBookmarked ? 'text-primary-50' : 'text-neutral-60'
           )}
         />
       </div>
