@@ -1,5 +1,5 @@
-import { format } from "date-fns";
-import { ko } from "date-fns/locale";
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
 
 /**
  * 날짜만 포맷팅 (yyyy-MM-dd)
@@ -10,7 +10,7 @@ import { ko } from "date-fns/locale";
  * formatDate("2025-11-26T14:30:00Z") // "2025-11-26"
  */
 export function formatDate(dateString: string): string {
-  return format(new Date(dateString), "yyyy-MM-dd", { locale: ko });
+  return format(new Date(dateString), 'yyyy-MM-dd', { locale: ko });
 }
 
 /**
@@ -30,7 +30,7 @@ export function formatRelativeTime(dateString: string): string {
 
   // 5분 이내
   if (diffMinutes < 5) {
-    return "방금 전";
+    return '방금 전';
   }
 
   // 5분 초과 ~ 1시간 미만
@@ -48,9 +48,9 @@ export function formatRelativeTime(dateString: string): string {
   }
 
   // 11일 이후
-  return new Intl.DateTimeFormat("ko-KR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
+  return new Intl.DateTimeFormat('ko-KR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
   }).format(date);
 }

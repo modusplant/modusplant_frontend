@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from 'react';
 
 /**
  * 게시글 작성/수정 폼 상태 관리 훅
@@ -15,16 +15,16 @@ export function usePostWriteForm(initialData?: {
 }) {
   // 카테고리 상태
   const [primaryCategoryId, setPrimaryCategoryId] = useState(
-    initialData?.primaryCategoryId || ""
+    initialData?.primaryCategoryId || ''
   );
   const [secondaryCategoryId, setSecondaryCategoryId] = useState(
-    initialData?.secondaryCategoryId || ""
+    initialData?.secondaryCategoryId || ''
   );
 
   // 제목 및 본문 상태
-  const [title, setTitle] = useState(initialData?.title || "");
+  const [title, setTitle] = useState(initialData?.title || '');
   const [textContent, setTextContent] = useState(
-    initialData?.textContent || ""
+    initialData?.textContent || ''
   );
 
   // 이미지 상태 (File | string 통합 관리)
@@ -66,18 +66,18 @@ export function usePostWriteForm(initialData?: {
     () =>
       primaryCategoryId &&
       secondaryCategoryId &&
-      title.trim() !== "" &&
+      title.trim() !== '' &&
       title.length <= 60 &&
-      (textContent.trim() !== "" || images.length > 0),
+      (textContent.trim() !== '' || images.length > 0),
     [primaryCategoryId, secondaryCategoryId, title, textContent, images]
   );
 
   // 폼 초기화
   const resetForm = () => {
-    setPrimaryCategoryId("");
-    setSecondaryCategoryId("");
-    setTitle("");
-    setTextContent("");
+    setPrimaryCategoryId('');
+    setSecondaryCategoryId('');
+    setTitle('');
+    setTextContent('');
     setImages([]);
   };
 

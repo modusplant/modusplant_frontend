@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils/tailwindHelper";
-import { MYPAGE_MENU_SECTIONS } from "@/lib/constants/mypage";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils/tailwindHelper';
+import { MYPAGE_MENU_SECTIONS } from '@/lib/constants/mypage';
 
 interface SidebarDesktopProps {
   onLogout: () => void;
@@ -33,11 +33,11 @@ export default function SidebarDesktop({ onLogout }: SidebarDesktopProps) {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "flex rounded-[10px] px-0 py-3.25",
-                    "text-[16px] leading-[1.19] tracking-[-0.02em]",
-                    "transition-colors",
-                    isActive && "text-neutral-5 font-semibold",
-                    !isActive && "text-neutral-30 font-medium"
+                    'flex rounded-[10px] px-0 py-3.25',
+                    'text-[16px] leading-[1.19] tracking-[-0.02em]',
+                    'transition-colors',
+                    isActive && 'text-neutral-5 font-semibold',
+                    !isActive && 'text-neutral-30 font-medium'
                   )}
                 >
                   {item.label}
@@ -59,9 +59,9 @@ export default function SidebarDesktop({ onLogout }: SidebarDesktopProps) {
         <button
           onClick={onLogout}
           className={cn(
-            "mt-2.5 flex rounded-[10px] px-0 py-3.25",
-            "text-[16px] leading-[1.19] tracking-[-0.02em]",
-            "text-neutral-30 font-medium"
+            'mt-2.5 flex rounded-[10px] px-0 py-3.25',
+            'text-[16px] leading-[1.19] tracking-[-0.02em]',
+            'text-neutral-30 font-medium'
           )}
         >
           로그아웃

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { FieldError } from "react-hook-form";
+import { FieldError } from 'react-hook-form';
 
 interface LoginFormErrorProps {
   emailError?: FieldError;
@@ -28,7 +28,7 @@ export default function LoginFormError({
   return (
     <div
       className="text-system-alert text-sm"
-      style={{ fontFamily: "Pretendard" }}
+      style={{ fontFamily: 'Pretendard' }}
     >
       {errorMessage}
     </div>

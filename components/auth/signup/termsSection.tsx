@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useTermsAgreement } from "@/lib/hooks/auth/useTermsAgreement";
-import { Checkbox } from "@/components/_common/checkbox";
-import { TERMS_MAP, TERMS_LABELS } from "@/lib/constants/terms";
-import { TermsSectionProps } from "@/lib/types/auth";
-import TermsItem from "./termsItem";
+import { useTermsAgreement } from '@/lib/hooks/auth/useTermsAgreement';
+import { Checkbox } from '@/components/_common/checkbox';
+import { TERMS_MAP, TERMS_LABELS } from '@/lib/constants/terms';
+import { TermsSectionProps } from '@/lib/types/auth';
+import TermsItem from './termsItem';
 
 export default function TermsSection({
   register,
@@ -16,9 +16,9 @@ export default function TermsSection({
 
   // 현재 폼의 동의 상태 확인
   const agreementValues = {
-    agreeToTerms: watch("agreeToTerms"),
-    agreeToPrivacy: watch("agreeToPrivacy"),
-    agreeToCommunity: watch("agreeToCommunity"),
+    agreeToTerms: watch('agreeToTerms'),
+    agreeToPrivacy: watch('agreeToPrivacy'),
+    agreeToCommunity: watch('agreeToCommunity'),
   };
 
   // 모든 필수 약관 동의 상태
@@ -29,9 +29,9 @@ export default function TermsSection({
 
   const handleAllAgreementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;
-    setValue("agreeToTerms", checked);
-    setValue("agreeToPrivacy", checked);
-    setValue("agreeToCommunity", checked);
+    setValue('agreeToTerms', checked);
+    setValue('agreeToPrivacy', checked);
+    setValue('agreeToCommunity', checked);
   };
 
   return (
@@ -61,9 +61,9 @@ export default function TermsSection({
           id="agreeToTerms"
           label={TERMS_LABELS.terms}
           checked={agreementValues.agreeToTerms || false}
-          register={register("agreeToTerms")}
+          register={register('agreeToTerms')}
           isExpanded={contentState.showTermsContent}
-          onToggle={() => toggleContent("showTermsContent")}
+          onToggle={() => toggleContent('showTermsContent')}
           content={TERMS_MAP.terms}
         />
 
@@ -72,9 +72,9 @@ export default function TermsSection({
           id="agreeToPrivacy"
           label={TERMS_LABELS.privacy}
           checked={agreementValues.agreeToPrivacy || false}
-          register={register("agreeToPrivacy")}
+          register={register('agreeToPrivacy')}
           isExpanded={contentState.showPrivacyContent}
-          onToggle={() => toggleContent("showPrivacyContent")}
+          onToggle={() => toggleContent('showPrivacyContent')}
           content={TERMS_MAP.privacy}
         />
 
@@ -83,9 +83,9 @@ export default function TermsSection({
           id="agreeToCommunity"
           label={TERMS_LABELS.community}
           checked={agreementValues.agreeToCommunity || false}
-          register={register("agreeToCommunity")}
+          register={register('agreeToCommunity')}
           isExpanded={contentState.showCommunityContent}
-          onToggle={() => toggleContent("showCommunityContent")}
+          onToggle={() => toggleContent('showCommunityContent')}
           content={TERMS_MAP.community}
         />
       </div>

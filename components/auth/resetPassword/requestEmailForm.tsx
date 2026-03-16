@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Input } from "@/components/_common/input";
-import { ArrowLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/lib/store/authStore";
-import Button from "@/components/_common/button";
-import { authApi } from "@/lib/api/client/auth";
-import { ApiError } from "@/lib/types/common";
-import { showModal } from "@/lib/store/modalStore";
-import { z } from "zod";
-import { emailSchema } from "@/lib/constants/schema";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from '@/components/_common/input';
+import { ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/lib/store/authStore';
+import Button from '@/components/_common/button';
+import { authApi } from '@/lib/api/client/auth';
+import { ApiError } from '@/lib/types/common';
+import { showModal } from '@/lib/store/modalStore';
+import { z } from 'zod';
+import { emailSchema } from '@/lib/constants/schema';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const requestEmailSchema = z.object({
   email: emailSchema,
@@ -34,7 +34,7 @@ export default function RequestEmailForm() {
   } = useForm<EmailFormValues>({
     resolver: zodResolver(requestEmailSchema),
     defaultValues: {
-      email: user?.email || "",
+      email: user?.email || '',
     },
   });
 
@@ -43,24 +43,24 @@ export default function RequestEmailForm() {
       const response = await authApi.requestPasswordResetEmail(data.email);
       if (response.status === 200) {
         showModal({
-          type: "snackbar",
-          description: "비밀번호 재설정 메일이 발송되었습니다.",
+          type: 'snackbar',
+          description: '비밀번호 재설정 메일이 발송되었습니다.',
         });
       }
     } catch (err) {
       const error = err as ApiError;
-      if (error.code === "invalid_input") {
-        setError("email", { message: "입력을 확인해주세요." });
+      if (error.code === 'invalid_input') {
+        setError('email', { message: '입력을 확인해주세요.' });
         return;
       }
 
-      if (error.code === "member_not_found_with_email") {
-        setError("email", { message: "등록된 이메일이 아닙니다." });
+      if (error.code === 'member_not_found_with_email') {
+        setError('email', { message: '등록된 이메일이 아닙니다.' });
         return;
       }
 
-      setError("email", {
-        message: "비밀번호 재설정 메일 발송에 실패했습니다. 다시 시도해주세요.",
+      setError('email', {
+        message: '비밀번호 재설정 메일 발송에 실패했습니다. 다시 시도해주세요.',
       });
     }
   };
@@ -98,7 +98,7 @@ export default function RequestEmailForm() {
           <p>이메일</p>
           <Input
             type="email"
-            {...register("email")}
+            {...register('email')}
             placeholder="이메일을 입력해주세요."
           />
           {errors.email && (

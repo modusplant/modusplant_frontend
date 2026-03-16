@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { PostData } from "@/lib/types/post";
-import PostListItemContent from "./postListItemContent";
-import PostListItemMetadata from "./postListItemMetadata";
-import PostListItemThumbnail from "./postListItemThumbnail";
+import Link from 'next/link';
+import { PostData } from '@/lib/types/post';
+import PostListItemContent from './postListItemContent';
+import PostListItemMetadata from './postListItemMetadata';
+import PostListItemThumbnail from './postListItemThumbnail';
 
 export interface PostListItemProps {
   post: PostData;

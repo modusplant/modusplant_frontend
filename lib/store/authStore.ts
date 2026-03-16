@@ -1,6 +1,6 @@
-import { create } from "zustand";
-import { User } from "@/lib/types/auth";
-import { deleteAllCookies } from "@/lib/utils/cookies/client";
+import { create } from 'zustand';
+import { User } from '@/lib/types/auth';
+import { deleteAllCookies } from '@/lib/utils/cookies/client';
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;

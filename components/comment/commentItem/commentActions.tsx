@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Heart, MessageSquare } from "lucide-react";
-import { formatRelativeTime } from "@/lib/utils/formatTime";
+import { Heart, MessageSquare } from 'lucide-react';
+import { formatRelativeTime } from '@/lib/utils/formatTime';
 
 interface CommentActionsProps {
   createdAt: string;
@@ -31,10 +31,10 @@ export default function CommentActions({
       >
         <Heart
           className={`h-4 w-4 transition-all ${
-            isLiked ? "" : "group-hover:fill-neutral-90"
+            isLiked ? '' : 'group-hover:fill-neutral-90'
           }`}
-          color={isLiked ? "red" : "#919191"}
-          fill={isLiked ? "red" : "none"}
+          color={isLiked ? 'red' : '#919191'}
+          fill={isLiked ? 'red' : 'none'}
         />
         <span>{likeCount}</span>
       </button>

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Image as ImageIcon } from "lucide-react";
-import { RefObject } from "react";
+import { Image as ImageIcon } from 'lucide-react';
+import { RefObject } from 'react';
 
 interface ImageUploadButtonProps {
   fileInputRef: RefObject<HTMLInputElement | null>;

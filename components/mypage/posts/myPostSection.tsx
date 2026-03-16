@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import MyPostList from "@/components/mypage/posts/myPostList";
+import MyPostList from '@/components/mypage/posts/myPostList';
 
 export default function MyPostSection() {
   return (

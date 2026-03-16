@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import Image from "next/image";
-import { Button } from "@/components/_common/button";
+import Link from 'next/link';
+import Image from 'next/image';
+import { Button } from '@/components/_common/button';
 
 interface LoginFormActionsProps {
   isLoading: boolean;
@@ -27,21 +27,21 @@ export default function LoginFormActions({ isLoading }: LoginFormActionsProps) {
       >
         {isLoading ? (
           <Image
-            src={"/icon/loading.gif"}
+            src={'/icon/loading.gif'}
             alt="Loading"
             width={20}
             height={20}
             unoptimized
           />
         ) : (
-          "로그인"
+          '로그인'
         )}
       </Button>
 
       {/* 하단 링크 */}
       <div
         className="text-neutral-60 flex items-center justify-center gap-2 text-sm"
-        style={{ fontFamily: "Pretendard" }}
+        style={{ fontFamily: 'Pretendard' }}
       >
         <Link
           href="/reset-password"

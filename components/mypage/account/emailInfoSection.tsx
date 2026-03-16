@@ -1,7 +1,7 @@
-import Link from "next/link";
-import { Input } from "@/components/_common/input";
-import { Button } from "@/components/_common/button";
-import { formatDate } from "@/lib/utils/formatTime";
+import Link from 'next/link';
+import { Input } from '@/components/_common/input';
+import { Button } from '@/components/_common/button';
+import { formatDate } from '@/lib/utils/formatTime';
 
 interface EmailInfoSectionProps {
   email: string;
@@ -34,7 +34,7 @@ export default function EmailInfoSection({
         <Input type="email" value={email} disabled className="flex-1" />
         <div className="flex flex-col gap-6">
           <p className="text-neutral-60 text-sm leading-normal">
-            가입일: {createdAt ? formatDate(createdAt) : "-"}
+            가입일: {createdAt ? formatDate(createdAt) : '-'}
           </p>
           <hr className="border-surface-stroke-2" />
           <div>

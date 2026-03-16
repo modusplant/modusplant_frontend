@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Comment } from "@/lib/types/comment";
-import { useAuthStore } from "@/lib/store/authStore";
-import { useCommentLike } from "@/lib/hooks/comment/useCommentLike";
-import { useCommentMutations } from "@/lib/hooks/comment/useCommentMutations";
-import CommentInput from "./commentInput";
-import ProfileImage from "@/components/_common/profileImage";
-import DeletedComment from "./commentItem/deletedComment";
-import CommentHeader from "./commentItem/commentHeader";
-import CommentContent from "./commentItem/commentContent";
-import CommentActions from "./commentItem/commentActions";
-import CommentReplies from "./commentItem/commentReplies";
+import { useState } from 'react';
+import { Comment } from '@/lib/types/comment';
+import { useAuthStore } from '@/lib/store/authStore';
+import { useCommentLike } from '@/lib/hooks/comment/useCommentLike';
+import { useCommentMutations } from '@/lib/hooks/comment/useCommentMutations';
+import CommentInput from './commentInput';
+import ProfileImage from '@/components/_common/profileImage';
+import DeletedComment from './commentItem/deletedComment';
+import CommentHeader from './commentItem/commentHeader';
+import CommentContent from './commentItem/commentContent';
+import CommentActions from './commentItem/commentActions';
+import CommentReplies from './commentItem/commentReplies';
 
 interface CommentItemProps {
   comment: Comment;

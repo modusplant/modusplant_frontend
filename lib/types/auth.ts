@@ -4,8 +4,8 @@ import {
   UseFormWatch,
   FieldErrors,
   UseFormSetValue,
-} from "react-hook-form";
-import { SignupFormValues } from "@/lib/constants/schema";
+} from 'react-hook-form';
+import { SignupFormValues } from '@/lib/constants/schema';
 
 /**
  * 로그인 요청 데이터
@@ -176,7 +176,7 @@ export interface EmailSectionProps {
 export interface PasswordSectionProps {
   register: UseFormRegister<SignupFormValues>;
   watch: UseFormWatch<SignupFormValues>;
-  errors: Pick<FieldErrors<SignupFormValues>, "password" | "passwordConfirm">;
+  errors: Pick<FieldErrors<SignupFormValues>, 'password' | 'passwordConfirm'>;
   className?: string;
 }
 
@@ -187,7 +187,7 @@ export interface NicknameSectionProps {
   register: UseFormRegister<SignupFormValues>;
   trigger: UseFormTrigger<SignupFormValues>;
   watch: UseFormWatch<SignupFormValues>;
-  errors: Pick<FieldErrors<SignupFormValues>, "nickname">;
+  errors: Pick<FieldErrors<SignupFormValues>, 'nickname'>;
   className?: string;
 }
 

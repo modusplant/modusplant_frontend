@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 /**
  * 로그인 폼 스키마
@@ -6,9 +6,9 @@ import { z } from "zod";
 export const loginSchema = z.object({
   email: z
     .string()
-    .min(1, "이메일을 입력해주세요")
-    .email("올바른 이메일을 입력해주세요"),
-  password: z.string().min(1, "비밀번호를 입력해주세요"),
+    .min(1, '이메일을 입력해주세요')
+    .email('올바른 이메일을 입력해주세요'),
+  password: z.string().min(1, '비밀번호를 입력해주세요'),
   rememberMe: z.boolean().optional(),
 });
 
@@ -17,15 +17,15 @@ export const loginSchema = z.object({
  */
 export const emailSchema = z
   .string()
-  .min(1, "이메일을 입력해주세요")
-  .email("올바른 이메일을 입력해주세요");
+  .min(1, '이메일을 입력해주세요')
+  .email('올바른 이메일을 입력해주세요');
 
 /**
  * 공통 인증코드 스키마
  */
 export const verificationCodeSchema = z
   .string()
-  .min(1, "인증코드를 입력해주세요");
+  .min(1, '인증코드를 입력해주세요');
 
 /**
  * 공통 비밀번호 스키마
@@ -34,11 +34,11 @@ export const passwordSchema = z
   .string()
   .min(
     8,
-    "영문, 숫자, 특수문자를 포함한 8자리 이상의 비밀번호를 입력해 주세요."
+    '영문, 숫자, 특수문자를 포함한 8자리 이상의 비밀번호를 입력해 주세요.'
   )
   .regex(
     /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/,
-    "영문, 숫자, 특수문자를 포함한 8자리 이상의 비밀번호를 입력해 주세요."
+    '영문, 숫자, 특수문자를 포함한 8자리 이상의 비밀번호를 입력해 주세요.'
   );
 
 /**
@@ -46,7 +46,7 @@ export const passwordSchema = z
  */
 export const passwordConfirmSchema = z
   .string()
-  .min(1, "비밀번호 확인을 입력해주세요");
+  .min(1, '비밀번호 확인을 입력해주세요');
 
 /**
  * 회원가입 폼 스키마
@@ -59,21 +59,21 @@ export const signupSchema = z
     passwordConfirm: passwordConfirmSchema,
     nickname: z
       .string()
-      .min(1, "닉네임을 입력해주세요")
-      .max(20, "닉네임은 20자 이내로 입력해주세요"),
+      .min(1, '닉네임을 입력해주세요')
+      .max(20, '닉네임은 20자 이내로 입력해주세요'),
     agreeToTerms: z.boolean().refine((val) => val === true, {
-      message: "이용약관에 동의해주세요",
+      message: '이용약관에 동의해주세요',
     }),
     agreeToPrivacy: z.boolean().refine((val) => val === true, {
-      message: "개인정보처리방침에 동의해주세요",
+      message: '개인정보처리방침에 동의해주세요',
     }),
     agreeToCommunity: z.boolean().refine((val) => val === true, {
-      message: "커뮤니티 운영정책에 동의해주세요",
+      message: '커뮤니티 운영정책에 동의해주세요',
     }),
   })
   .refine((data) => data.password === data.passwordConfirm, {
-    message: "비밀번호가 서로 일치하지 않습니다",
-    path: ["passwordConfirm"],
+    message: '비밀번호가 서로 일치하지 않습니다',
+    path: ['passwordConfirm'],
   });
 
 /**
@@ -87,8 +87,8 @@ export const resetPasswordSchema = z
     newPasswordConfirm: passwordConfirmSchema,
   })
   .refine((data) => data.newPassword === data.newPasswordConfirm, {
-    message: "비밀번호가 서로 일치하지 않습니다",
-    path: ["newPasswordConfirm"],
+    message: '비밀번호가 서로 일치하지 않습니다',
+    path: ['newPasswordConfirm'],
   });
 
 /**
@@ -100,8 +100,8 @@ export const newPasswordSchema = z
     passwordConfirm: passwordConfirmSchema,
   })
   .refine((data) => data.password === data.passwordConfirm, {
-    message: "비밀번호가 서로 일치하지 않습니다",
-    path: ["passwordConfirm"],
+    message: '비밀번호가 서로 일치하지 않습니다',
+    path: ['passwordConfirm'],
   });
 
 // 타입 추출

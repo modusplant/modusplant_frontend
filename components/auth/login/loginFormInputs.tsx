@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { UseFormRegisterReturn } from "react-hook-form";
-import { Input } from "@/components/_common/input";
+import { UseFormRegisterReturn } from 'react-hook-form';
+import { Input } from '@/components/_common/input';
 
 interface LoginFormInputsProps {
   emailRegister: UseFormRegisterReturn;

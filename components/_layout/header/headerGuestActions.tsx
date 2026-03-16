@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { Button } from "@/components/_common/button";
+import Link from 'next/link';
+import { Button } from '@/components/_common/button';
 
 export default function HeaderGuestActions() {
   return (

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils/tailwindHelper";
-import { MYPAGE_MENU_SECTIONS } from "@/lib/constants/mypage";
-import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils/tailwindHelper';
+import { MYPAGE_MENU_SECTIONS } from '@/lib/constants/mypage';
+import { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 
 interface SidebarMobileProps {
   onLogout: () => void;
@@ -24,8 +24,8 @@ export default function SidebarMobile({ onLogout }: SidebarMobileProps) {
         <span className="text-neutral-20 text-base font-semibold">메뉴</span>
         <ChevronDown
           className={cn(
-            "text-neutral-60 h-5 w-5 transition-transform",
-            isOpen && "rotate-180"
+            'text-neutral-60 h-5 w-5 transition-transform',
+            isOpen && 'rotate-180'
           )}
         />
       </button>
@@ -51,11 +51,11 @@ export default function SidebarMobile({ onLogout }: SidebarMobileProps) {
                       key={item.href}
                       href={item.href}
                       className={cn(
-                        "flex rounded-[10px] px-0 py-3.25",
-                        "text-[15px] leading-[1.19] font-medium tracking-[-0.02em]",
-                        "transition-colors",
-                        isActive && "text-neutral-5 font-semibold",
-                        !isActive && "text-neutral-30 font-medium"
+                        'flex rounded-[10px] px-0 py-3.25',
+                        'text-[15px] leading-[1.19] font-medium tracking-[-0.02em]',
+                        'transition-colors',
+                        isActive && 'text-neutral-5 font-semibold',
+                        !isActive && 'text-neutral-30 font-medium'
                       )}
                     >
                       {item.label}
@@ -77,9 +77,9 @@ export default function SidebarMobile({ onLogout }: SidebarMobileProps) {
             <button
               onClick={onLogout}
               className={cn(
-                "mt-2.5 flex rounded-[10px] px-0 py-3.25",
-                "text-[15px] leading-[1.19] font-medium tracking-[-0.02em]",
-                "text-neutral-30"
+                'mt-2.5 flex rounded-[10px] px-0 py-3.25',
+                'text-[15px] leading-[1.19] font-medium tracking-[-0.02em]',
+                'text-neutral-30'
               )}
             >
               로그아웃

@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { memberApi } from "@/lib/api/client/member";
-import { ProfileData } from "@/lib/types/member";
-import { ApiResponse } from "@/lib/types/common";
-import { useAuthStore } from "@/lib/store/authStore";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { memberApi } from '@/lib/api/client/member';
+import { ProfileData } from '@/lib/types/member';
+import { ApiResponse } from '@/lib/types/common';
+import { useAuthStore } from '@/lib/store/authStore';
 
 interface ProfileMutationVariables {
   userId: string;
@@ -26,7 +26,7 @@ export function useProfileMutation() {
       onSuccess: (data, variables) => {
         // 1. 프로필 쿼리 캐시 무효화 (최신 데이터 다시 가져오기)
         queryClient.invalidateQueries({
-          queryKey: ["profile", variables.userId],
+          queryKey: ['profile', variables.userId],
         });
 
         // 2. authStore의 user 정보 업데이트
@@ -39,7 +39,7 @@ export function useProfileMutation() {
         }
       },
       onError: (error) => {
-        console.error("프로필 수정 실패:", error);
+        console.error('프로필 수정 실패:', error);
       },
       retry: 0,
     }
