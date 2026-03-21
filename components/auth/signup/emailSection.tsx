@@ -12,7 +12,6 @@ export default function EmailSection({
   errors,
   className,
 }: EmailSectionProps) {
-  'use no memo';
   const watchedEmail = watch('email');
 
   const {

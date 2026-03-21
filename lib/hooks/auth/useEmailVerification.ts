@@ -16,7 +16,6 @@ export const useEmailVerification = ({
   trigger,
   watch,
 }: UseEmailVerificationProps = {}) => {
-  'use no memo';
   const [verificationState, setVerificationState] =
     useState<EmailVerificationState>({
       isCodeSent: false,
