@@ -5,9 +5,8 @@ import { z } from 'zod';
  */
 export const loginSchema = z.object({
   email: z
-    .string()
-    .min(1, '이메일을 입력해주세요')
-    .email('올바른 이메일을 입력해주세요'),
+    .email('올바른 이메일을 입력해주세요')
+    .min(1, '이메일을 입력해주세요'),
   password: z.string().min(1, '비밀번호를 입력해주세요'),
   rememberMe: z.boolean().optional(),
 });
@@ -16,9 +15,8 @@ export const loginSchema = z.object({
  * 공통 이메일 스키마
  */
 export const emailSchema = z
-  .string()
-  .min(1, '이메일을 입력해주세요')
-  .email('올바른 이메일을 입력해주세요');
+  .email('올바른 이메일을 입력해주세요')
+  .min(1, '이메일을 입력해주세요');
 
 /**
  * 공통 인증코드 스키마
