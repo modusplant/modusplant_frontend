@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import PrimaryCategoryFilter from "@/components/_common/primaryCategoryFilter";
-import SecondaryCategoryFilter from "@/components/_common/secondaryCategoryFilter";
+import PrimaryCategoryFilter from '@/components/_common/primaryCategoryFilter';
+import SecondaryCategoryFilter from '@/components/_common/secondaryCategoryFilter';
 
 interface CategorySelectorProps {
   primaryCategoryId: string;
@@ -26,11 +26,11 @@ export default function CategorySelector({
   const handlePrimaryChange = (categoryId: string) => {
     onPrimaryCategoryChange(categoryId);
     // 1차 변경 시 2차 초기화
-    onSecondaryCategoryChange("");
+    onSecondaryCategoryChange('');
   };
 
   const handleSecondaryChange = (categoryIds: string[]) => {
-    onSecondaryCategoryChange(categoryIds[0] || "");
+    onSecondaryCategoryChange(categoryIds[0] || '');
   };
 
   return (

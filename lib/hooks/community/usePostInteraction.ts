@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { postApi } from "@/lib/api/client/post";
-import { useAuthStore } from "@/lib/store/authStore";
-import { showModal } from "@/lib/store/modalStore";
-import { set } from "zod";
+import { useEffect, useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { postApi } from '@/lib/api/client/post';
+import { useAuthStore } from '@/lib/store/authStore';
+import { showModal } from '@/lib/store/modalStore';
+import { set } from 'zod';
 
 interface UsePostInteractionProps {
   postId: string;
@@ -56,7 +56,7 @@ export function usePostInteraction({
   const likeMutation = useMutation({
     mutationFn: async (currentIsLiked: boolean) => {
       if (!isAuthenticated || !user) {
-        throw new Error("로그인이 필요합니다.");
+        throw new Error('로그인이 필요합니다.');
       }
 
       if (currentIsLiked) {
@@ -74,9 +74,9 @@ export function usePostInteraction({
       // 에러 시 롤백
       setLikeCount((prev) => prev + (currentIsLiked ? 1 : -1));
       setIsLiked(currentIsLiked);
-      console.error("좋아요 처리 실패:", error);
+      console.error('좋아요 처리 실패:', error);
       showModal({
-        type: "snackbar",
+        type: 'snackbar',
         description: error.message,
       });
     },
@@ -86,7 +86,7 @@ export function usePostInteraction({
   const bookmarkMutation = useMutation({
     mutationFn: async (currentIsBookmarked: boolean) => {
       if (!isAuthenticated || !user) {
-        throw new Error("로그인이 필요합니다.");
+        throw new Error('로그인이 필요합니다.');
       }
 
       if (currentIsBookmarked) {
@@ -102,9 +102,9 @@ export function usePostInteraction({
     onError: (error: Error, currentIsBookmarked) => {
       // 에러 시 롤백
       setIsBookmarked(currentIsBookmarked);
-      console.error("북마크 처리 실패:", error);
+      console.error('북마크 처리 실패:', error);
       showModal({
-        type: "snackbar",
+        type: 'snackbar',
         description: error.message,
       });
     },

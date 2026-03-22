@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useAuthStore } from "@/lib/store/authStore";
-import { useProfileMutation } from "@/lib/hooks/mypage/useProfileMutation";
-import { useProfileForm } from "@/lib/hooks/mypage/useProfileForm";
-import ProfileImageUploader from "./profileImageUploader";
-import ProfileFormFields from "./profileFormFields";
-import Button from "@/components/_common/button";
-import { showModal } from "@/lib/store/modalStore";
-import Image from "next/image";
+import { useAuthStore } from '@/lib/store/authStore';
+import { useProfileMutation } from '@/lib/hooks/mypage/useProfileMutation';
+import { useProfileForm } from '@/lib/hooks/mypage/useProfileForm';
+import ProfileImageUploader from './profileImageUploader';
+import ProfileFormFields from './profileFormFields';
+import Button from '@/components/_common/button';
+import { showModal } from '@/lib/store/modalStore';
+import Image from 'next/image';
 
 export default function ProfileSection() {
   const { user } = useAuthStore();
@@ -38,14 +38,14 @@ export default function ProfileSection() {
       {
         onSuccess: () => {
           showModal({
-            type: "snackbar",
-            description: "프로필이 성공적으로 수정되었습니다.",
+            type: 'snackbar',
+            description: '프로필이 성공적으로 수정되었습니다.',
           });
         },
         onError: (error) => {
           showModal({
-            type: "snackbar",
-            description: error.message || "프로필 수정에 실패했습니다.",
+            type: 'snackbar',
+            description: error.message || '프로필 수정에 실패했습니다.',
           });
         },
       }
@@ -81,7 +81,7 @@ export default function ProfileSection() {
       {/* 저장 버튼 */}
       <div className="border-surface-98 flex justify-end border-t">
         <Button
-          variant={hasChanges && !isPending ? "point" : "deactivate"}
+          variant={hasChanges && !isPending ? 'point' : 'deactivate'}
           size="md"
           onClick={handleSave}
           disabled={!hasChanges || isPending}
@@ -89,14 +89,14 @@ export default function ProfileSection() {
         >
           {isPending ? (
             <Image
-              src={"/icon/loading.gif"}
+              src={'/icon/loading.gif'}
               alt="Loading"
               width={20}
               height={20}
               unoptimized
             />
           ) : (
-            "변경사항 저장"
+            '변경사항 저장'
           )}
         </Button>
       </div>

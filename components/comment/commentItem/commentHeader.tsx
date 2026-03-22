@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { EllipsisVertical } from "lucide-react";
-import ProfileImage from "@/components/_common/profileImage";
-import Dropdown from "@/components/_common/dropdown";
+import { useState } from 'react';
+import { EllipsisVertical } from 'lucide-react';
+import ProfileImage from '@/components/_common/profileImage';
+import Dropdown from '@/components/_common/dropdown';
 
 interface CommentHeaderProps {
   nickname: string;
@@ -43,7 +43,7 @@ export default function CommentHeader({
           }
           items={[
             {
-              label: "삭제",
+              label: '삭제',
               onClick: onDelete,
               disabled: isDeleting,
             },

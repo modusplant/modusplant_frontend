@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { showModal } from "@/lib/store/modalStore";
-import { signupSchema, SignupFormValues } from "@/lib/constants/schema";
-import { authApi } from "@/lib/api/client/auth";
-import { useAuthStore } from "@/lib/store/authStore";
-import { TERMS_VERSIONS } from "@/lib/constants/terms";
-import { Button } from "@/components/_common/button";
-import { processSuccessfulAuth } from "@/lib/utils/auth/processSuccessfulAuth";
-import Image from "next/image";
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { showModal } from '@/lib/store/modalStore';
+import { signupSchema, SignupFormValues } from '@/lib/constants/schema';
+import { authApi } from '@/lib/api/client/auth';
+import { useAuthStore } from '@/lib/store/authStore';
+import { TERMS_VERSIONS } from '@/lib/constants/terms';
+import { Button } from '@/components/_common/button';
+import { processSuccessfulAuth } from '@/lib/utils/auth/processSuccessfulAuth';
+import Image from 'next/image';
 
 // Sub-components
-import EmailSection from "./emailSection";
-import PasswordSection from "./passwordSection";
-import NicknameSection from "./nicknameSection";
-import TermsSection from "./termsSection";
+import EmailSection from './emailSection';
+import PasswordSection from './passwordSection';
+import NicknameSection from './nicknameSection';
+import TermsSection from './termsSection';
 
 export default function SignupForm() {
   const router = useRouter();
@@ -44,7 +44,7 @@ export default function SignupForm() {
         agreedPrivacyPolicyVersion: TERMS_VERSIONS.privacyPolicy,
         agreedAdInfoReceivingVersion: data.agreeToCommunity
           ? TERMS_VERSIONS.adInfoReceiving
-          : "",
+          : '',
       };
 
       const signupResult = await authApi.signup(signupData);
@@ -67,28 +67,28 @@ export default function SignupForm() {
           login(user);
 
           showModal({
-            type: "snackbar",
-            description: "회원가입이 완료되었습니다!",
+            type: 'snackbar',
+            description: '회원가입이 완료되었습니다!',
           });
-          router.push("/"); // 메인 페이지로 이동
+          router.push('/'); // 메인 페이지로 이동
         } else {
           // 로그인 실패 시 로그인 페이지로 이동
           showModal({
-            type: "one-button",
-            title: "회원가입이 완료되었습니다!",
-            description: "로그인을 진행해주세요.",
-            buttonText: "로그인",
+            type: 'one-button',
+            title: '회원가입이 완료되었습니다!',
+            description: '로그인을 진행해주세요.',
+            buttonText: '로그인',
             onConfirm: () => {
-              router.push("/login");
+              router.push('/login');
             },
           });
         }
       }
     } catch (error: any) {
-      console.error("회원가입 오류:", error);
+      console.error('회원가입 오류:', error);
       showModal({
-        type: "snackbar",
-        description: error.message || "회원가입 중 오류가 발생했습니다.",
+        type: 'snackbar',
+        description: error.message || '회원가입 중 오류가 발생했습니다.',
       });
     }
   };
@@ -136,18 +136,18 @@ export default function SignupForm() {
         type="submit"
         disabled={!isFormValid || isSubmitting}
         className="w-full rounded-lg py-3 text-[16px] font-semibold md:py-4"
-        variant={isFormValid || !isSubmitting ? "point" : "secondary"}
+        variant={isFormValid || !isSubmitting ? 'point' : 'secondary'}
       >
         {isSubmitting ? (
           <Image
-            src={"/icon/loading.gif"}
+            src={'/icon/loading.gif'}
             alt="Loading"
             width={20}
             height={20}
             unoptimized
           />
         ) : (
-          "회원가입"
+          '회원가입'
         )}
       </Button>
     </form>

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { UseFormRegisterReturn } from "react-hook-form";
-import { Checkbox } from "@/components/_common/checkbox";
-import { ShieldCheck } from "lucide-react";
+import Link from 'next/link';
+import { UseFormRegisterReturn } from 'react-hook-form';
+import { Checkbox } from '@/components/_common/checkbox';
+import { ShieldCheck } from 'lucide-react';
 
 interface LoginFormRememberMeHintProps {
   rememberMeRegister: UseFormRegisterReturn;
@@ -35,7 +35,7 @@ export default function LoginFormRememberMeHint({
       {loginAttempts >= 3 && (
         <div
           className="bg-surface-99 flex items-center gap-2 rounded-lg p-3 text-sm"
-          style={{ fontFamily: "Pretendard" }}
+          style={{ fontFamily: 'Pretendard' }}
         >
           <ShieldCheck size={16} className="text-primary-50" />
           <span className="text-neutral-60">

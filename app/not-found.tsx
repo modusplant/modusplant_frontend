@@ -1,4 +1,4 @@
-import EmptyState from "@/components/_common/emptyState";
+import EmptyState from '@/components/_common/emptyState';
 
 /**
  * Next.js 전역 404 페이지

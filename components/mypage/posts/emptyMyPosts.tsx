@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import EmptyState from "@/components/_common/emptyState";
+import EmptyState from '@/components/_common/emptyState';
 
 /**
  * 작성한 게시글이 없을 때 표시되는 빈 상태 컴포넌트

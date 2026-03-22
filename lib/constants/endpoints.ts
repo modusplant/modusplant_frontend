@@ -1,7 +1,7 @@
 /**
  * API 베이스 경로
  */
-const API_V1 = "/api/v1";
+const API_V1 = '/api/v1';
 
 /**
  * 인증 관련 엔드포인트
@@ -92,11 +92,11 @@ export function buildQueryString(
   const queryParams = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== "") {
+    if (value !== undefined && value !== null && value !== '') {
       queryParams.append(key, String(value));
     }
   });
 
   const queryString = queryParams.toString();
-  return queryString ? `?${queryString}` : "";
+  return queryString ? `?${queryString}` : '';
 }

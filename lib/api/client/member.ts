@@ -1,13 +1,13 @@
-import { clientApiInstance } from "@/lib/api/instances/clientInstance";
-import { ApiResponse } from "@/lib/types/common";
-import { ProfileData, AuthInfo } from "@/lib/types/member";
-import { MEMBER_ENDPOINTS, buildQueryString } from "@/lib/constants/endpoints";
+import { clientApiInstance } from '@/lib/api/instances/clientInstance';
+import { ApiResponse } from '@/lib/types/common';
+import { ProfileData, AuthInfo } from '@/lib/types/member';
+import { MEMBER_ENDPOINTS, buildQueryString } from '@/lib/constants/endpoints';
 import {
   GetMyPostsRequest,
   GetMyPostsResponseData,
   GetRecentPostsRequest,
   GetRecentPostsResponseData,
-} from "@/lib/types/post";
+} from '@/lib/types/post';
 
 /**
  * 회원 프로필 API

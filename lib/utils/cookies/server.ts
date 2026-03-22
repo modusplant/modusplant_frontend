@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+import { cookies } from 'next/headers';
 
 /**
  * 서버 전용 쿠키 유틸리티
@@ -10,7 +10,7 @@ export interface CookieOptions {
   path?: string;
   domain?: string;
   secure?: boolean;
-  sameSite?: "strict" | "lax" | "none";
+  sameSite?: 'strict' | 'lax' | 'none';
   httpOnly?: boolean;
 }
 
@@ -37,9 +37,9 @@ export async function setCookie(
 ): Promise<void> {
   const {
     maxAge = 30 * 60,
-    path = "/",
+    path = '/',
     secure = true,
-    sameSite = "lax",
+    sameSite = 'lax',
     httpOnly = false,
   } = options;
 

@@ -1,6 +1,6 @@
-import { useMemo } from "react";
-import { Comment } from "@/lib/types/comment";
-import { buildCommentTree } from "@/lib/utils/parseComments";
+import { useMemo } from 'react';
+import { Comment } from '@/lib/types/comment';
+import { buildCommentTree } from '@/lib/utils/parseComments';
 
 interface UseCommentTreeProps {
   comments: Comment[];

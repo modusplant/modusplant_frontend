@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import Link from "next/link";
-import { PostData } from "@/lib/types/post";
-import Badge from "@/components/_common/badge";
-import { secondaryCategoryLabels } from "@/lib/constants/categories";
-import { getThumbnail, getTextContent } from "@/lib/utils/post";
-import { formatRelativeTime } from "@/lib/utils/formatTime";
-import { cn } from "@/lib/utils/tailwindHelper";
-import { Bookmark, Heart, MessageSquare } from "lucide-react";
+import Image from 'next/image';
+import Link from 'next/link';
+import { PostData } from '@/lib/types/post';
+import Badge from '@/components/_common/badge';
+import { secondaryCategoryLabels } from '@/lib/constants/categories';
+import { getThumbnail, getTextContent } from '@/lib/utils/post';
+import { formatRelativeTime } from '@/lib/utils/formatTime';
+import { cn } from '@/lib/utils/tailwindHelper';
+import { Bookmark, Heart, MessageSquare } from 'lucide-react';
 
 export interface PostCardProps {
   post: PostData;
@@ -33,7 +33,7 @@ export default function PostCard({ post, className }: PostCardProps) {
   return (
     <Link
       href={`/community/${post.postId}`}
-      className={cn("group block overflow-hidden", className)}
+      className={cn('group block overflow-hidden', className)}
     >
       {/* 썸네일 이미지 */}
       <div className="relative aspect-4/3 w-full overflow-hidden rounded-lg">
@@ -84,8 +84,8 @@ export default function PostCard({ post, className }: PostCardProps) {
             <span className="flex items-center gap-1">
               <Heart
                 className="md:h-4 md:w-4"
-                color={post.isLiked ? "red" : "currentColor"}
-                fill={post.isLiked ? "red" : "none"}
+                color={post.isLiked ? 'red' : 'currentColor'}
+                fill={post.isLiked ? 'red' : 'none'}
               />
               <span>{post.likeCount}</span>
             </span>
@@ -94,10 +94,10 @@ export default function PostCard({ post, className }: PostCardProps) {
               <span>{post.commentCount}</span>
             </span>
             <Bookmark
-              fill={post.isBookmarked ? "currentColor" : "none"}
+              fill={post.isBookmarked ? 'currentColor' : 'none'}
               className={cn(
-                "md:h-4 md:w-4",
-                post.isBookmarked ? "text-primary-50" : "text-neutral-60"
+                'md:h-4 md:w-4',
+                post.isBookmarked ? 'text-primary-50' : 'text-neutral-60'
               )}
             />
           </div>

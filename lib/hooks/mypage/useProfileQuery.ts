@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import { memberApi } from "@/lib/api/client/member";
-import { ProfileData } from "@/lib/types/member";
-import { ApiResponse } from "@/lib/types/common";
+import { useQuery } from '@tanstack/react-query';
+import { memberApi } from '@/lib/api/client/member';
+import { ProfileData } from '@/lib/types/member';
+import { ApiResponse } from '@/lib/types/common';
 
 /**
  * 프로필 조회 React Query 훅
@@ -11,10 +11,10 @@ import { ApiResponse } from "@/lib/types/common";
  */
 export function useProfileQuery(userId: string | null) {
   return useQuery<ApiResponse<ProfileData>, Error>({
-    queryKey: ["profile", userId],
+    queryKey: ['profile', userId],
     queryFn: () => {
       if (!userId) {
-        throw new Error("사용자 ID가 필요합니다.");
+        throw new Error('사용자 ID가 필요합니다.');
       }
       return memberApi.getProfile(userId);
     },

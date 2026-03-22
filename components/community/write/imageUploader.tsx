@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { memo } from "react";
-import useImageUpload from "@/lib/hooks/community/useImageUpload";
-import ImagePreviewItem from "./imagePreviewItem";
-import ImageDropZone from "./imageDropZone";
-import ImageUploadButton from "./imageUploadButton";
+import { memo } from 'react';
+import useImageUpload from '@/lib/hooks/community/useImageUpload';
+import ImagePreviewItem from './imagePreviewItem';
+import ImageDropZone from './imageDropZone';
+import ImageUploadButton from './imageUploadButton';
 
 interface ImageUploaderProps {
   images: (File | string)[];
@@ -42,8 +42,8 @@ function ImageUploader({
         <div
           className={`mt-4 overflow-x-auto rounded-lg pb-2 ${
             isDragging
-              ? "border-primary-50 bg-primary-10"
-              : "border-surface-stroke"
+              ? 'border-primary-50 bg-primary-10'
+              : 'border-surface-stroke'
           }`}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}

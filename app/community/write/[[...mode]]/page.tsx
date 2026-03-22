@@ -1,29 +1,29 @@
-"use client";
+'use client';
 
-import { useMemo } from "react";
-import { useParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import PostWriteHeader from "@/components/community/write/postWriteHeader";
-import CategorySelector from "@/components/community/write/categorySelector";
-import TitleInput from "@/components/community/write/titleInput";
-import ContentEditor from "@/components/community/write/contentEditor";
-import PostWriteActions from "@/components/community/write/postWriteActions";
-import usePostWrite from "@/lib/hooks/community/usePostWrite";
-import { usePostWriteForm } from "@/lib/hooks/community/usePostWriteForm";
-import { postApi } from "@/lib/api/client/post";
-import { getTextContent, getImageContent } from "@/lib/utils/post";
+import { useMemo } from 'react';
+import { useParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import PostWriteHeader from '@/components/community/write/postWriteHeader';
+import CategorySelector from '@/components/community/write/categorySelector';
+import TitleInput from '@/components/community/write/titleInput';
+import ContentEditor from '@/components/community/write/contentEditor';
+import PostWriteActions from '@/components/community/write/postWriteActions';
+import usePostWrite from '@/lib/hooks/community/usePostWrite';
+import { usePostWriteForm } from '@/lib/hooks/community/usePostWriteForm';
+import { postApi } from '@/lib/api/client/post';
+import { getTextContent, getImageContent } from '@/lib/utils/post';
 
 export default function PostWritePage() {
   const params = useParams();
   const mode = params.mode as string[] | undefined;
 
   // 수정 모드 확인 (URL: /community/write/edit/[postId])
-  const isEditMode = mode?.[0] === "edit";
+  const isEditMode = mode?.[0] === 'edit';
   const postId = isEditMode ? mode[1] : undefined;
 
   // 수정 모드일 경우 기존 데이터 로드
   const { data: existingPost } = useQuery({
-    queryKey: ["post", postId],
+    queryKey: ['post', postId],
     queryFn: () => postApi.getEditPostDetail(postId!),
     enabled: isEditMode && !!postId,
   });
