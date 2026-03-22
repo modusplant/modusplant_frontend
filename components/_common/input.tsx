@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useState, useEffect } from "react";
 import { cn } from "@/lib/utils/tailwindHelper";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -6,11 +6,30 @@ export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
   showPasswordToggle?: boolean;
+  showCount?: boolean;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, error, showPasswordToggle = false, ...props }, ref) => {
+  ({ className, type, error, showPasswordToggle = false, showCount = false, maxLength, ...props }, ref) => {
     const [showPassword, setShowPassword] = useState(false);
+    
+    const [charCount, setCharCount] = useState(
+      props.value ? String(props.value).length : props.defaultValue ? String(props.defaultValue).length : 0
+    );
+
+    useEffect(() => {
+      if (props.value !== undefined && props.value !== null) {
+        setCharCount(String(props.value).length);
+      }
+    }, [props.value]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setCharCount(e.target.value.length);
+      if (props.onChange) {
+        props.onChange(e);
+      }
+    };
+
     const inputType =
       showPasswordToggle && type === "password"
         ? showPassword
@@ -36,6 +55,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               className
             )}
             ref={ref}
+            maxLength={maxLength}
+            onChange={handleChange}
             {...props}
           />
           <button
@@ -54,7 +75,35 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       );
     }
 
-    // 일반 input의 경우 순수 input 태그만 반환
+    // 일반 input의 경우
+    if (showCount) {
+      return (
+        <div className="relative flex items-center">
+          <input
+            type={inputType}
+            className={cn(
+              "text-neutral-0 placeholder:text-neutral-70 w-full bg-transparent text-base",
+              "rounded-lg border px-4 py-3 outline-none",
+              isError ? "border-system-alert" : "border-surface-stroke-2",
+              "focus:border-primary-50",
+              "disabled:cursor-not-allowed disabled:opacity-50",
+              "transition-colors",
+              "pr-16", // 카운트 텍스트를 위한 우측 공간 확보
+              className
+            )}
+            ref={ref}
+            maxLength={maxLength}
+            onChange={handleChange}
+            {...props}
+          />
+          <span className="text-neutral-50 absolute right-4 text-xs">
+            {charCount}{maxLength ? `/${maxLength}` : ""}
+          </span>
+        </div>
+      );
+    }
+
+    // showCount가 없는 일반 input 태그 반환
     return (
       <input
         type={inputType}
@@ -68,6 +117,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           className
         )}
         ref={ref}
+        maxLength={maxLength}
+        onChange={handleChange}
         {...props}
       />
     );
