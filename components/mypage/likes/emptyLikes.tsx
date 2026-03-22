@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import EmptyState from "@/components/_common/emptyState";
+import EmptyState from '@/components/_common/emptyState';
 
 /**
  * 좋아요한 게시글이 없을 때 표시되는 컴포넌트

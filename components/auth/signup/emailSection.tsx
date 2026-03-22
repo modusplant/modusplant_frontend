@@ -1,9 +1,9 @@
-"use client";
-import { cn } from "@/lib/utils/tailwindHelper";
-import { useEmailVerification } from "@/lib/hooks/auth/useEmailVerification";
-import { Input } from "@/components/_common/input";
-import Button from "@/components/_common/button";
-import { EmailSectionProps } from "@/lib/types/auth";
+'use client';
+import { cn } from '@/lib/utils/tailwindHelper';
+import { useEmailVerification } from '@/lib/hooks/auth/useEmailVerification';
+import { Input } from '@/components/_common/input';
+import Button from '@/components/_common/button';
+import { EmailSectionProps } from '@/lib/types/auth';
 
 export default function EmailSection({
   register,
@@ -12,7 +12,7 @@ export default function EmailSection({
   errors,
   className,
 }: EmailSectionProps) {
-  const watchedEmail = watch("email");
+  const watchedEmail = watch('email');
 
   const {
     isCodeSent,
@@ -29,7 +29,7 @@ export default function EmailSection({
     !watchedEmail || !!errors.email || (isCodeSent && !canResend) || isVerified;
 
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn('space-y-2', className)}>
       <label className="text-neutral-20 block text-sm font-medium">
         이메일
       </label>
@@ -38,14 +38,14 @@ export default function EmailSection({
       <div className="flex flex-col gap-2 sm:flex-row">
         <div className="flex-1">
           <Input
-            {...register("email")}
+            {...register('email')}
             type="email"
             placeholder="이메일을 입력해주세요"
             disabled={isVerified}
             className={cn(
-              "w-full",
-              errors.email && "border-system-alert",
-              isVerified && "border-primary-50"
+              'w-full',
+              errors.email && 'border-system-alert',
+              isVerified && 'border-primary-50'
             )}
           />
         </div>
@@ -58,9 +58,9 @@ export default function EmailSection({
           }
           disabled={emailDisabled}
           className="w-full min-w-23 cursor-pointer rounded-lg px-5 py-3 text-sm font-medium sm:w-auto"
-          variant={!emailDisabled ? "point" : "secondary"}
+          variant={!emailDisabled ? 'point' : 'secondary'}
         >
-          {canResend ? "재요청" : "인증요청"}
+          {canResend ? '재요청' : '인증요청'}
         </Button>
       </div>
 
@@ -77,7 +77,7 @@ export default function EmailSection({
           <div className="flex flex-col gap-2 sm:flex-row">
             <div className="flex-1">
               <Input
-                {...register("verificationCode")}
+                {...register('verificationCode')}
                 type="text"
                 placeholder="인증코드를 입력해주세요"
                 className="w-full font-medium"
@@ -86,9 +86,9 @@ export default function EmailSection({
             <Button
               type="button"
               onClick={() => handleVerifyCode(watchedEmail)}
-              disabled={!watch("verificationCode")}
+              disabled={!watch('verificationCode')}
               className="w-full min-w-23 rounded-lg px-5 py-3 text-sm font-medium sm:w-auto"
-              variant={watch("verificationCode") ? "point" : "secondary"}
+              variant={watch('verificationCode') ? 'point' : 'secondary'}
             >
               확인
             </Button>

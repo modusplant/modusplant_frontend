@@ -1,4 +1,4 @@
-import { ApiResponse, ApiError } from "../../types/common";
+import { ApiResponse, ApiError } from '../../types/common';
 
 interface RequestConfig extends RequestInit {
   skipAuth?: boolean;
@@ -19,7 +19,7 @@ interface CreateApiOptions {
   /**
    * 401 처리 훅. "retry"를 반환하면 한 번 재시도합니다.
    */
-  onUnauthorized?: () => Promise<"retry" | "fail"> | "retry" | "fail";
+  onUnauthorized?: () => Promise<'retry' | 'fail'> | 'retry' | 'fail';
 }
 
 async function requestCore<T = any>(
@@ -38,25 +38,25 @@ async function requestCore<T = any>(
 
   const isFormData = fetchConfig.body instanceof FormData;
   const headers: Record<string, string> = {
-    ...(!isFormData && { "Content-Type": "application/json" }),
+    ...(!isFormData && { 'Content-Type': 'application/json' }),
     ...(!enableCache && {
-      "Cache-Control": "no-cache, no-store, must-revalidate",
-      Pragma: "no-cache",
-      Expires: "0",
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      Pragma: 'no-cache',
+      Expires: '0',
     }),
     ...(fetchConfig.headers as Record<string, string>),
   };
 
   if (!skipAuth && opts.getAccessToken) {
     const token = await opts.getAccessToken();
-    if (token) headers["Authorization"] = `Bearer ${token}`;
+    if (token) headers['Authorization'] = `Bearer ${token}`;
   }
 
   try {
     const response = await fetch(url, {
       ...fetchConfig,
       headers,
-      ...(opts.includeCredentials ? { credentials: "include" as const } : {}),
+      ...(opts.includeCredentials ? { credentials: 'include' as const } : {}),
     });
 
     const data: ApiResponse<T> = await response.json();
@@ -64,32 +64,32 @@ async function requestCore<T = any>(
     if (data.status === 401 && !skipAuth) {
       if (!isRetry && opts.onUnauthorized) {
         const action = await opts.onUnauthorized();
-        if (action === "retry") {
+        if (action === 'retry') {
           return requestCore<T>(endpoint, { ...config, isRetry: true }, opts);
         }
       }
-      throw new ApiError(401, "authentication_required", "다시 로그인해주세요");
+      throw new ApiError(401, 'authentication_required', '다시 로그인해주세요');
     }
 
     if (data.status >= 400) {
       throw new ApiError(
         data.status,
         data.code,
-        data.message || "요청에 실패했습니다"
+        data.message || '요청에 실패했습니다'
       );
     }
 
     return data;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    throw new ApiError(500, "network_error", "네트워크 오류가 발생했습니다");
+    throw new ApiError(500, 'network_error', '네트워크 오류가 발생했습니다');
   }
 }
 
 export function createApi(options: CreateApiOptions) {
   return {
     get: <T = any>(endpoint: string, opts: ApiRequestOptions = {}) =>
-      requestCore<T>(endpoint, { ...opts, method: "GET" }, options),
+      requestCore<T>(endpoint, { ...opts, method: 'GET' }, options),
 
     post: <T = any>(
       endpoint: string,
@@ -100,7 +100,7 @@ export function createApi(options: CreateApiOptions) {
         endpoint,
         {
           ...opts,
-          method: "POST",
+          method: 'POST',
           body:
             body instanceof FormData
               ? body
@@ -120,7 +120,7 @@ export function createApi(options: CreateApiOptions) {
         endpoint,
         {
           ...opts,
-          method: "PUT",
+          method: 'PUT',
           body:
             body instanceof FormData
               ? body
@@ -140,7 +140,7 @@ export function createApi(options: CreateApiOptions) {
         endpoint,
         {
           ...opts,
-          method: "PATCH",
+          method: 'PATCH',
           body:
             body instanceof FormData
               ? body
@@ -152,6 +152,6 @@ export function createApi(options: CreateApiOptions) {
       ),
 
     delete: <T = any>(endpoint: string, opts: ApiRequestOptions = {}) =>
-      requestCore<T>(endpoint, { ...opts, method: "DELETE" }, options),
+      requestCore<T>(endpoint, { ...opts, method: 'DELETE' }, options),
   };
 }

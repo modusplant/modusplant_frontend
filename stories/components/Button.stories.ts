@@ -49,7 +49,7 @@ const meta = {
     },
     children: {
       control: 'text',
-      description: '버튼 내부에 들어갈 콘텐츠',
+      description: '버튼 내부에 들어갈 컨텐츠',
     },
   },
   args: { onClick: fn() },

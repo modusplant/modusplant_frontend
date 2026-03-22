@@ -1,4 +1,4 @@
-import RecentSection from "@/components/mypage/recent/recentSection";
+import RecentSection from '@/components/mypage/recent/recentSection';
 
 /**
  * 최근에 본 글 페이지

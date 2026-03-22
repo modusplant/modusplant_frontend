@@ -1,5 +1,5 @@
-import { clientApiInstance } from "../instances/clientInstance";
-import { ApiResponse } from "@/lib/types/common";
+import { clientApiInstance } from '../instances/clientInstance';
+import { ApiResponse } from '@/lib/types/common';
 import {
   GetMyPostsRequest,
   GetMyPostsResponseData,
@@ -10,16 +10,16 @@ import {
   PostDetail,
   PostEditData,
   PostWritePayload,
-} from "@/lib/types/post";
+} from '@/lib/types/post';
 import {
   POST_ENDPOINTS,
   MEMBER_ENDPOINTS,
   buildQueryString,
-} from "@/lib/constants/endpoints";
+} from '@/lib/constants/endpoints';
 import {
   buildPostFormData,
   buildPostQueryParams,
-} from "../../utils/postFormData";
+} from '../../utils/postFormData';
 
 /**
  * 게시글 관련 API

@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { cn } from "@/lib/utils/tailwindHelper";
-import Image from "next/image";
-import { PRIMARY_CATEGORIES, type Category } from "@/lib/constants/categories";
-import { useDropdownState } from "@/lib/hooks/category/useDropdownState";
+import { cn } from '@/lib/utils/tailwindHelper';
+import Image from 'next/image';
+import { PRIMARY_CATEGORIES, type Category } from '@/lib/constants/categories';
+import { useDropdownState } from '@/lib/hooks/category/useDropdownState';
 
 export interface PrimaryCategoryFilterProps {
   selectedCategoryId: string;
   onCategoryChange: (categoryId: string) => void;
-  variant?: "filter" | "selector";
+  variant?: 'filter' | 'selector';
   showAll?: boolean;
   className?: string;
 }
@@ -21,14 +21,14 @@ export interface PrimaryCategoryFilterProps {
 export default function PrimaryCategoryFilter({
   selectedCategoryId,
   onCategoryChange,
-  variant = "filter",
+  variant = 'filter',
   showAll = true,
   className,
 }: PrimaryCategoryFilterProps) {
   const { isOpen, dropdownRef, toggle, close } = useDropdownState();
 
   const categories: Category[] = showAll
-    ? [{ id: "all", name: "전체" }, ...PRIMARY_CATEGORIES]
+    ? [{ id: 'all', name: '전체' }, ...PRIMARY_CATEGORIES]
     : PRIMARY_CATEGORIES;
 
   const handleSelect = (category: Category) => {
@@ -36,30 +36,30 @@ export default function PrimaryCategoryFilter({
     close();
   };
 
-  const isSelector = variant === "selector";
+  const isSelector = variant === 'selector';
   const selectedCategory = categories.find((c) => c.id == selectedCategoryId);
-  const displayText = selectedCategory?.name ?? "주제를 선택해주세요(필수)";
+  const displayText = selectedCategory?.name ?? '주제를 선택해주세요(필수)';
 
   return (
     <div
       ref={dropdownRef}
-      className={cn("relative inline-block w-full md:w-auto", className)}
+      className={cn('relative inline-block w-full md:w-auto', className)}
     >
       {/* 드롭다운 버튼 */}
       <button
         type="button"
         onClick={toggle}
         className={cn(
-          "border-surface-stroke flex items-center justify-between border",
-          "hover:border-primary-50 focus:border-primary-50 focus:ring-primary-10 focus:ring-2 focus:outline-none",
-          "cursor-pointer",
-          isOpen && "border-primary-50 ring-primary-10 ring-2",
+          'border-surface-stroke flex items-center justify-between border',
+          'hover:border-primary-50 focus:border-primary-50 focus:ring-primary-10 focus:ring-2 focus:outline-none',
+          'cursor-pointer',
+          isOpen && 'border-primary-50 ring-primary-10 ring-2',
           {
             // filter 스타일 (메인페이지)
-            "text-neutral-20 h-10 w-40 rounded-full px-4 py-3 text-sm font-medium":
+            'text-neutral-20 h-10 w-40 rounded-full px-4 py-3 text-sm font-medium':
               !isSelector,
             // selector 스타일 (게시글 작성)
-            "text-neutral-20 h-11 w-full rounded-lg px-3 py-2.5 text-[15px] leading-normal font-medium tracking-[-0.01em] md:w-60 md:px-4.5":
+            'text-neutral-20 h-11 w-full rounded-lg px-3 py-2.5 text-[15px] leading-normal font-medium tracking-[-0.01em] md:w-60 md:px-4.5':
               isSelector,
           }
         )}
@@ -68,7 +68,7 @@ export default function PrimaryCategoryFilter({
       >
         <span
           className={cn({
-            "text-neutral-70": isSelector && !selectedCategory,
+            'text-neutral-70': isSelector && !selectedCategory,
           })}
         >
           {displayText}
@@ -78,7 +78,7 @@ export default function PrimaryCategoryFilter({
           alt="arrow"
           width={12}
           height={12}
-          className={cn(isOpen && "rotate-180")}
+          className={cn(isOpen && 'rotate-180')}
           loading="lazy"
         />
       </button>
@@ -87,10 +87,10 @@ export default function PrimaryCategoryFilter({
       {isOpen && (
         <div
           className={cn(
-            "border-surface-stroke absolute z-50 mt-2 border bg-neutral-100 shadow-lg",
+            'border-surface-stroke absolute z-50 mt-2 border bg-neutral-100 shadow-lg',
             {
-              "rounded-lg p-1.5": !isSelector,
-              "top-12 left-0 w-full rounded-lg md:w-60": isSelector,
+              'rounded-lg p-1.5': !isSelector,
+              'top-12 left-0 w-full rounded-lg md:w-60': isSelector,
             }
           )}
           role="listbox"
@@ -100,15 +100,15 @@ export default function PrimaryCategoryFilter({
               key={category.id}
               onClick={() => handleSelect(category)}
               className={cn(
-                "hover:bg-surface-98 w-full text-left transition-colors",
+                'hover:bg-surface-98 w-full text-left transition-colors',
                 {
                   // filter 스타일
-                  "text-neutral-0 rounded-lg px-5 py-2.5 text-sm font-medium md:px-4 md:py-3":
+                  'text-neutral-0 rounded-lg px-5 py-2.5 text-sm font-medium md:px-4 md:py-3':
                     !isSelector,
-                  "bg-primary-90 text-primary-50 font-semibold":
+                  'bg-primary-90 text-primary-50 font-semibold':
                     !isSelector && selectedCategoryId === category.id,
                   // selector 스타일
-                  "text-neutral-20 px-4 py-2.5 text-[15px] leading-normal font-medium tracking-[-0.01em]":
+                  'text-neutral-20 px-4 py-2.5 text-[15px] leading-normal font-medium tracking-[-0.01em]':
                     isSelector,
                 }
               )}

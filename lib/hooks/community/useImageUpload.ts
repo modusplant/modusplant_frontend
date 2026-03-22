@@ -1,5 +1,5 @@
-import { showModal } from "@/lib/store/modalStore";
-import { useRef, useState } from "react";
+import { showModal } from '@/lib/store/modalStore';
+import { useRef, useState } from 'react';
 
 interface UseImageUploadProps {
   maxImages?: number;
@@ -26,12 +26,12 @@ export default function useImageUpload({
 
     Array.from(files).forEach((file) => {
       // 확장자 검증
-      const validExtensions = ["image/jpeg", "image/png", "image/jpg"];
+      const validExtensions = ['image/jpeg', 'image/png', 'image/jpg'];
       if (!validExtensions.includes(file.type)) {
         showModal({
-          type: "snackbar",
+          type: 'snackbar',
           description:
-            "지원하지 않는 파일 형식입니다. jpeg, png, jpg 파일만 업로드 가능합니다.",
+            '지원하지 않는 파일 형식입니다. jpeg, png, jpg 파일만 업로드 가능합니다.',
         });
         return;
       }
@@ -39,8 +39,8 @@ export default function useImageUpload({
       // 용량 검증
       if (file.size > maxSizeInBytes) {
         showModal({
-          type: "snackbar",
-          description: "10MB 이하의 이미지를 등록해주세요.",
+          type: 'snackbar',
+          description: '10MB 이하의 이미지를 등록해주세요.',
         });
         return;
       }
@@ -58,7 +58,7 @@ export default function useImageUpload({
 
     if (images.length + validFiles.length > maxImages) {
       showModal({
-        type: "snackbar",
+        type: 'snackbar',
         description: `최대 ${maxImages}장 등록 가능합니다. 선택된 사진을 삭제 후 재시도 해주세요.`,
       });
       return;
@@ -66,7 +66,7 @@ export default function useImageUpload({
 
     onImagesChange([...images, ...validFiles]);
     if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+      fileInputRef.current.value = '';
     }
   };
 
@@ -96,7 +96,7 @@ export default function useImageUpload({
 
     if (images.length + validFiles.length > maxImages) {
       showModal({
-        type: "snackbar",
+        type: 'snackbar',
         description: `최대 ${maxImages}장 등록 가능합니다. 선택된 사진을 삭제 후 재시도 해주세요.`,
       });
       return;

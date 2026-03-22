@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuthStore } from "@/lib/store/authStore";
-import { loginSchema, LoginFormValues } from "@/lib/constants/schema";
-import { useLogin } from "@/lib/hooks/auth/useLogin";
-import LoginFormInputs from "./loginFormInputs";
-import LoginFormError from "./loginFormError";
-import LoginFormRememberMeHint from "./loginFormRememberMeHint";
-import LoginFormActions from "./loginFormActions";
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuthStore } from '@/lib/store/authStore';
+import { loginSchema, LoginFormValues } from '@/lib/constants/schema';
+import { useLogin } from '@/lib/hooks/auth/useLogin';
+import LoginFormInputs from './loginFormInputs';
+import LoginFormError from './loginFormError';
+import LoginFormRememberMeHint from './loginFormRememberMeHint';
+import LoginFormActions from './loginFormActions';
 
 interface LoginFormProps {
   className?: string;
@@ -26,8 +26,8 @@ export default function LoginForm({ className }: LoginFormProps) {
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
       rememberMe: true,
     },
   });
@@ -38,8 +38,8 @@ export default function LoginForm({ className }: LoginFormProps) {
         {/* 입력 필드 영역 */}
         <div className="space-y-2.5">
           <LoginFormInputs
-            emailRegister={register("email")}
-            passwordRegister={register("password")}
+            emailRegister={register('email')}
+            passwordRegister={register('password')}
           />
 
           <LoginFormError
@@ -49,8 +49,8 @@ export default function LoginForm({ className }: LoginFormProps) {
           />
 
           <LoginFormRememberMeHint
-            rememberMeRegister={register("rememberMe")}
-            rememberMeValue={watch("rememberMe")}
+            rememberMeRegister={register('rememberMe')}
+            rememberMeValue={watch('rememberMe')}
             loginAttempts={loginAttempts}
           />
         </div>

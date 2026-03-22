@@ -54,7 +54,9 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  reactCompiler: true,
+  reactCompiler: {
+    compilationMode: 'annotation',
+  },
 };
 
 export default nextConfig;

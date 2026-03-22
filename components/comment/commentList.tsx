@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Comment } from "@/lib/types/comment";
-import CommentItem from "./commentItem";
+import { Comment } from '@/lib/types/comment';
+import CommentItem from './commentItem';
 
 interface CommentListProps {
   comments: Comment[];

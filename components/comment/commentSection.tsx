@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useCommentTree } from "@/lib/hooks/comment/useCommentTree";
-import { useCommentsQuery } from "@/lib/hooks/comment/useCommentsQuery";
-import CommentList from "./commentList";
-import CommentInput from "./commentInput";
-import BlurOverlay from "../_layout/blurOverlay";
-import { useAuthStore } from "@/lib/store/authStore";
+import { useCommentTree } from '@/lib/hooks/comment/useCommentTree';
+import { useCommentsQuery } from '@/lib/hooks/comment/useCommentsQuery';
+import CommentList from './commentList';
+import CommentInput from './commentInput';
+import BlurOverlay from '../_layout/blurOverlay';
+import { useAuthStore } from '@/lib/store/authStore';
 
 interface CommentSectionProps {
   postId: string;

@@ -1,8 +1,8 @@
-import Link from "next/link";
-import Button from "@/components/_common/button";
-import { cn } from "@/lib/utils/tailwindHelper";
+import Link from 'next/link';
+import Button from '@/components/_common/button';
+import { cn } from '@/lib/utils/tailwindHelper';
 
-export type BlurOverlayVariant = "post" | "comment";
+export type BlurOverlayVariant = 'post' | 'comment';
 
 interface BlurOverlayProps {
   variant: BlurOverlayVariant;
@@ -11,8 +11,8 @@ interface BlurOverlayProps {
 }
 
 const messages: Record<BlurOverlayVariant, string> = {
-  post: "모두의식물 회원이 되어\n모든 게시글을 확인하세요",
-  comment: "모두의식물 회원이 되어\n소통에 참여하세요",
+  post: '모두의식물 회원이 되어\n모든 게시글을 확인하세요',
+  comment: '모두의식물 회원이 되어\n소통에 참여하세요',
 };
 
 export default function BlurOverlay({
@@ -20,19 +20,19 @@ export default function BlurOverlay({
   sticky = false,
   className,
 }: BlurOverlayProps) {
-  const lines = messages[variant].split("\n");
+  const lines = messages[variant].split('\n');
 
   return (
-    <div className={cn("absolute inset-0 z-10 min-h-[30vh]", className)}>
+    <div className={cn('absolute inset-0 z-10 min-h-[30vh]', className)}>
       {/* 배경 블러 + 반투명 화이트 */}
       <div className="h-full w-full bg-white/40 py-32 backdrop-blur-xs">
         {/* 중앙 정렬 컨테이너 */}
         <div
           className={cn(
-            "px-4",
+            'px-4',
             sticky
-              ? "sticky top-1/2"
-              : "flex h-full items-center justify-center"
+              ? 'sticky top-1/2'
+              : 'flex h-full items-center justify-center'
           )}
         >
           <div className="mx-auto flex max-w-120 flex-col items-center gap-5 text-center">

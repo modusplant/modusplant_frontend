@@ -3,7 +3,7 @@
  * 작성과 수정에서 공통으로 사용하는 FormData 생성 로직
  */
 
-import { getProxiedImageUrl } from "./image";
+import { getProxiedImageUrl } from './image';
 
 export interface PostFormDataPayload {
   textContent: string;
@@ -25,11 +25,11 @@ export async function buildPostFormData(
 
   // 1. 텍스트 콘텐츠를 파일로 변환하여 추가
   if (payload.textContent.trim()) {
-    const textBlob = new Blob([payload.textContent], { type: "text/plain" });
-    const textFile = new File([textBlob], "text_0.txt", {
-      type: "text/plain",
+    const textBlob = new Blob([payload.textContent], { type: 'text/plain' });
+    const textFile = new File([textBlob], 'text_0.txt', {
+      type: 'text/plain',
     });
-    formData.append("content", textFile);
+    formData.append('content', textFile);
   }
 
   // 2. 이미지 처리 (File 객체와 URL 모두 동일하게 처리)
@@ -38,8 +38,8 @@ export async function buildPostFormData(
   for (const image of payload.images) {
     if (image instanceof File) {
       imageFiles.push(image);
-      formData.append("content", image);
-    } else if (typeof image === "string") {
+      formData.append('content', image);
+    } else if (typeof image === 'string') {
       // URL을 Blob으로 변환하여 File 객체로 생성
       try {
         // 프록시 경로로 변환 (CORS 회피)
@@ -52,13 +52,13 @@ export async function buildPostFormData(
 
         const blob = await response.blob();
 
-        const filename = image.split("/").pop()?.split("?")[0] || "image";
+        const filename = image.split('/').pop()?.split('?')[0] || 'image';
         const file = new File([blob], filename, { type: blob.type });
 
         imageFiles.push(file);
-        formData.append("content", file);
+        formData.append('content', file);
       } catch (error) {
-        console.error("FormData 변환 중 이미지 로드 실패");
+        console.error('FormData 변환 중 이미지 로드 실패');
       }
     }
   }
@@ -68,7 +68,7 @@ export async function buildPostFormData(
   let currentOrder = 1;
 
   if (payload.textContent.trim()) {
-    orderInfo.push({ filename: "text_0.txt", order: currentOrder++ });
+    orderInfo.push({ filename: 'text_0.txt', order: currentOrder++ });
   }
 
   imageFiles.forEach((image) => {
@@ -76,9 +76,9 @@ export async function buildPostFormData(
   });
 
   const orderBlob = new Blob([JSON.stringify(orderInfo)], {
-    type: "application/json",
+    type: 'application/json',
   });
-  formData.append("orderInfo", orderBlob);
+  formData.append('orderInfo', orderBlob);
 
   return formData;
 }
@@ -93,7 +93,7 @@ export function buildPostQueryParams(payload: PostFormDataPayload): string {
     primaryCategoryId: payload.primaryCategoryId,
     secondaryCategoryId: payload.secondaryCategoryId,
     title: payload.title,
-    isPublished: "true",
+    isPublished: 'true',
   });
 
   return params.toString();

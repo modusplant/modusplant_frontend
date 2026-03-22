@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import { commentApi } from "@/lib/api/client/comment";
-import { Comment } from "@/lib/types/comment";
-import { getFullImageUrl } from "@/lib/utils/image";
+import { useQuery } from '@tanstack/react-query';
+import { commentApi } from '@/lib/api/client/comment';
+import { Comment } from '@/lib/types/comment';
+import { getFullImageUrl } from '@/lib/utils/image';
 
 interface UseCommentsQueryProps {
   postId: string;
@@ -23,7 +23,7 @@ export function useCommentsQuery({
     error,
     refetch,
   } = useQuery({
-    queryKey: ["comments", postId],
+    queryKey: ['comments', postId],
     queryFn: async () => {
       const response = await commentApi.getComments(postId);
       const rawComments = response.data || [];

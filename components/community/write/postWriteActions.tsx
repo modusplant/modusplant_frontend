@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
 interface PostWriteActionsProps {
   isSubmitting: boolean;
-  isFormValid: boolean | "";
+  isFormValid: boolean | '';
   onSubmit: () => void;
   isEditMode: boolean;
 }
@@ -20,17 +20,17 @@ export default function PostWriteActions({
         disabled={!isFormValid || isSubmitting}
         className={`flex h-10 items-center gap-25 rounded-[7px] px-5 py-3.5 text-[15px] leading-[1.2] font-medium tracking-[-0.01em] transition-colors ${
           isFormValid && !isSubmitting
-            ? "bg-primary-50 hover:bg-primary-70 text-white"
-            : "bg-neutral-90 cursor-not-allowed text-white"
+            ? 'bg-primary-50 hover:bg-primary-70 text-white'
+            : 'bg-neutral-90 cursor-not-allowed text-white'
         }`}
       >
         {isSubmitting
           ? isEditMode
-            ? "수정 중..."
-            : "등록 중..."
+            ? '수정 중...'
+            : '등록 중...'
           : isEditMode
-            ? "수정하기"
-            : "등록하기"}
+            ? '수정하기'
+            : '등록하기'}
       </button>
     </div>
   );

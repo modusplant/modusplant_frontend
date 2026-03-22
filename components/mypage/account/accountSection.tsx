@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useAuthStore } from "@/lib/store/authStore";
-import { useMemberAuthInfo } from "@/lib/hooks/mypage/useMemberAuthInfo";
-import EmailInfoSection from "./emailInfoSection";
-import PasswordSection from "./passwordSection";
-import SocialLoginInfo from "./socialLoginInfo";
-import ChangeEmailModal from "./changeEmailModal";
-import { useState } from "react";
+import { useAuthStore } from '@/lib/store/authStore';
+import { useMemberAuthInfo } from '@/lib/hooks/mypage/useMemberAuthInfo';
+import EmailInfoSection from './emailInfoSection';
+import PasswordSection from './passwordSection';
+import SocialLoginInfo from './socialLoginInfo';
+import ChangeEmailModal from './changeEmailModal';
+import { useState } from 'react';
 
 /**
  * 계정 설정 섹션
@@ -36,7 +36,7 @@ export default function AccountSection() {
     );
   }
 
-  const isBasicAuth = authInfo.authProvider === "BASIC";
+  const isBasicAuth = authInfo.authProvider === 'BASIC';
 
   if (isBasicAuth) {
     return (

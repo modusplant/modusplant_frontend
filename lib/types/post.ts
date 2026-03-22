@@ -2,7 +2,7 @@
  * 콘텐츠 타입 (멀티파트)
  */
 export interface ContentPart {
-  type: "text" | "image" | "video" | "audio" | "file";
+  type: 'text' | 'image' | 'video' | 'audio' | 'file';
   order: number;
   filename: string;
   data?: string; // 텍스트인 경우만 존재
@@ -61,11 +61,10 @@ export interface PostDetail extends PostData {
 /**
  * 게시글 수정용 데이터 타입 (API 응답)
  */
-export interface PostEditData
-  extends Omit<
-    PostData,
-    "likeCount" | "commentCount" | "isLiked" | "isBookmarked"
-  > {
+export interface PostEditData extends Omit<
+  PostData,
+  'likeCount' | 'commentCount' | 'isLiked' | 'isBookmarked'
+> {
   primaryCategoryId: string;
   secondaryCategoryId: string;
   authorUuid: string;

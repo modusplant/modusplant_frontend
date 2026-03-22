@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useMyPostsQuery } from "@/lib/hooks/mypage/useMyPostsQuery";
-import EmptyMyPosts from "./emptyMyPosts";
-import PostList from "@/components/mypage/common/postList";
+import { useMyPostsQuery } from '@/lib/hooks/mypage/useMyPostsQuery';
+import EmptyMyPosts from './emptyMyPosts';
+import PostList from '@/components/mypage/common/postList';
 
 /**
  * 내가 쓴 게시글 목록 컴포넌트

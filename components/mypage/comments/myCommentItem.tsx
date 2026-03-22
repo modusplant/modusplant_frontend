@@ -1,6 +1,6 @@
-import Link from "next/link";
-import { MyComment } from "@/lib/types/comment";
-import { formatRelativeTime } from "@/lib/utils/formatTime";
+import Link from 'next/link';
+import { MyComment } from '@/lib/types/comment';
+import { formatRelativeTime } from '@/lib/utils/formatTime';
 
 interface MyCommentItemProps {
   comment: MyComment;

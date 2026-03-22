@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { cn } from "@/lib/utils/tailwindHelper";
-import { useCarousel } from "@/lib/hooks/home/useCarousel";
-import CarouselControls from "./carouselControls";
-import HeroBannerContent from "./heroBannerContent";
-import { StaticImageData } from "next/image";
-import Banner1 from "@/public/banner/ban_01.png";
-import Banner2 from "@/public/banner/ban_02.png";
+import Image from 'next/image';
+import { cn } from '@/lib/utils/tailwindHelper';
+import { useCarousel } from '@/lib/hooks/home/useCarousel';
+import CarouselControls from './carouselControls';
+import HeroBannerContent from './heroBannerContent';
+import { StaticImageData } from 'next/image';
+import Banner1 from '@/public/banner/ban_01.png';
+import Banner2 from '@/public/banner/ban_02.png';
 
 export interface HeroBannerProps {
   images?: StaticImageData[];
@@ -48,7 +48,7 @@ export default function HeroBanner({
   return (
     <section
       className={cn(
-        "bg-surface-98 relative h-[70vh] w-full overflow-hidden",
+        'bg-surface-98 relative h-[70vh] w-full overflow-hidden',
         className
       )}
     >
@@ -56,10 +56,10 @@ export default function HeroBanner({
       <div className="relative h-full w-full">
         <div
           className={cn(
-            "flex h-full",
+            'flex h-full',
             isTransitioning
-              ? "transition-transform duration-1000 ease-in-out"
-              : ""
+              ? 'transition-transform duration-1000 ease-in-out'
+              : ''
           )}
           style={{
             transform: `translateX(-${currentIndex * 100}%)`,

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState, ReactNode } from "react";
-import PostListItem from "./postListItem";
-import Pagination from "./pagination";
-import { PostData } from "@/lib/types/post";
+import { useState, ReactNode } from 'react';
+import PostListItem from './postListItem';
+import Pagination from './pagination';
+import { PostData } from '@/lib/types/post';
 
 interface PostListProps<T> {
   /**

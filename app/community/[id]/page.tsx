@@ -1,11 +1,11 @@
-import { notFound } from "next/navigation";
-import PostDetail from "@/components/community/detail/postDetail";
-import { serverPostApi } from "@/lib/api/server/post";
+import { notFound } from 'next/navigation';
+import PostDetail from '@/components/community/detail/postDetail';
+import { serverPostApi } from '@/lib/api/server/post';
 import {
   createPostMetadata,
   notFoundPostMetadata,
   errorPostMetadata,
-} from "@/lib/metadata/community";
+} from '@/lib/metadata/community';
 
 interface PostPageProps {
   params: Promise<{

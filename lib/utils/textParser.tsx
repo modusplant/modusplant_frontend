@@ -10,7 +10,7 @@ export function parseTextWithLinks(text: string) {
     if (part.match(urlRegex)) {
       try {
         const url = new URL(part);
-        const displayText = url.hostname.replace(/^www\./, "");
+        const displayText = url.hostname.replace(/^www\./, '');
 
         return (
           <a
