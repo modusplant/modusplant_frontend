@@ -11,7 +11,6 @@ export default function PasswordSection({
   watch,
   className,
 }: PasswordSectionProps) {
-  'use no memo';
   const [passwordError, setPasswordError] = useState<string>('');
   const [confirmError, setConfirmError] = useState<string>('');
 

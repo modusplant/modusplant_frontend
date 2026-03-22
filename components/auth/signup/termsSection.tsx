@@ -12,7 +12,6 @@ export default function TermsSection({
   watch,
   setValue,
 }: TermsSectionProps) {
-  'use no memo';
   const { contentState, toggleContent } = useTermsAgreement();
 
   // 현재 폼의 동의 상태 확인

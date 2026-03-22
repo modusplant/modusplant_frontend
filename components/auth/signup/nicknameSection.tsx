@@ -14,7 +14,6 @@ export default function NicknameSection({
   errors,
   className,
 }: NicknameSectionProps) {
-  'use no memo';
   const watchedNickname = watch('nickname');
 
   const {
