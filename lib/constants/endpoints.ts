@@ -75,6 +75,7 @@ export const COMMENT_ENDPOINTS = {
   COMMENTS: `${API_V1}/communication/comments`,
   POST_COMMENTS: (postId: string) =>
     `${API_V1}/communication/comments/post/${postId}`,
+  UPDATE_COMMENTS: () => `${API_V1}/communication/comments/update`,
   DELETE_COMMENT: (postUlid: string, path: string) =>
     `${API_V1}/communication/comments/post/${postUlid}/path/${path}`,
   LIKE_COMMENT: (memberId: string, postUlid: string, path: string) =>

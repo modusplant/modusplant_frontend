@@ -38,13 +38,19 @@ export default function CommentItem({
   });
 
   // 삭제 훅
-  const { deleteComment, isDeleting } = useCommentMutations({
+  const { deleteComment, isDeleting, updateComment, isUpdating } =
+    useCommentMutations({
     postId,
     onSuccess: onUpdate,
   });
 
   const handleDelete = () => {
     deleteComment({ commentPath: comment.path });
+  };
+
+  const handleUpdate = () => {
+    // setIsUpdateMode(true);
+    updateComment({ content: '답글 수정 API 테스트', path: comment.path });
   };
 
   return (
@@ -63,6 +69,7 @@ export default function CommentItem({
               profileImagePath={comment.profileImagePath}
               isMyComment={isMyComment}
               onDelete={handleDelete}
+              onUpdate={handleUpdate}
               isDeleting={isDeleting}
             />
 
