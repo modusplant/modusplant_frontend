@@ -1,4 +1,4 @@
-import { WriteFormData } from '@/lib/schemas/writeForm';
+import { WriteFormData } from '@/app/community/write/[[...mode]]/page';
 import { useFormContext } from 'react-hook-form';
 
 const ContentField = () => {

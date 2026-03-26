@@ -21,8 +21,9 @@ const ImageUploadButton = ({ ref, handleChange }: ImageUploadButtonProps) => {
       />
       <button
         onClick={(e) => {
+          // prevent default action to avoid form submission when the button is inside a form
           e.preventDefault();
-          ref.current?.click();
+          fileInputRef.current?.click();
         }}
         className="text-neutral-20 hover:bg-surface-98 flex cursor-pointer items-center gap-1 rounded-[40px] px-3 py-2.25 text-[15px] leading-normal font-medium tracking-[-0.01em] transition-colors"
       >
