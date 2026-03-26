@@ -1,8 +1,7 @@
-import {
-  MAX_TITLE_LENGTH,
-  WriteFormData,
-} from '@/app/community/write/[[...mode]]/page';
 import { useFormContext, useWatch } from 'react-hook-form';
+
+import { MAX_TITLE_LENGTH } from '@/lib/constants/write';
+import type { WriteFormData } from '@/lib/schemas/writeForm';
 
 const TitleField = () => {
   const { control, register } = useFormContext<WriteFormData>();
