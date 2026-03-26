@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
-import z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import usePostWrite from '@/lib/hooks/community/usePostWrite';
@@ -16,28 +15,7 @@ import ActionButtonField from '@/components/community/write/ActionButtonField';
 import ImageUploadField from '@/components/community/write/ImageUploadField';
 import PostWriteHeader from '@/components/community/write/PostWriteHeader';
 import CategorySelector from '@/components/community/write/CategorySelector';
-
-// 제목 최대 길이 상수
-export const MAX_TITLE_LENGTH = 60;
-
-// 전체 폼 유효성 검증 스키마
-export const WriteFormSchema = z.object({
-  primaryCategoryId: z.string().nonempty('1차 카테고리를 선택해주세요.'),
-  secondaryCategoryId: z.string().nonempty('2차 카테고리를 선택해주세요.'),
-  title: z
-    .string()
-    .trim()
-    .nonempty('제목을 입력해주세요.')
-    .max(
-      MAX_TITLE_LENGTH,
-      `제목은 최대 ${MAX_TITLE_LENGTH}자까지 입력 가능합니다.`
-    ),
-  textContent: z.string().trim().nonempty('본문 내용을 입력해주세요.'),
-  images: z.array(z.union([z.instanceof(File), z.string()])),
-});
-
-// 폼 데이터 타입 정의
-export type WriteFormData = z.infer<typeof WriteFormSchema>;
+import { type WriteFormData, WriteFormSchema } from '@/lib/schemas/writeForm';
 
 const PostWritePage = () => {
   const { mode } = useParams<{ mode: string[] | undefined }>();
@@ -87,7 +65,6 @@ const PostWritePage = () => {
     });
   }, [post, reset]);
 
-  // 게시글 제출 훅
   const { createMutation, updateMutation } = usePostWrite(postId);
 
   const onValid = (data: WriteFormData) => {
@@ -119,7 +96,6 @@ const PostWritePage = () => {
             <ImageUploadField />
           </div>
           <ActionButtonField isEditMode={isEditMode} />
-          );
         </form>
       </FormProvider>
     </div>
