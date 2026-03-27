@@ -26,7 +26,7 @@ export default function CommentItem({
 }: CommentItemProps) {
   const { user, isAuthenticated } = useAuthStore();
   const [showReplyForm, setShowReplyForm] = useState(false);
-
+  const [isUpdateMode, setIsUpdateMode] = useState(false);
   const isMyComment = isAuthenticated && user?.nickname === comment.nickname;
 
   // 좋아요 훅
@@ -36,21 +36,22 @@ export default function CommentItem({
     initialLikeCount: comment.likeCount,
     initialIsLiked: comment.isLiked,
   });
+  console.log(isMyComment);
 
   // 삭제 훅
   const { deleteComment, isDeleting, updateComment, isUpdating } =
     useCommentMutations({
-    postId,
-    onSuccess: onUpdate,
-  });
+      postId,
+      onSuccess: onUpdate,
+    });
 
   const handleDelete = () => {
     deleteComment({ commentPath: comment.path });
   };
 
   const handleUpdate = () => {
-    // setIsUpdateMode(true);
-    updateComment({ content: '답글 수정 API 테스트', path: comment.path });
+    setIsUpdateMode(true);
+    // updateComment({ content: '답글 수정 API 테스트', path: comment.path });
   };
 
   return (

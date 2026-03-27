@@ -1,11 +1,10 @@
 import Button from '@/components/_common/button';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import '../../app/globals.css';
 
 import { fn } from 'storybook/test';
 
 const meta = {
-  title: 'Components/Button',
+  title: 'Components/공통 컴포넌트/Button',
   component: Button,
   parameters: {
     layout: 'centered',
