@@ -51,7 +51,7 @@ const meta = {
   tags: ['autodocs'],
   args: {
     postId: 'post-123',
-    onUpdate: fn(),
+    refetch: fn(),
   },
 } satisfies Meta<typeof CommentItem>;
 
@@ -133,14 +133,6 @@ export const Liked: Story = {
 export const WithReplies: Story = {
   args: {
     comment: commentWithReplies,
-  },
-};
-
-// 댓글 수정
-
-export const Editing: Story = {
-  args: {
-    comment: baseComment,
   },
 };
 

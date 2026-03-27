@@ -16,13 +16,13 @@ import CommentReplies from './commentItem/commentReplies';
 interface CommentItemProps {
   comment: Comment;
   postId: string;
-  onUpdate: () => void;
+  refetch: () => void;
 }
 
 export default function CommentItem({
   comment,
   postId,
-  onUpdate,
+  refetch,
 }: CommentItemProps) {
   const { user, isAuthenticated } = useAuthStore();
   const [showReplyForm, setShowReplyForm] = useState(false);
@@ -42,7 +42,7 @@ export default function CommentItem({
   const { deleteComment, isDeleting, updateComment, isUpdating } =
     useCommentMutations({
       postId,
-      onSuccess: onUpdate,
+      onSuccess: refetch,
     });
 
   const handleDelete = () => {
@@ -92,9 +92,9 @@ export default function CommentItem({
                   postId={postId}
                   parentPath={comment.path}
                   siblingCount={comment.children?.length || 0}
-                  onSuccess={() => {
+                  refetch={() => {
                     setShowReplyForm(false);
-                    onUpdate();
+                    refetch();
                   }}
                   onCancel={() => setShowReplyForm(false)}
                 />
@@ -107,7 +107,7 @@ export default function CommentItem({
       <CommentReplies
         children={comment.children || []}
         postId={postId}
-        onUpdate={onUpdate}
+        refetch={refetch}
         CommentItemComponent={CommentItem}
       />
     </>
