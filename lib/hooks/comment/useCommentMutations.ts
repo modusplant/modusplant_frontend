@@ -16,6 +16,11 @@ interface CreateCommentParams {
   content: string;
 }
 
+interface UpdateCommentParams {
+  path: string;
+  content: string;
+}
+
 interface DeleteCommentParams {
   commentPath: string;
 }
@@ -24,6 +29,10 @@ interface UseCommentMutationsReturn {
   // 생성
   createComment: (params: CreateCommentParams) => Promise<void>;
   isCreating: boolean;
+
+  // 수정
+  updateComment: (params: UpdateCommentParams) => Promise<void>;
+  isUpdating: boolean;
 
   // 삭제
   deleteComment: (params: DeleteCommentParams) => Promise<void>;
@@ -80,6 +89,35 @@ export function useCommentMutations({
     },
   });
 
+  // 댓글 수정 mutation
+  const updateMutation = useMutation({
+    mutationFn: async ({ path, content }: UpdateCommentParams) => {
+      if (!isAuthenticated) {
+        showModal({
+          description: '로그인이 필요합니다.',
+          type: 'snackbar',
+        });
+        return;
+      }
+
+      if (content.trim().length === 0) {
+        throw new Error('댓글 내용을 입력해주세요.');
+      }
+
+      await commentApi.updateComment({ content, path, postId });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
+      onSuccess?.();
+    },
+    onError: (error: Error) => {
+      showModal({
+        type: 'snackbar',
+        description: error.message,
+      });
+    },
+  });
+
   // 댓글 삭제 mutation
   const deleteMutation = useMutation({
     mutationFn: async ({ commentPath }: DeleteCommentParams) => {
@@ -108,5 +146,7 @@ export function useCommentMutations({
     isCreating: createMutation.isPending,
     deleteComment: deleteMutation.mutateAsync,
     isDeleting: deleteMutation.isPending,
+    updateComment: updateMutation.mutateAsync,
+    isUpdating: updateMutation.isPending,
   };
 }

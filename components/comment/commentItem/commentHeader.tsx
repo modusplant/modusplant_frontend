@@ -10,6 +10,7 @@ interface CommentHeaderProps {
   profileImagePath?: string;
   isMyComment: boolean;
   onDelete: () => void;
+  onUpdate: () => void;
   isDeleting: boolean;
 }
 
@@ -18,6 +19,7 @@ export default function CommentHeader({
   profileImagePath,
   isMyComment,
   onDelete,
+  onUpdate,
   isDeleting,
 }: CommentHeaderProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -46,6 +48,11 @@ export default function CommentHeader({
               label: '삭제',
               onClick: onDelete,
               disabled: isDeleting,
+            },
+            {
+              label: '수정',
+              onClick: onUpdate,
+              disabled: false,
             },
           ]}
           position="right"
