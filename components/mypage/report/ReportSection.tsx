@@ -1,9 +1,19 @@
 'use client';
 
 import { Input } from '@/components/_common/input';
+import { Button } from '@/components/_common/button';
 import MypageBox from '../common/MypageBox';
+import { Upload } from 'lucide-react';
 
 const ReportSection = () => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      console.log('선택된 파일:', file.name);
+      // TODO: 사진 업로드 및 미리보기 로직 추가
+    }
+  };
+
   return (
     <MypageBox className="px-10 py-12">
       <div className="flex w-full flex-col gap-6">
@@ -24,16 +34,40 @@ const ReportSection = () => {
             maxLength={60}
             showCount
             placeholder="건의사항이나 버그에 대해 간단한 제목을 입력해주세요."
-            className="text-neutral-40 text-regular14"
+            className="placeholder:text-neutral-70 text-neutral-40 text-regular14"
           />
         </div>
 
         <div className="flex flex-col gap-2">
-          <p className="text-medium14 text-neutral-20">내용</p>
+          <p className="text-medium14 placeholder:text-neutral-20 text-neutral-40">
+            내용
+          </p>
           <textarea
-            className="border-surface-stroke-2 text-neutral-40 text-regular14 placeholder:text-neutral-70 placeholder:text-regular14 focus:border-primary-50 h-[120px] w-full resize-none rounded-[10px] border bg-transparent p-4 transition-colors outline-none"
+            className="border-surface-stroke-2 text-neutral-40 text-regular14 placeholder:text-neutral-70 placeholder:text-regular14 focus:border-primary-50 h-[180px] w-full resize-none rounded-[10px] border bg-transparent p-4 transition-colors outline-none"
             placeholder="자세한 내용을 입력해주세요. 버그 제보의 경우 발생 상황과 재현 방법을 구체적으로 설명해주시면 더욱 도움이 됩니다."
           />
+        </div>
+
+        <div className="flex w-full items-center justify-between">
+          <div>
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              id="image-upload"
+              onChange={handleFileChange}
+            />
+            <label
+              htmlFor="image-upload"
+              className="border-primary-40 text-primary-50 hover:bg-primary-10 inline-flex cursor-pointer items-center justify-center gap-[6px] rounded-full border px-[18px] py-3 transition-colors"
+            >
+              <Upload size={14} />
+              <span className="text-medium14">사진 첨부</span>
+            </label>
+          </div>
+          <Button variant="point" className="cursor-pointer px-[18px] py-3">
+            <span className="text-medium14">제출하기</span>
+          </Button>
         </div>
       </div>
     </MypageBox>
