@@ -110,7 +110,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             onChange={handleChange}
             {...props}
           />
-          <span className="text-regular14 absolute right-4 tracking-[-0.04em] text-neutral-50">
+          <span className="text-regular14 text-neutral-70 absolute right-4 tracking-[-0.04em]">
             {charCount}
             {maxLength ? `/${maxLength}` : ''}
           </span>
