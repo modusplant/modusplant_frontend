@@ -12,10 +12,11 @@ interface LoginFormActionsProps {
  * 로그인폼 - 액션 영역
  * - 로그인 버튼
  * - 하단 네비게이션 링크 (비밀번호 재설정, 회원가입)
+ * - 소셜 로그인
  */
 export default function LoginFormActions({ isLoading }: LoginFormActionsProps) {
   return (
-    <div className="space-y-8">
+    <div>
       {/* 로그인 버튼 */}
       <Button
         type="submit"
@@ -40,7 +41,7 @@ export default function LoginFormActions({ isLoading }: LoginFormActionsProps) {
 
       {/* 하단 링크 */}
       <div
-        className="text-neutral-60 flex items-center justify-center gap-2 text-sm"
+        className="text-neutral-60 mt-8 flex items-center justify-center gap-2 text-sm"
         style={{ fontFamily: 'Pretendard' }}
       >
         <Link
@@ -56,6 +57,32 @@ export default function LoginFormActions({ isLoading }: LoginFormActionsProps) {
         >
           회원가입
         </Link>
+      </div>
+
+      {/* 소셜 로그인 */}
+      <div className="mt-10 mb-3 flex items-center justify-center gap-4">
+        {[
+          {
+            id: 'google',
+            label: '구글 로그인',
+            icon: '/icon/google-enabled.svg',
+          },
+          {
+            id: 'kakao',
+            label: '카카오 로그인',
+            icon: '/icon/kakao-enabled.svg',
+          },
+        ].map(({ id, label, icon }) => (
+          <button
+            key={id}
+            type="button"
+            onClick={() => console.log(`${id} 로그인`)}
+            aria-label={label}
+            className="transition-opacity hover:opacity-80"
+          >
+            <Image src={icon} alt={label} width={45} height={45} />
+          </button>
+        ))}
       </div>
     </div>
   );

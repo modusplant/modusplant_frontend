@@ -35,6 +35,20 @@ export const commentApi = {
   },
 
   /**
+   * 댓글 수정
+   * @param payload 댓글 수정 페이로드
+   * @returns 성공 응답
+   */
+  async updateComment(
+    payload: CommentCreatePayload
+  ): Promise<ApiResponse<void>> {
+    return clientApiInstance.put<void>(
+      COMMENT_ENDPOINTS.UPDATE_COMMENTS(),
+      payload
+    );
+  },
+
+  /**
    * 댓글 삭제
    * @param postUlid 게시글 ULID
    * @param path 댓글 경로 (예: "0", "0.1", "0.1.2")
