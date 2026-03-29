@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   /* Primary Colors (Green) */
@@ -16,6 +16,7 @@
   --neutral-5: #111111;
   --neutral-10: #212121;
   --neutral-20: #313131;
+  --neutral-30: #414141;
   --neutral-40: #515151;
   --neutral-50: #777777;
   --neutral-60: #919191;
@@ -52,8 +53,10 @@
 
   /* Neutral Colors */
   --color-neutral-0: var(--neutral-0);
+  --color-neutral-5: var(--neutral-5);
   --color-neutral-10: var(--neutral-10);
   --color-neutral-20: var(--neutral-20);
+  --color-neutral-30: var(--neutral-30);
   --color-neutral-40: var(--neutral-40);
   --color-neutral-50: var(--neutral-50);
   --color-neutral-60: var(--neutral-60);
@@ -75,6 +78,28 @@
   /* Font Families */
   --font-emphasis: var(--font-nanum-myeongjo);
   --font-body: var(--font-pretendard);
+
+  /* Custom Text Styles */
+  /* bold-20/title */
+  --text-bold-20: 20px;
+  --text-bold-20--line-height: 1.5;
+  --text-bold-20--letter-spacing: -0.01em;
+  --text-bold-20--font-weight: 700;
+  --text-bold-20--font-family: var(--font-body);
+
+  /* medium14 */
+  --text-medium14: 14px;
+  --text-medium14--line-height: 1.2;
+  --text-medium14--letter-spacing: -0.01em;
+  --text-medium14--font-weight: 500;
+  --text-medium14--font-family: var(--font-body);
+
+  /* regular14 */
+  --text-regular14: 14px;
+  --text-regular14--line-height: 1.2;
+  --text-regular14--letter-spacing: -0.01em;
+  --text-regular14--font-weight: 400;
+  --text-regular14--font-family: var(--font-body);
 }
 
 body {
@@ -82,7 +107,7 @@ body {
     var(--font-body),
     -apple-system,
     BlinkMacSystemFont,
-    "Segoe UI",
+    'Segoe UI',
     sans-serif;
   color: var(--neutral-0);
   background-color: var(--neutral-100);
