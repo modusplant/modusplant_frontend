@@ -1,0 +1,70 @@
+name: Preview URL Created & Expired Notification
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+
+jobs:
+  notify-preview-created:
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      # Vercel preview 배포가 완료될 때까지 대기
+      - name: Wait for Vercel Preview
+        uses: patrickedqvist/wait-for-vercel-preview@v1.3.1
+        id: vercel_preview
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          max_timeout: 180 # 최대 3분 대기
+          check_interval: 5 # 5초마다 배포 상태 확인
+
+      # Bypass secret 붙인 URL을 Slack으로 전송
+      - name: Send Preview URL to Slack
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "🚀 *Preview 배포 완료*",
+              "attachments": [
+                {
+                  "color": "#36a64f",
+                  "fields": [
+                    {
+                      "title": "PR",
+                      "value": "<${{ github.event.pull_request.html_url }}|#${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}>",
+                      "short": false
+                    },
+                    {
+                      "title": "작성자",
+                      "value": "${{ github.event.pull_request.user.login }}",
+                      "short": true
+                    },
+                    {
+                      "title": "브랜치",
+                      "value": "${{ github.head_ref }}",
+                      "short": true
+                    },
+                    {
+                      "title": "Preview URL",
+                      "value": "${{ steps.vercel_preview.outputs.url }}?x-vercel-protection-bypass=${{ secrets.VERCEL_BYPASS_SECRET }}",
+                      "short": false
+                    }
+                  ]
+                }
+              ]
+            }
+  notify-preview-expired:
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify preview expired
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "🔒 PR #${{ github.event.pull_request.number }} *${{ github.event.pull_request.title }}* 가 ${{ github.event.pull_request.merged && '머지' || '닫힘' }}되었습니다. Preview 링크가 만료됩니다."
+            }
