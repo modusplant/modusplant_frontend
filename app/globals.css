@@ -80,26 +80,30 @@
   --font-body: var(--font-pretendard);
 
   /* Custom Text Styles */
-  /* bold-20/title */
-  --text-bold-20: 20px;
-  --text-bold-20--line-height: 1.5;
-  --text-bold-20--letter-spacing: -0.01em;
-  --text-bold-20--font-weight: 700;
-  --text-bold-20--font-family: var(--font-body);
+}
 
-  /* medium14 */
-  --text-medium14: 14px;
-  --text-medium14--line-height: 1.2;
-  --text-medium14--letter-spacing: -0.01em;
-  --text-medium14--font-weight: 500;
-  --text-medium14--font-family: var(--font-body);
+@utility typo-regular14 {
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  font-weight: 400;
+  font-family: var(--font-body);
+}
 
-  /* regular14 */
-  --text-regular14: 14px;
-  --text-regular14--line-height: 1.2;
-  --text-regular14--letter-spacing: -0.01em;
-  --text-regular14--font-weight: 400;
-  --text-regular14--font-family: var(--font-body);
+@utility typo-medium {
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  font-weight: 500; /* Medium 굵기 */
+  font-family: var(--font-body);
+}
+
+@utility typo-bold20 {
+  font-size: 20px;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  font-weight: 700; /* Bold 굵기 */
+  font-family: var(--font-body);
 }
 
 body {
