@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useEffect } from 'react';
+import React, { forwardRef, useState } from 'react';
 import { cn } from '@/lib/utils/tailwindHelper';
 import { Eye, EyeOff } from 'lucide-react';
 
@@ -31,14 +31,16 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           : 0
     );
 
-    useEffect(() => {
-      if (props.value !== undefined && props.value !== null) {
-        setCharCount(String(props.value).length);
-      }
-    }, [props.value]);
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setCharCount(e.target.value.length);
+      let value = e.target.value;
+
+      if (maxLength && value.length > maxLength) {
+        value = value.slice(0, maxLength);
+        e.target.value = value;
+      }
+      setCharCount(value.length);
+
+      // 상위 컴포넌트나 react-hook-form에서 전달한 onChange가 동작하도록 유지
       if (props.onChange) {
         props.onChange(e);
       }
