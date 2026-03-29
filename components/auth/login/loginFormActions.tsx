@@ -14,6 +14,20 @@ interface LoginFormActionsProps {
  * - 하단 네비게이션 링크 (비밀번호 재설정, 회원가입)
  * - 소셜 로그인
  */
+
+const SOCIAL_PLATFORMS = [
+  {
+    id: 'google',
+    label: '구글 로그인',
+    icon: '/icon/google-enabled.svg',
+  },
+  {
+    id: 'kakao',
+    label: '카카오 로그인',
+    icon: '/icon/kakao-enabled.svg',
+  },
+];
+
 export default function LoginFormActions({ isLoading }: LoginFormActionsProps) {
   return (
     <div>
@@ -61,18 +75,7 @@ export default function LoginFormActions({ isLoading }: LoginFormActionsProps) {
 
       {/* 소셜 로그인 */}
       <div className="mt-10 mb-3 flex items-center justify-center gap-4">
-        {[
-          {
-            id: 'google',
-            label: '구글 로그인',
-            icon: '/icon/google-enabled.svg',
-          },
-          {
-            id: 'kakao',
-            label: '카카오 로그인',
-            icon: '/icon/kakao-enabled.svg',
-          },
-        ].map(({ id, label, icon }) => (
+        {SOCIAL_PLATFORMS.map(({ id, label, icon }) => (
           <button
             key={id}
             type="button"
