@@ -16,6 +16,7 @@ import ImageUploadField from '@/components/community/write/ImageUploadField';
 import PostWriteHeader from '@/components/community/write/PostWriteHeader';
 import CategorySelector from '@/components/community/write/CategorySelector';
 import { type WriteFormData, WriteFormSchema } from '@/lib/schemas/writeForm';
+import { ContentPart } from '@/lib/types/post';
 
 const PostWritePage = () => {
   const { mode } = useParams<{ mode: string[] | undefined }>();
@@ -47,12 +48,20 @@ const PostWritePage = () => {
       images: [],
     },
   });
+
   const { handleSubmit, reset } = form;
 
   // 기존 게시글 데이터 가공
   useEffect(() => {
     if (!post) return undefined;
-    const { content, primaryCategoryId, secondaryCategoryId, title } = post;
+
+    const {
+      content,
+      primaryCategoryId,
+      secondaryCategoryId,
+      title,
+      thumbnailFilename,
+    } = post;
 
     reset({
       primaryCategoryId,
@@ -60,8 +69,12 @@ const PostWritePage = () => {
       title,
       textContent: getTextContent(content),
       images: getImageContent(content)
-        .map(({ src }) => src)
-        .filter((src): src is string => !!src), // 문자열인 src만 필터링
+        .filter((item): item is ContentPart & { src: string } => !!item.src)
+        .map(({ src, filename }) => ({
+          id: crypto.randomUUID(),
+          content: src,
+          isThumbnail: filename == thumbnailFilename,
+        })),
     });
   }, [post, reset]);
 
@@ -73,7 +86,7 @@ const PostWritePage = () => {
       secondaryCategoryId: data.secondaryCategoryId,
       title: data.title,
       textContent: data.textContent,
-      images: data.images,
+      images: data.images.map(({ content }) => content),
     };
 
     // 수정 모드 여부에 따라 적절한 Mutation 호출

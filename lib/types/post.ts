@@ -67,7 +67,8 @@ export interface PostEditData extends Omit<
 > {
   primaryCategoryId: string;
   secondaryCategoryId: string;
-  authorUuid: string;
+  authorId: string;
+  thumbnailFilename: string;
   isPublished: boolean;
   updatedAt: string;
 }
