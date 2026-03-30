@@ -1,12 +1,11 @@
-name: Preview URL Created & Expired Notification
+name: Preview URL Created Notification
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, closed]
+    types: [opened, synchronize, reopened]
 
 jobs:
   notify-preview-created:
-    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     steps:
       # Vercel preview 배포가 완료될 때까지 대기
@@ -54,17 +53,4 @@ jobs:
                   ]
                 }
               ]
-            }
-  notify-preview-expired:
-    if: github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Notify preview expired
-        uses: slackapi/slack-github-action@v2.0.0
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            {
-              "text": "🔒 PR #${{ github.event.pull_request.number }} *${{ github.event.pull_request.title }}* 가 ${{ github.event.pull_request.merged && '머지' || '닫힘' }}되었습니다. Preview 링크가 만료됩니다."
             }
