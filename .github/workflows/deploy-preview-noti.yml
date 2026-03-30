@@ -17,7 +17,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           max_timeout: 180 # 최대 3분 대기
           check_interval: 5 # 5초마다 배포 상태 확인
-          vercel_protection_bypass_header: ${{secrets.VERCEL_BYPASS_SECRET }}
 
       # Bypass secret 붙인 URL을 Slack으로 전송
       - name: Send Preview URL to Slack
@@ -49,7 +48,7 @@ jobs:
                     },
                     {
                       "title": "Preview URL",
-                      "value": "${{ steps.vercel_preview.outputs.url }}?x-vercel-protection-bypass=${{ secrets.VERCEL_BYPASS_SECRET }}?x-vercel-set-bypass-cookie=true",
+                      "value": "${{ steps.vercel_preview.outputs.url }}",
                       "short": false
                     }
                   ]
