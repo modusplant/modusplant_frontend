@@ -1,21 +1,26 @@
 'use client';
 
 import { Image as ImageIcon } from 'lucide-react';
-import { RefObject } from 'react';
+import { useRef } from 'react';
 
 interface ImageUploadButtonProps {
-  ref: RefObject<HTMLInputElement | null>;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChange: (e: FileList) => void;
 }
 
-const ImageUploadButton = ({ ref, handleChange }: ImageUploadButtonProps) => {
+const ImageUploadButton = ({ handleChange }: ImageUploadButtonProps) => {
+  const ref = useRef<HTMLInputElement | null>(null);
+
   return (
     <>
       <input
         ref={ref}
         type="file"
         accept="image/jpeg,image/png,image/jpg"
-        onChange={handleChange}
+        onChange={(e) => {
+          const files = e.target.files;
+          if (files) handleChange(files);
+          if (ref.current) ref.current.value = '';
+        }}
         className="hidden"
         multiple
       />
