@@ -49,7 +49,7 @@ jobs:
                     },
                     {
                       "title": "Preview URL",
-                      "value": "${{ steps.vercel_preview.outputs.url }}?x-vercel-protection-bypass=${{ secrets.VERCEL_BYPASS_SECRET }}",
+                      "value": "${{ steps.vercel_preview.outputs.url }}?x-vercel-protection-bypass=${{ secrets.VERCEL_BYPASS_SECRET }}?x-vercel-set-bypass-cookie=true",
                       "short": false
                     }
                   ]
