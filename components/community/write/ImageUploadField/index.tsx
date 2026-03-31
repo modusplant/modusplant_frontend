@@ -16,7 +16,7 @@ import { useDnD } from '@/lib/hooks/community/useDnD';
 import ImageItem from './ImageItem';
 import { useEffect, useState } from 'react';
 import ImagePopup from './ImagePopup';
-import { createUuid } from '@/lib/utils/image';
+import { createUuid } from '@/lib/utils/uuid';
 
 const ImageUploadField = () => {
   const { control, setValue } = useFormContext<WriteFormData>();
