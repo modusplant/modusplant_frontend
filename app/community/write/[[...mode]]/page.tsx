@@ -82,12 +82,26 @@ const PostWritePage = () => {
   const { createMutation, updateMutation } = usePostWrite(postId);
 
   const onValid = (data: WriteFormData) => {
+    const images = data.images.map(({ content, isThumbnail }) => {
+      return { content, isThumbnail };
+    });
+
+    const _getThumbnailFilename = () => {
+      const thumbnail = images.find(({ isThumbnail }) => isThumbnail)?.content;
+      if (!thumbnail) return;
+
+      if (thumbnail instanceof File) return thumbnail.name;
+      if (typeof thumbnail === 'string')
+        return thumbnail.split('/').pop()?.split('?')[0] || 'image';
+    };
+
     const payload = {
       primaryCategoryId: data.primaryCategoryId,
       secondaryCategoryId: data.secondaryCategoryId,
       title: data.title,
       textContent: data.textContent,
-      images: data.images.map(({ content }) => content),
+      images: images.map(({ content }) => content),
+      thumbnailFilename: _getThumbnailFilename(),
     };
 
     // 수정 모드 여부에 따라 적절한 Mutation 호출

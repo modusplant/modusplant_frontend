@@ -135,7 +135,7 @@ export const postApi = {
    * 게시글 작성
    * @param payload 게시글 작성 데이터
    */
-  async createPost(payload: PostWritePayload): Promise<ApiResponse<void>> {
+  async createPost(payload: PostWritePayload) {
     const formData = await buildPostFormData(payload);
     const queryParams = buildPostQueryParams(payload);
 
@@ -150,12 +150,10 @@ export const postApi = {
    * @param postId 게시글 ID (ULID)
    * @param payload 게시글 수정 데이터
    */
-  async updatePost(
-    postId: string,
-    payload: PostWritePayload
-  ): Promise<ApiResponse<void>> {
+  async updatePost(postId: string, payload: PostWritePayload) {
     const formData = await buildPostFormData(payload);
     const queryParams = buildPostQueryParams(payload);
+
     return clientApiInstance.put<void>(
       `${POST_ENDPOINTS.POST_DETAIL(postId)}?${queryParams}`,
       formData
