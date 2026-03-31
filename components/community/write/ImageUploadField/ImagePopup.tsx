@@ -10,6 +10,7 @@ interface ImagePopupProps {
   handleThumbnailImage: (id: string) => void;
 }
 
+// TODO: Improve reusability by creating a generic Popup component
 const ImagePopup = ({
   image,
   handleClose,
