@@ -17,6 +17,7 @@ import PostWriteHeader from '@/components/community/write/PostWriteHeader';
 import CategorySelector from '@/components/community/write/CategorySelector';
 import { type WriteFormData, WriteFormSchema } from '@/lib/schemas/writeForm';
 import { ContentPart } from '@/lib/types/post';
+import { createUuid } from '@/lib/utils/image';
 
 const PostWritePage = () => {
   const { mode } = useParams<{ mode: string[] | undefined }>();
@@ -71,7 +72,7 @@ const PostWritePage = () => {
       images: getImageContent(content)
         .filter((item): item is ContentPart & { src: string } => !!item.src)
         .map(({ src, filename }) => ({
-          id: crypto.randomUUID(),
+          id: createUuid(),
           content: src,
           isThumbnail: filename == thumbnailFilename,
         })),

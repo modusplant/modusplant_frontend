@@ -14,20 +14,15 @@ import {
 } from '@/lib/constants/write';
 import { useDnD } from '@/lib/hooks/community/useDnD';
 import ImageItem from './ImageItem';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ImagePopup from './ImagePopup';
-
-const createId = () =>
-  typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
-    ? crypto.randomUUID()
-    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+import { createUuid } from '@/lib/utils/image';
 
 const ImageUploadField = () => {
   const { control, setValue } = useFormContext<WriteFormData>();
   const images = useWatch({ control, name: 'images' });
 
   const [popupImageId, setPopupImageId] = useState<string | null>(null);
-
   const handleImages = (values: WriteImageData[]) =>
     setValue('images', values, { shouldDirty: true, shouldValidate: true });
 
@@ -51,7 +46,7 @@ const ImageUploadField = () => {
     });
 
     const newImages = validatedFiles.map((content) => {
-      const id = createId();
+      const id = createUuid();
       return { id, content, isThumbnail: false };
     });
 
@@ -73,6 +68,32 @@ const ImageUploadField = () => {
     showModal({ type: 'snackbar', description: msg });
     return false;
   };
+
+  // keyboard event handlers for image popup
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!popupImageId) return;
+
+      // close popup on Escape key
+      if (e.key === 'Escape') setPopupImageId(null);
+
+      // navigate images with Arrow keys
+      const currentIndex = images.findIndex(({ id }) => id === popupImageId);
+      if (e.key === 'ArrowRight') {
+        const nextIndex = (currentIndex + 1) % images.length;
+        setPopupImageId(images[nextIndex].id);
+      }
+      if (e.key === 'ArrowLeft') {
+        const prevIndex = (currentIndex - 1 + images.length) % images.length;
+        setPopupImageId(images[prevIndex].id);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [popupImageId, images]);
 
   const popupImage = images.find((image) => image.id === popupImageId);
   return (
