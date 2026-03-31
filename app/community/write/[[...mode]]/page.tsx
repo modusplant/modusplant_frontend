@@ -64,9 +64,11 @@ const PostWritePage = () => {
       thumbnailFilename,
     } = post;
 
+    // TODO: primary, secondCategoryId가 UUID로 구현되어있었으나
+    // API 명세에 따르면 number로 내려옴
     reset({
-      primaryCategoryId,
-      secondaryCategoryId,
+      primaryCategoryId: primaryCategoryId.toString(),
+      secondaryCategoryId: secondaryCategoryId.toString(),
       title,
       textContent: getTextContent(content),
       images: getImageContent(content)
