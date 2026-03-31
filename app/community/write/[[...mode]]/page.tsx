@@ -17,7 +17,7 @@ import PostWriteHeader from '@/components/community/write/PostWriteHeader';
 import CategorySelector from '@/components/community/write/CategorySelector';
 import { type WriteFormData, WriteFormSchema } from '@/lib/schemas/writeForm';
 import { ContentPart } from '@/lib/types/post';
-import { createUuid } from '@/lib/utils/image';
+import { createUuid } from '@/lib/utils/uuid';
 
 const PostWritePage = () => {
   const { mode } = useParams<{ mode: string[] | undefined }>();
@@ -71,11 +71,11 @@ const PostWritePage = () => {
       textContent: getTextContent(content),
       images: getImageContent(content)
         .filter((item): item is ContentPart & { src: string } => !!item.src)
-        .map(({ src, filename }) => ({
-          id: createUuid(),
-          content: src,
-          isThumbnail: filename == thumbnailFilename,
-        })),
+        .map(({ src: content, filename }) => {
+          const id = createUuid();
+          const isThumbnail = filename === thumbnailFilename;
+          return { id, content, isThumbnail };
+        }),
     });
   }, [post, reset]);
 
