@@ -6,7 +6,8 @@ import Button from '@/components/_common/button';
 
 interface CommentActionsProps {
   createdAt: string;
-  updatedAt?: string;
+  updatedAt: string;
+  isUpdated: boolean;
   likeCount: number;
   isLiked: boolean;
   isLiking: boolean;
@@ -20,6 +21,7 @@ interface CommentActionsProps {
 export default function CommentActions({
   createdAt,
   updatedAt,
+  isUpdated,
   likeCount,
   isLiked,
   isLiking,
@@ -33,8 +35,8 @@ export default function CommentActions({
     <div className="flex w-full items-center justify-between">
       <div className="text-neutral-60 flex items-center gap-4 text-sm">
         <div className="flex items-center gap-1.5">
-          <span>{formatRelativeTime(updatedAt || createdAt)}</span>
-          {updatedAt && (
+          <span>{formatRelativeTime(isUpdated ? updatedAt : createdAt)}</span>
+          {isUpdated && (
             <>
               <span>&middot;</span>
               <span>수정됨</span>

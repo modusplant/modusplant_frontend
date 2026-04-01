@@ -25,6 +25,18 @@ export default function CommentItem({
   postId,
   refetch,
 }: CommentItemProps) {
+  const {
+    content: initialContent,
+    createdAt,
+    isDeleted,
+    isLiked: initialIsLiked,
+    likeCount: initialLikeCount,
+    nickname,
+    path,
+    profileImagePath,
+    updatedAt,
+    children,
+  } = comment;
   const { user, isAuthenticated } = useAuthStore();
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [isUpdateMode, setIsUpdateMode] = useState(false);
@@ -34,9 +46,9 @@ export default function CommentItem({
   // 좋아요 훅
   const { likeCount, isLiked, isLiking, handleLike } = useCommentLike({
     postId,
-    commentPath: comment.path,
-    initialLikeCount: comment.likeCount,
-    initialIsLiked: comment.isLiked,
+    commentPath: path,
+    initialLikeCount,
+    initialIsLiked,
   });
 
   // 삭제 훅
@@ -47,7 +59,7 @@ export default function CommentItem({
     });
 
   const handleDelete = () => {
-    deleteComment({ commentPath: comment.path });
+    deleteComment({ commentPath: path });
   };
 
   const handleUpdateModeActive = () => {
@@ -55,7 +67,7 @@ export default function CommentItem({
   };
 
   const handleUpdateModeInActive = () => {
-    setUpdatingComment(comment.content);
+    setUpdatingComment(initialContent);
     setIsUpdateMode(false);
   };
 
@@ -64,11 +76,11 @@ export default function CommentItem({
       return;
     }
 
-    if (updatingComment === comment.content) {
+    if (updatingComment === initialContent) {
       handleUpdateModeInActive();
       return;
     }
-    updateComment({ content: updatingComment, path: comment.path });
+    updateComment({ content: updatingComment, path });
     handleUpdateModeInActive();
   };
 
@@ -78,20 +90,23 @@ export default function CommentItem({
     setUpdatingComment(event.target.value);
   };
 
+  const isUpdated =
+    new Date(updatedAt).getTime() > new Date(createdAt).getTime();
+
   return (
     <>
-      {comment.isDeleted ? (
+      {isDeleted ? (
         <DeletedComment />
       ) : (
         <div className="mt-6 flex gap-4">
           <div className="relative h-7.5 w-7.5">
-            <ProfileImage imageSrc={comment.profileImagePath} />
+            <ProfileImage imageSrc={profileImagePath} />
           </div>
 
           <div className="w-full">
             <CommentHeader
-              nickname={comment.nickname}
-              profileImagePath={comment.profileImagePath}
+              nickname={nickname}
+              profileImagePath={profileImagePath}
               isMyComment={isMyComment}
               onDelete={handleDelete}
               onUpdate={handleUpdateModeActive}
@@ -108,12 +123,14 @@ export default function CommentItem({
                   />
                 </div>
               ) : (
-                <CommentContent content={comment.content} />
+                <CommentContent content={initialContent} />
               )}
             </div>
 
             <CommentActions
-              createdAt={comment.createdAt}
+              createdAt={createdAt}
+              updatedAt={updatedAt}
+              isUpdated={isUpdated}
               likeCount={likeCount}
               isLiked={isLiked}
               isLiking={isLiking}
@@ -129,8 +146,8 @@ export default function CommentItem({
               <div className="mt-4">
                 <CommentInput
                   postId={postId}
-                  parentPath={comment.path}
-                  siblingCount={comment.children?.length || 0}
+                  parentPath={path}
+                  siblingCount={children?.length || 0}
                   refetch={() => {
                     setShowReplyForm(false);
                     refetch();
@@ -144,7 +161,7 @@ export default function CommentItem({
       )}
 
       <CommentReplies
-        children={comment.children || []}
+        children={children || []}
         postId={postId}
         refetch={refetch}
         CommentItemComponent={CommentItem}
