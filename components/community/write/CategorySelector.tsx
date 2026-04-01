@@ -2,9 +2,9 @@
 
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { WriteFormData } from '@/app/community/write/[[...mode]]/page';
 import PrimaryCategoryFilter from '@/components/_common/primaryCategoryFilter';
 import SecondaryCategoryFilter from '@/components/_common/secondaryCategoryFilter';
+import { WriteFormData } from '@/lib/schemas/writeForm';
 
 interface CategorySelectorProps {
   isEditMode: boolean;
