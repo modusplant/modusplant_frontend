@@ -23,18 +23,25 @@ export interface PostCardProps {
  */
 export default function PostCard({ post, className }: PostCardProps) {
   const {
-    isBookmarked,
-    isBookmarking,
-    handleBookmark,
+    postId,
+    isLiked: initialIsLiked,
+    isBookmarked: initialIsBookmarked,
+    likeCount: initialLikeCount,
+  } = post;
+
+  const {
+    likeCount,
     isLiked,
     isLiking,
     handleLike,
-    likeCount,
+    isBookmarked,
+    isBookmarking,
+    handleBookmark,
   } = usePostInteraction({
-    postId: post.postId,
-    initialIsBookmarked: post.isBookmarked,
-    initialIsLiked: post.isLiked,
-    initialLikeCount: post.likeCount,
+    postId,
+    initialLikeCount,
+    initialIsLiked,
+    initialIsBookmarked,
   });
 
   // 썸네일 이미지 (content에서 추출)
@@ -110,7 +117,7 @@ export default function PostCard({ post, className }: PostCardProps) {
                 color={isLiked ? 'red' : 'currentColor'}
                 fill={isLiked ? 'red' : 'none'}
               />
-              <span>{likeCount || post.likeCount}</span>
+              <span>{likeCount}</span>
             </button>
 
             <span className="flex items-center gap-1">
@@ -125,14 +132,10 @@ export default function PostCard({ post, className }: PostCardProps) {
               disabled={isBookmarking}
             >
               <Bookmark
-                fill={
-                  isBookmarked || post.isBookmarked ? 'currentColor' : 'none'
-                }
+                fill={isBookmarked ? 'currentColor' : 'none'}
                 className={cn(
                   'md:h-4 md:w-4',
-                  isBookmarked || post.isBookmarked
-                    ? 'text-primary-50'
-                    : 'text-neutral-60'
+                  isBookmarked ? 'text-primary-50' : 'text-neutral-60'
                 )}
               />
             </button>
