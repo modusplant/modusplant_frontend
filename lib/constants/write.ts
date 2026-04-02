@@ -13,3 +13,7 @@ export type ErrorType = keyof typeof ERROR_MSGS;
 export const MAXIMUM_FILE_SIZE = 10 * 1024 * 1024;
 
 export const MAXIMUM_FILE_COUNT = 10;
+
+export const DRAFT_INVALID_MESSAGE = '임시저장 입력값이 올바르지 않습니다.';
+export const DRAFT_CATEGORY_WARNING_MESSAGE =
+  '카테고리 정보를 일부 불러오지 못했습니다.';

@@ -45,6 +45,7 @@ export const MEMBER_ENDPOINTS = {
 export const POST_ENDPOINTS = {
   // 기본 CRUD
   POSTS: `${API_V1}/communication/posts`,
+  MY_DRAFTS: `${API_V1}/communication/posts/me/drafts`,
   POST_DETAIL: (postId: string) => `${API_V1}/communication/posts/${postId}`,
   POST_DETAIL_EDIT: (postId: string) =>
     `${API_V1}/communication/posts/${postId}/data`,

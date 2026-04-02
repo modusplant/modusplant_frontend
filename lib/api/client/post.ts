@@ -1,21 +1,15 @@
 import { clientApiInstance } from '../instances/clientInstance';
 import { ApiResponse } from '@/lib/types/common';
 import {
-  GetMyPostsRequest,
-  GetMyPostsResponseData,
+  GetMyDraftsRequest,
+  GetMyDraftsResponseData,
   GetPostsRequest,
   GetPostsResponseData,
-  GetRecentPostsRequest,
-  GetRecentPostsResponseData,
   PostDetail,
   PostEditData,
   PostWritePayload,
 } from '@/lib/types/post';
-import {
-  POST_ENDPOINTS,
-  MEMBER_ENDPOINTS,
-  buildQueryString,
-} from '@/lib/constants/endpoints';
+import { POST_ENDPOINTS, buildQueryString } from '@/lib/constants/endpoints';
 import {
   buildPostFormData,
   buildPostQueryParams,
@@ -143,6 +137,21 @@ export const postApi = {
       `${POST_ENDPOINTS.POSTS}?${queryParams}`,
       formData
     );
+  },
+
+  /**
+   * 내 임시저장 목록 조회 (페이지네이션)
+   * @param params 조회 파라미터
+   * @returns 내 임시저장 목록 응답
+   */
+  async getDraftList(params: GetMyDraftsRequest) {
+    const queryString = buildQueryString({
+      page: params.page ?? 1,
+      size: params.size,
+    });
+    const endpoint = `${POST_ENDPOINTS.MY_DRAFTS}${queryString}`;
+
+    return clientApiInstance.get<GetMyDraftsResponseData>(endpoint);
   },
 
   /**

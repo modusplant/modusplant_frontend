@@ -1,13 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import usePostWrite from '@/lib/hooks/community/usePostWrite';
-import { postApi } from '@/lib/api/client/post';
 import { getTextContent, getImageContent } from '@/lib/utils/post';
 import TitleField from '@/components/community/write/TitleField';
 import ContentField from '@/components/community/write/ContentField';
@@ -15,28 +13,34 @@ import ActionButtonField from '@/components/community/write/ActionButtonField';
 import ImageUploadField from '@/components/community/write/ImageUploadField';
 import PostWriteHeader from '@/components/community/write/PostWriteHeader';
 import CategorySelector from '@/components/community/write/CategorySelector';
-import { type WriteFormData, WriteFormSchema } from '@/lib/schemas/writeForm';
-import { ContentPart } from '@/lib/types/post';
+import {
+  DraftWriteFormSchema,
+  type WriteFormData,
+  WriteFormSchema,
+} from '@/lib/schemas/writeForm';
+import { ContentPart, PostEditData } from '@/lib/types/post';
 import { createUuid } from '@/lib/utils/uuid';
+import { showModal } from '@/lib/store/modalStore';
+import { useDraftListQuery } from '@/lib/hooks/community/useDraftListQuery';
+import { DRAFT_INVALID_MESSAGE } from '@/lib/constants/write';
+import { usePostQuery } from '@/lib/hooks/community/usePostQuery';
+import DraftListPopup from '@/components/community/write/DraftListPopup';
 
 const PostWritePage = () => {
   const { mode } = useParams<{ mode: string[] | undefined }>();
 
   // 수정 모드 확인 (URL: /community/write/edit/[postId])
-  const postId = mode?.[1]; // postId가 존재하면 수정 모드
+  const postId = mode?.[1] ?? null; // postId가 존재하면 수정 모드
   const isEditMode = !!postId;
 
-  // 수정 모드일 경우 기존 데이터 로드
-  const { data: post } = useQuery({
-    queryKey: ['post', postId],
-    queryFn: () => {
-      // postId가 없으면 API 호출하지 않음
-      if (!postId) return Promise.reject(new Error('게시글 ID가 필요합니다.'));
-      return postApi.getEditPostDetail(postId);
-    },
-    enabled: isEditMode,
-    select: (data) => data.data, // API 응답에서 실제 게시글 데이터만 선택
-  });
+  const [isDraftPopupOpen, setIsDraftPopupOpen] = useState(false);
+  const [draftPostId, setDraftPostId] = useState<string | null>(null);
+
+  const { post } = usePostQuery(postId);
+  const { createPost, updatePost } = usePostWrite();
+
+  const { drafts, draftCount } = useDraftListQuery();
+  const { post: draftPost } = usePostQuery(draftPostId);
 
   const form = useForm<WriteFormData>({
     resolver: zodResolver(WriteFormSchema),
@@ -50,65 +54,91 @@ const PostWritePage = () => {
     },
   });
 
-  const { handleSubmit, reset } = form;
+  const { handleSubmit, reset, getValues } = form;
+
+  const resetForm = useCallback(
+    (post: PostEditData) => {
+      // TODO: primary, secondCategoryId가 UUID로 구현되어있었으나 API 명세에 따르면 number로 내려옴
+      // 추후 수정 필요
+      reset({
+        primaryCategoryId: post.primaryCategoryId?.toString() ?? '',
+        secondaryCategoryId: post.secondaryCategoryId?.toString() ?? '',
+        title: post.title ?? '',
+        textContent: getTextContent(post.content ?? []),
+        images: getImageContent(post.content ?? [])
+          .filter((item): item is ContentPart & { src: string } => !!item.src)
+          .map(({ src: content, filename }) => {
+            const id = createUuid();
+            const isThumbnail = filename === post.thumbnailFilename;
+            return { id, content, isThumbnail };
+          }),
+      });
+    },
+    [reset]
+  );
 
   // 기존 게시글 데이터 가공
   useEffect(() => {
-    if (!post) return undefined;
+    if (!post) return;
+    resetForm(post);
+  }, [post, resetForm]);
 
-    const {
-      content,
-      primaryCategoryId,
-      secondaryCategoryId,
-      title,
-      thumbnailFilename,
-    } = post;
+  useEffect(() => {
+    if (!draftPost) return;
+    resetForm(draftPost);
+  }, [draftPost, resetForm]);
 
-    // TODO: primary, secondCategoryId가 UUID로 구현되어있었으나
-    // API 명세에 따르면 number로 내려옴
-    reset({
-      primaryCategoryId: primaryCategoryId.toString(),
-      secondaryCategoryId: secondaryCategoryId.toString(),
-      title,
-      textContent: getTextContent(content),
-      images: getImageContent(content)
-        .filter((item): item is ContentPart & { src: string } => !!item.src)
-        .map(({ src: content, filename }) => {
-          const id = createUuid();
-          const isThumbnail = filename === thumbnailFilename;
-          return { id, content, isThumbnail };
-        }),
-    });
-  }, [post, reset]);
-
-  const { createMutation, updateMutation } = usePostWrite(postId);
-
-  const onValid = (data: WriteFormData) => {
+  const buildWritePayload = (data: WriteFormData, isPublished: boolean) => {
     const images = data.images.map(({ content, isThumbnail }) => {
       return { content, isThumbnail };
     });
 
-    const _getThumbnailFilename = () => {
-      const thumbnail = images.find(({ isThumbnail }) => isThumbnail)?.content;
-      if (!thumbnail) return;
+    const thumbnail = images.find(({ isThumbnail }) => isThumbnail)?.content;
+    const thumbnailFilename =
+      thumbnail instanceof File
+        ? thumbnail.name
+        : typeof thumbnail === 'string'
+          ? thumbnail.split('/').pop()?.split('?')[0] || 'image'
+          : undefined;
 
-      if (thumbnail instanceof File) return thumbnail.name;
-      if (typeof thumbnail === 'string')
-        return thumbnail.split('/').pop()?.split('?')[0] || 'image';
-    };
-
-    const payload = {
+    return {
       primaryCategoryId: data.primaryCategoryId,
       secondaryCategoryId: data.secondaryCategoryId,
       title: data.title,
       textContent: data.textContent,
       images: images.map(({ content }) => content),
-      thumbnailFilename: _getThumbnailFilename(),
+      thumbnailFilename,
+      isPublished,
     };
+  };
+
+  const onValid = (data: WriteFormData) => {
+    const payload = buildWritePayload(data, true);
 
     // 수정 모드 여부에 따라 적절한 Mutation 호출
-    if (isEditMode) return updateMutation.mutate(payload);
-    createMutation.mutate(payload);
+    if (postId) return updatePost({ postId, payload });
+    createPost(payload);
+  };
+
+  const handleDraftSave = () => {
+    const values = getValues();
+    const parseResult = DraftWriteFormSchema.safeParse(values);
+
+    if (!parseResult.success) {
+      const message = parseResult.error.issues[0].message;
+      showModal({
+        type: 'snackbar',
+        description: message || DRAFT_INVALID_MESSAGE,
+      });
+      return;
+    }
+
+    const payload = buildWritePayload(parseResult.data, false);
+    if (draftPostId) {
+      updatePost({ postId: draftPostId, payload });
+      return;
+    }
+    createPost(payload);
   };
 
   return (
@@ -125,9 +155,26 @@ const PostWritePage = () => {
             <ContentField />
             <ImageUploadField />
           </div>
-          <ActionButtonField isEditMode={isEditMode} />
+          <ActionButtonField
+            isEditMode={isEditMode}
+            draftCount={draftCount}
+            onClickLoadDraft={() => setIsDraftPopupOpen(true)}
+            onClickSaveDraft={handleDraftSave}
+          />
         </form>
       </FormProvider>
+
+      {isDraftPopupOpen && (
+        <DraftListPopup
+          isOpen={isDraftPopupOpen}
+          onClose={() => setIsDraftPopupOpen(false)}
+          drafts={drafts}
+          onSelectDraft={(draftPostId) => {
+            setDraftPostId(draftPostId);
+            setIsDraftPopupOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 };

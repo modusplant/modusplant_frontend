@@ -14,18 +14,27 @@ export interface PostFormDataPayload {
   title: string;
 }
 
+interface BuildPostFormDataOptions {
+  isDraft?: boolean;
+}
+
 /**
  * 게시글 작성/수정 시 FormData 생성
  * @param payload 게시글 데이터
  * @returns 서버에 전송할 FormData
  */
-export async function buildPostFormData(payload: PostFormDataPayload) {
+export async function buildPostFormData(
+  payload: PostFormDataPayload,
+  options?: BuildPostFormDataOptions
+) {
   const { textContent, images } = payload;
+  const hasTextContent = !!textContent.trim();
+  const isDraft = options?.isDraft ?? false;
 
   const formData = new FormData();
 
   // 1. 텍스트 콘텐츠를 파일로 변환하여 추가
-  if (textContent.trim()) {
+  if (hasTextContent) {
     const textBlob = new Blob([textContent], { type: 'text/plain' });
     const textFile = new File([textBlob], 'text_0.txt', { type: 'text/plain' });
     formData.append('content', textFile);
@@ -51,25 +60,35 @@ export async function buildPostFormData(payload: PostFormDataPayload) {
   };
 
   // 2. 이미지 처리 (File 객체와 URL 모두 동일하게 처리)
-  const imagesToProcess = images.map(async (image) => {
-    if (image instanceof File) return image;
-    if (typeof image === 'string') return await _getImageFileFromUrl(image);
-    return null;
-  });
-  const fileList = await Promise.all(imagesToProcess);
-  const imageFiles = fileList.filter((file): file is File => file !== null);
-  imageFiles.forEach((image) => formData.append('content', image));
+  let imageFiles: File[] = [];
+  const canIncludeContent = !isDraft || hasTextContent;
+  if (canIncludeContent) {
+    const imagesToProcess = images.map(async (image) => {
+      if (image instanceof File) return image;
+      if (typeof image === 'string') return await _getImageFileFromUrl(image);
+      return null;
+    });
+    const fileList = await Promise.all(imagesToProcess);
+    imageFiles = fileList.filter((file): file is File => file !== null);
+    imageFiles.forEach((image) => formData.append('content', image));
+  }
 
   // 3. orderInfo 생성 (텍스트 + 이미지 순서)
-  const orderInfo = [
-    ...(textContent.trim() ? ['text_0.txt'] : []),
-    ...imageFiles.map(({ name }) => name),
-  ].map((filename, idx) => ({ filename, order: idx + 1 }));
-  const orderInfoStr = JSON.stringify(orderInfo);
-  const orderBlob = new Blob([orderInfoStr], { type: 'application/json' });
-  formData.append('orderInfo', orderBlob);
+  if (canIncludeContent) {
+    const orderInfo = [
+      ...(hasTextContent ? ['text_0.txt'] : []),
+      ...imageFiles.map(({ name }) => name),
+    ].map((filename, idx) => ({ filename, order: idx + 1 }));
+    const orderInfoStr = JSON.stringify(orderInfo);
+    const orderBlob = new Blob([orderInfoStr], { type: 'application/json' });
+    formData.append('orderInfo', orderBlob);
+  }
 
   return formData;
+}
+
+interface BuildPostQueryParamsOptions {
+  omitEmptyString?: boolean;
 }
 
 /**
@@ -79,17 +98,22 @@ export async function buildPostFormData(payload: PostFormDataPayload) {
  */
 export function buildPostQueryParams(
   payload: PostWritePayload,
-  isPublished = true
+  options?: BuildPostQueryParamsOptions
 ) {
-  const params = new URLSearchParams({
-    title: payload.title,
-    primaryCategoryId: payload.primaryCategoryId,
-    secondaryCategoryId: payload.secondaryCategoryId,
-    isPublished: String(isPublished),
-    ...(payload.thumbnailFilename && {
-      thumbnailFilename: payload.thumbnailFilename,
-    }),
-  });
+  const params = new URLSearchParams();
+  const { omitEmptyString = false } = options ?? {};
+
+  const _appendParam = (key: string, value?: string) => {
+    if (value === undefined) return;
+    if (omitEmptyString && value === '') return;
+    params.append(key, value);
+  };
+
+  _appendParam('title', payload.title);
+  _appendParam('primaryCategoryId', payload.primaryCategoryId);
+  _appendParam('secondaryCategoryId', payload.secondaryCategoryId);
+  _appendParam('isPublished', String(payload.isPublished));
+  _appendParam('thumbnailFilename', payload.thumbnailFilename);
 
   return params.toString();
 }

@@ -22,5 +22,24 @@ export const WriteFormSchema = z.object({
   images: z.array(WriteImageSchema),
 });
 
+export const DraftWriteFormSchema = z
+  .object({
+    primaryCategoryId: z.string(),
+    secondaryCategoryId: z.string(),
+    title: z
+      .string()
+      .trim()
+      .max(
+        MAX_TITLE_LENGTH,
+        `제목은 최대 ${MAX_TITLE_LENGTH}자까지 입력 가능합니다.`
+      ),
+    textContent: z.string().trim(),
+    images: z.array(WriteImageSchema),
+  })
+  .refine(({ title, textContent }) => !!title.trim() || !!textContent.trim(), {
+    message: '제목 또는 본문을 입력해주세요.',
+    path: ['title'],
+  });
+
 export type WriteImageData = z.infer<typeof WriteImageSchema>;
 export type WriteFormData = z.infer<typeof WriteFormSchema>;
