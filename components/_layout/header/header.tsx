@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import HeaderLogo from './headerLogo';
 import HeaderAuthActions from './headerAuthActions';
 import HeaderGuestActions from './headerGuestActions';
+import { getFCMToken } from '@/lib/fcm';
 
 export interface HeaderProps {
   className?: string;
@@ -40,6 +41,15 @@ export default function Header({ className, initialUser }: HeaderProps) {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isRootPath]);
+
+  useEffect(() => {
+    getFCMToken().then((token) => {
+      if (token) {
+        // console.log('FCM Token:', token);
+        // 토큰 등록 API 호출
+      }
+    });
+  }, []);
 
   const handleLogout = async () => {
     logout();
