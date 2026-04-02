@@ -1,14 +1,13 @@
 'use client';
 
+import { useFormContext, useWatch } from 'react-hook-form';
+
+import { WriteFormData } from '@/app/community/write/[[...mode]]/page';
 import PrimaryCategoryFilter from '@/components/_common/primaryCategoryFilter';
 import SecondaryCategoryFilter from '@/components/_common/secondaryCategoryFilter';
 
 interface CategorySelectorProps {
-  primaryCategoryId: string;
-  secondaryCategoryId: string;
-  onPrimaryCategoryChange: (categoryId: string) => void;
-  onSecondaryCategoryChange: (categoryId: string) => void;
-  isEditMode?: boolean;
+  isEditMode: boolean;
 }
 
 /**
@@ -16,21 +15,22 @@ interface CategorySelectorProps {
  * - 기존 PrimaryCategoryFilter와 SecondaryCategoryFilter 재사용
  * - variant="selector"로 게시글 작성용 스타일 적용
  */
-export default function CategorySelector({
-  primaryCategoryId,
-  secondaryCategoryId,
-  onPrimaryCategoryChange,
-  onSecondaryCategoryChange,
-  isEditMode = false,
-}: CategorySelectorProps) {
+const CategorySelector = ({ isEditMode }: CategorySelectorProps) => {
+  const { control, setValue } = useFormContext<WriteFormData>();
+  const [primaryCategoryId, secondaryCategoryId] = useWatch({
+    control,
+    name: ['primaryCategoryId', 'secondaryCategoryId'] as const,
+  });
+
+  const setOptions = { shouldDirty: true, shouldValidate: true };
+
   const handlePrimaryChange = (categoryId: string) => {
-    onPrimaryCategoryChange(categoryId);
-    // 1차 변경 시 2차 초기화
-    onSecondaryCategoryChange('');
+    setValue('primaryCategoryId', categoryId, setOptions);
+    setValue('secondaryCategoryId', '', setOptions); // 1차 변경 시 2차 초기화
   };
 
   const handleSecondaryChange = (categoryIds: string[]) => {
-    onSecondaryCategoryChange(categoryIds[0] || '');
+    setValue('secondaryCategoryId', categoryIds[0] || '', setOptions);
   };
 
   return (
@@ -53,4 +53,6 @@ export default function CategorySelector({
       />
     </div>
   );
-}
+};
+
+export default CategorySelector;

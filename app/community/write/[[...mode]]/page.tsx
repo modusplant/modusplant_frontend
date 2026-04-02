@@ -1,125 +1,105 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import PostWriteHeader from '@/components/community/write/postWriteHeader';
-import CategorySelector from '@/components/community/write/categorySelector';
-import TitleInput from '@/components/community/write/titleInput';
-import ContentEditor from '@/components/community/write/contentEditor';
-import PostWriteActions from '@/components/community/write/postWriteActions';
+import { FormProvider, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
 import usePostWrite from '@/lib/hooks/community/usePostWrite';
-import { usePostWriteForm } from '@/lib/hooks/community/usePostWriteForm';
 import { postApi } from '@/lib/api/client/post';
 import { getTextContent, getImageContent } from '@/lib/utils/post';
+import TitleField from '@/components/community/write/TitleField';
+import ContentField from '@/components/community/write/ContentField';
+import ActionButtonField from '@/components/community/write/ActionButtonField';
+import ImageUploadField from '@/components/community/write/ImageUploadField';
+import PostWriteHeader from '@/components/community/write/PostWriteHeader';
+import CategorySelector from '@/components/community/write/CategorySelector';
+import { type WriteFormData, WriteFormSchema } from '@/lib/schemas/writeForm';
 
-export default function PostWritePage() {
-  const params = useParams();
-  const mode = params.mode as string[] | undefined;
+const PostWritePage = () => {
+  const { mode } = useParams<{ mode: string[] | undefined }>();
 
   // 수정 모드 확인 (URL: /community/write/edit/[postId])
-  const isEditMode = mode?.[0] === 'edit';
-  const postId = isEditMode ? mode[1] : undefined;
+  const postId = mode?.[1]; // postId가 존재하면 수정 모드
+  const isEditMode = !!postId;
 
   // 수정 모드일 경우 기존 데이터 로드
-  const { data: existingPost } = useQuery({
+  const { data: post } = useQuery({
     queryKey: ['post', postId],
-    queryFn: () => postApi.getEditPostDetail(postId!),
-    enabled: isEditMode && !!postId,
+    queryFn: () => {
+      // postId가 없으면 API 호출하지 않음
+      if (!postId) return Promise.reject(new Error('게시글 ID가 필요합니다.'));
+      return postApi.getEditPostDetail(postId);
+    },
+    enabled: isEditMode,
+    select: (data) => data.data, // API 응답에서 실제 게시글 데이터만 선택
   });
 
+  const form = useForm<WriteFormData>({
+    resolver: zodResolver(WriteFormSchema),
+    mode: 'onChange',
+    defaultValues: {
+      primaryCategoryId: '',
+      secondaryCategoryId: '',
+      title: '',
+      textContent: '',
+      images: [],
+    },
+  });
+  const { handleSubmit, reset } = form;
+
   // 기존 게시글 데이터 가공
-  const initialData = useMemo(() => {
-    if (!existingPost?.data) return undefined;
+  useEffect(() => {
+    if (!post) return undefined;
+    const { content, primaryCategoryId, secondaryCategoryId, title } = post;
 
-    const post = existingPost.data;
-    // 텍스트 콘텐츠 추출
-    const textParts = getTextContent(post.content);
-
-    // 이미지 데이터 추출 (src URL)
-    const imageUrls = getImageContent(post.content)
-      .map((img) => img.src)
-      .filter(Boolean) as string[];
-
-    return {
-      primaryCategoryId: post.primaryCategoryId,
-      secondaryCategoryId: post.secondaryCategoryId,
-      title: post.title,
-      textContent: textParts,
-      imageUrls,
-    };
-  }, [existingPost]);
-
-  // 폼 상태 관리 훅
-  const {
-    primaryCategoryId,
-    setPrimaryCategoryId,
-    secondaryCategoryId,
-    setSecondaryCategoryId,
-    title,
-    setTitle,
-    textContent,
-    setTextContent,
-    images,
-    setImages,
-    isFormValid,
-  } = usePostWriteForm(initialData);
-
-  // 게시글 제출 훅
-  const {
-    isEditMode: hookIsEditMode,
-    isSubmitting,
-    handleSubmit,
-  } = usePostWrite(postId);
-
-  // 제출 핸들러
-  const onSubmit = () => {
-    if (!isFormValid || isSubmitting) return;
-
-    handleSubmit({
+    reset({
       primaryCategoryId,
       secondaryCategoryId,
-      title: title.trim(),
-      textContent: textContent.trim(),
-      images,
+      title,
+      textContent: getTextContent(content),
+      images: getImageContent(content)
+        .map(({ src }) => src)
+        .filter((src): src is string => !!src), // 문자열인 src만 필터링
     });
+  }, [post, reset]);
+
+  const { createMutation, updateMutation } = usePostWrite(postId);
+
+  const onValid = (data: WriteFormData) => {
+    const payload = {
+      primaryCategoryId: data.primaryCategoryId,
+      secondaryCategoryId: data.secondaryCategoryId,
+      title: data.title,
+      textContent: data.textContent,
+      images: data.images,
+    };
+
+    // 수정 모드 여부에 따라 적절한 Mutation 호출
+    if (isEditMode) return updateMutation.mutate(payload);
+    createMutation.mutate(payload);
   };
 
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-full flex-col gap-5 bg-neutral-100 px-4 py-5 md:px-8 lg:w-212 lg:px-10">
-      {/* 헤더 */}
-      <PostWriteHeader isEditMode={hookIsEditMode} />
-
-      {/* 메인 폼 */}
-      <div className="flex flex-col gap-4 self-stretch">
-        {/* 카테고리 선택 */}
-        <CategorySelector
-          primaryCategoryId={primaryCategoryId}
-          secondaryCategoryId={secondaryCategoryId}
-          onPrimaryCategoryChange={setPrimaryCategoryId}
-          onSecondaryCategoryChange={setSecondaryCategoryId}
-          isEditMode={hookIsEditMode}
-        />
-
-        {/* 제목 입력 */}
-        <TitleInput value={title} onChange={setTitle} />
-
-        {/* 본문 에디터 */}
-        <ContentEditor
-          textContent={textContent}
-          images={images}
-          onTextChange={setTextContent}
-          onImagesChange={setImages}
-        />
-
-        {/* 액션 버튼 */}
-        <PostWriteActions
-          isSubmitting={isSubmitting}
-          isFormValid={isFormValid}
-          onSubmit={onSubmit}
-          isEditMode={hookIsEditMode}
-        />
-      </div>
+      <PostWriteHeader isEditMode={isEditMode} />
+      <FormProvider {...form}>
+        <form
+          onSubmit={handleSubmit(onValid)}
+          className="flex flex-col gap-4 self-stretch"
+        >
+          <CategorySelector isEditMode={isEditMode} />
+          <TitleField />
+          <div className="border-surface-stroke flex w-full flex-col self-stretch rounded-[10px] border">
+            <ContentField />
+            <ImageUploadField />
+          </div>
+          <ActionButtonField isEditMode={isEditMode} />
+        </form>
+      </FormProvider>
     </div>
   );
-}
+};
+
+export default PostWritePage;

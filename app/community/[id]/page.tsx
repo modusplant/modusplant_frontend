@@ -8,9 +8,7 @@ import {
 } from '@/lib/metadata/community';
 
 interface PostPageProps {
-  params: Promise<{
-    id: string;
-  }>;
+  params: Promise<{ id: string }>;
 }
 
 /**
@@ -44,6 +42,7 @@ export default async function PostPage({ params }: PostPageProps) {
       notFound();
     }
 
+    // TODO: Error: Avoid constructing JSX within try/catch 해결하기
     return <PostDetail postId={id} initialData={response.data} />;
   } catch (error) {
     notFound();
