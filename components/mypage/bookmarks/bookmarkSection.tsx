@@ -3,8 +3,15 @@
 import PostCardGrid from '@/components/mypage/common/postCardGrid';
 import EmptyBookmarks from '@/components/mypage/bookmarks/emptyBookmarks';
 import { useBookmarkedPostsQuery } from '@/lib/hooks/mypage/useBookmarkedPostsQuery';
+import { useState } from 'react';
 
 export default function BookmarkSection() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const onChangePage = (pageCount: number) => {
+    setCurrentPage(pageCount);
+  };
+  const { data, isPending, isError } = useBookmarkedPostsQuery(currentPage, 9);
+
   return (
     <div className="border-surface-98 flex flex-col gap-7.5 rounded-xl border bg-white p-10">
       {/* 페이지 제목 */}
@@ -14,9 +21,13 @@ export default function BookmarkSection() {
 
       {/* 게시글 카드 그리드 */}
       <PostCardGrid
-        useQueryHook={useBookmarkedPostsQuery}
+        data={data}
+        isPending={isPending}
+        isError={isError}
         emptyComponent={<EmptyBookmarks />}
+        currentPage={currentPage}
         pageSize={9}
+        onChangePage={onChangePage}
       />
     </div>
   );

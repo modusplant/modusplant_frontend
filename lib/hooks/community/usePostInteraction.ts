@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postApi } from '@/lib/api/client/post';
 import { useAuthStore } from '@/lib/store/authStore';
 import { showModal } from '@/lib/store/modalStore';
-import { set } from 'zod';
 
 interface UsePostInteractionProps {
   postId: string;
@@ -31,6 +30,7 @@ export function usePostInteraction({
   initialIsLiked = false,
   initialIsBookmarked = false,
 }: UsePostInteractionProps): UsePostInteractionReturn {
+  const queryClient = useQueryClient();
   const { user, isAuthenticated } = useAuthStore();
 
   // 좋아요 상태
@@ -80,6 +80,11 @@ export function usePostInteraction({
         description: error.message,
       });
     },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['likedPosts'],
+      });
+    },
   });
 
   // 북마크 mutation
@@ -106,6 +111,11 @@ export function usePostInteraction({
       showModal({
         type: 'snackbar',
         description: error.message,
+      });
+    },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['bookmarkedPosts'],
       });
     },
   });
