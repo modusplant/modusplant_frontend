@@ -1,28 +1,24 @@
+import { PreviewImage } from '@/lib/types/write';
 import { X } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect } from 'react';
 
 interface ImagePreviewItemProps {
-  file: File | string;
-  index: number;
-  onRemove: (index: number) => void;
+  preview: PreviewImage;
+  onRemove: (id: string) => void;
 }
 
-export default function ImagePreviewItem({
-  file,
-  index,
-  onRemove,
-}: ImagePreviewItemProps) {
-  // 이미지 미리보기 URL 생성
+const ImagePreviewItem = ({ preview, onRemove }: ImagePreviewItemProps) => {
+  const { id, file } = preview;
+
   const previewUrl =
     typeof file === 'string' ? file : URL.createObjectURL(file);
 
   useEffect(() => {
-    // 컴포넌트 언마운트 시 URL 해제
+    //  revokeObjectURL when the component unmounts to prevent memory leaks
     return () => {
-      if (typeof file !== 'string') {
-        URL.revokeObjectURL(previewUrl);
-      }
+      if (typeof file === 'string') return;
+      URL.revokeObjectURL(previewUrl);
     };
   }, [file, previewUrl]);
 
@@ -30,13 +26,15 @@ export default function ImagePreviewItem({
     <div className="group relative h-30 w-30 shrink-0">
       <Image
         src={previewUrl}
-        alt={`업로드 이미지 ${index + 1}`}
-        fill
+        alt={`업로드 이미지 ${id}`}
         className="rounded-lg object-cover"
+        fill
       />
-      {/* 삭제 버튼 */}
       <button
-        onClick={() => onRemove(index)}
+        onClick={(e) => {
+          e.preventDefault();
+          onRemove(id);
+        }}
         className="bg-neutral-70 absolute -top-2 -right-2 z-10 rounded-full p-1"
         aria-label="이미지 삭제"
       >
@@ -44,4 +42,6 @@ export default function ImagePreviewItem({
       </button>
     </div>
   );
-}
+};
+
+export default ImagePreviewItem;

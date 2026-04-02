@@ -12,7 +12,6 @@ import { showModal } from '@/lib/store/modalStore';
  */
 export default function usePostWrite(postId?: string) {
   const router = useRouter();
-  const isEditMode = !!postId;
 
   // 게시글 작성 Mutation
   const createMutation = useMutation({
@@ -53,18 +52,5 @@ export default function usePostWrite(postId?: string) {
     },
   });
 
-  // 제출 함수
-  const handleSubmit = (payload: PostWritePayload) => {
-    if (isEditMode) {
-      updateMutation.mutate(payload);
-    } else {
-      createMutation.mutate(payload);
-    }
-  };
-
-  return {
-    isEditMode,
-    isSubmitting: createMutation.isPending || updateMutation.isPending,
-    handleSubmit,
-  };
+  return { createMutation, updateMutation };
 }

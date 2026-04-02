@@ -1,8 +1,10 @@
+import { cn } from '@/lib/utils/tailwindHelper';
+
 interface ImageDropZoneProps {
   isDragging: boolean;
-  onDragOver: (e: React.DragEvent) => void;
-  onDragLeave: (e: React.DragEvent) => void;
-  onDrop: (e: React.DragEvent) => void;
+  onDragOver: (e: React.DragEvent<HTMLElement>) => void;
+  onDragLeave: (e: React.DragEvent<HTMLElement>) => void;
+  onDrop: (e: React.DragEvent<HTMLElement>) => void;
 }
 
 export default function ImageDropZone({
@@ -13,9 +15,10 @@ export default function ImageDropZone({
 }: ImageDropZoneProps) {
   return (
     <div
-      className={`mt-4 flex min-h-30 items-center justify-center rounded-lg border-2 border-dashed ${
+      className={cn(
+        'mt-4 flex min-h-30 items-center justify-center rounded-lg border-2 border-dashed',
         isDragging ? 'border-primary-50 bg-primary-10' : 'border-surface-stroke'
-      }`}
+      )}
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
