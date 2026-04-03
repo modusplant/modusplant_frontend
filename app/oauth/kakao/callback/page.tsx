@@ -18,15 +18,24 @@ function KakaoCallbackInner() {
     const handleKakaoLogin = async () => {
       try {
         const response = await OauthApi.kakaoLogin(code);
+        if (!response.data) return;
 
-        if (response.status === 200 && response.data?.accessToken) {
+        const { type } = response.data;
+
+        if (type === 'LOGIN') {
+          // 기존 유저 로그인 처리
           const user = await processSuccessfulAuth(
             response.data.accessToken,
-            true
+            true // TODO: 소셜 로그인 rememberMe, refreshToken 정책 확인
           );
-
           login(user);
           router.push('/');
+        } else if (type === 'NEED_SIGNUP') {
+          // 신규 유저 처리
+          router.push(`/signup/social`);
+        } else if (type === 'NEED_LINK') {
+          // 기존 이메일 계정 연동
+          router.push(`/signup/social`);
         }
       } catch (error) {
         console.error('카카오 로그인 실패', error);
