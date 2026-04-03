@@ -39,3 +39,40 @@ jobs:
               repo: context.repo.repo,
               body: `✅ Preview 배포 완료\n${{ steps.deploy.outputs.preview_url }}`
             })
+
+      - name: Send Preview URL to Slack
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "🚀 *Preview 배포 완료*",
+              "attachments": [
+                {
+                  "color": "#36a64f",
+                  "fields": [
+                    {
+                      "title": "PR",
+                      "value": "<${{ github.event.pull_request.html_url }}|#${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}>",
+                      "short": false
+                    },
+                    {
+                      "title": "작성자",
+                      "value": "${{ github.event.pull_request.user.login }}",
+                      "short": true
+                    },
+                    {
+                      "title": "브랜치",
+                      "value": "${{ github.head_ref }}",
+                      "short": true
+                    },
+                    {
+                      "title": "Preview URL",
+                      "value": "${{ steps.deploy.outputs.preview_url }}",
+                      "short": false
+                    }
+                  ]
+                }
+              ]
+            }

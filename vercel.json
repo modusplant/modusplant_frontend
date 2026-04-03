@@ -4,7 +4,11 @@
     "deploymentEnabled": {
       "main": true,
       "develop": true,
-      "feature/*": false
+      "feat/*": false,
+      "fix/*": false,
+      "chore/*": false,
+      "refactor/*": false,
+      "*MP*": false
     }
   }
 }
