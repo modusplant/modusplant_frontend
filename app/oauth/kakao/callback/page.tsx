@@ -1,6 +1,6 @@
 'use client';
 
-import { authApi } from '@/lib/api/client/auth';
+import { OauthApi } from '@/lib/api/client/oauth';
 import { useAuthStore } from '@/lib/store/authStore';
 import { processSuccessfulAuth } from '@/lib/utils/auth/processSuccessfulAuth';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -17,7 +17,7 @@ function KakaoCallbackInner() {
 
     const handleKakaoLogin = async () => {
       try {
-        const response = await authApi.kakaoLogin(code);
+        const response = await OauthApi.kakaoLogin(code);
 
         if (response.status === 200 && response.data?.accessToken) {
           const user = await processSuccessfulAuth(

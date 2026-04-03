@@ -29,20 +29,6 @@ export const authApi = {
   },
 
   /**
-   * 카카오 로그인
-   */
-  async kakaoLogin(
-    code: string
-  ): Promise<ApiResponse<{ accessToken: string }>> {
-    const response = await clientApiInstance.post<{ accessToken: string }>(
-      AUTH_ENDPOINTS.KAKAO_LOGIN,
-      { code },
-      { skipAuth: true }
-    );
-    return response;
-  },
-
-  /**
    * 로그아웃
    */
   async logout(): Promise<void> {},
