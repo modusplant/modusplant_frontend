@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/_common/button';
+import { KAKAO_AUTH_URL } from '@/lib/constants/socialAuth';
 
 interface LoginFormActionsProps {
   isLoading: boolean;
@@ -20,13 +21,22 @@ const SOCIAL_PLATFORMS = [
     id: 'google',
     label: '구글 로그인',
     icon: '/icon/google-enabled.svg',
+    url: '', // TODO: 구글 로그인 구현 시 교체
   },
   {
     id: 'kakao',
     label: '카카오 로그인',
     icon: '/icon/kakao-enabled.svg',
+    url: KAKAO_AUTH_URL,
   },
-];
+] as const;
+
+const handleSocialLoginClick = (id: string) => {
+  const platform = SOCIAL_PLATFORMS.find((s) => s.id === id);
+  if (platform) {
+    window.location.href = platform.url;
+  }
+};
 
 export default function LoginFormActions({ isLoading }: LoginFormActionsProps) {
   return (
@@ -79,7 +89,7 @@ export default function LoginFormActions({ isLoading }: LoginFormActionsProps) {
           <button
             key={id}
             type="button"
-            onClick={() => console.log(`${id} 로그인`)}
+            onClick={() => handleSocialLoginClick(id)}
             aria-label={label}
             className="transition-opacity hover:opacity-80"
           >
