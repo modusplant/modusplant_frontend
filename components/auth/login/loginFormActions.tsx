@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/_common/button';
-import { KAKAO_AUTH_URL } from '@/lib/constants/socialAuth';
+import { KAKAO_AUTH_URL } from '@/lib/constants/oauth';
 
 interface LoginFormActionsProps {
   isLoading: boolean;
