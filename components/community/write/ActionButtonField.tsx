@@ -1,5 +1,5 @@
 import { WriteFormData } from '@/lib/schemas/writeForm';
-import { useFormContext, useFormState } from 'react-hook-form';
+import { useFormContext, useFormState, useWatch } from 'react-hook-form';
 import WriteButton from './_common/WriteButton';
 
 interface ActionButtonFieldProps {
@@ -17,6 +17,11 @@ const ActionButtonField = ({
 }: ActionButtonFieldProps) => {
   const { control } = useFormContext<WriteFormData>();
   const { isSubmitting, isValid } = useFormState({ control });
+
+  const [title, textContent, images] = useWatch({
+    control,
+    name: ['title', 'textContent', 'images'],
+  });
 
   return (
     <div className="flex items-center justify-between gap-2.5">
@@ -42,6 +47,7 @@ const ActionButtonField = ({
             type="button"
             variant="default"
             onClick={onClickSaveDraft}
+            disabled={!title && !textContent && images.length === 0}
           >
             임시저장
           </WriteButton>

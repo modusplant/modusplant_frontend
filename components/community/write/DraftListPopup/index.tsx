@@ -37,7 +37,7 @@ const DraftListPopup = ({
   if (!isOpen) return null;
 
   const handleDeleteDraft = (draftPostId: string) => {
-    if (confirm('이 임시저장 글을 삭제하시겠습니까?')) {
+    if (confirm('임시저장 글을 삭제하시겠습니까?')) {
       deleteDraft(draftPostId);
     }
   };

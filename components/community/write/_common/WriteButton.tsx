@@ -19,7 +19,7 @@ const WriteButton = (props: WriteButtonProps) => {
           'border-surface-stroke border-[1px] border-solid text-[#4B4B4B]':
             variant === 'default',
         },
-        { 'bg-neutral-90! cursor-not-allowed': disabled },
+        { 'bg-neutral-90! cursor-not-allowed text-white': disabled },
         className
       )}
       {...restProps}
