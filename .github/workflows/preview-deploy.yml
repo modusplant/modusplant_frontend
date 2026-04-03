@@ -1,23 +1,45 @@
-name: Preview URL Created Notification
+name: Vercel Preview Deployment
+
+env:
+  VERCEL_ORG_ID: ${{secrets.VERCEL_ORG_ID}}
+  VERCEL_PROJECT_ID: ${{secrets.VERCEL_PROJECT_ID}}
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+permissions:
+  pull-requests: write
+
 jobs:
-  notify-preview-created:
+  deploy-preview:
     runs-on: ubuntu-latest
     steps:
-      # Vercel preview 배포가 완료될 때까지 대기
-      - name: Wait for Vercel Preview
-        uses: patrickedqvist/wait-for-vercel-preview@v1.3.3
-        id: vercel_preview
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          max_timeout: 180 # 최대 3분 대기
-          check_interval: 5 # 5초마다 배포 상태 확인
+          version: 9
 
-      # Bypass secret 붙인 URL을 Slack으로 전송
+      - name: Install Vercel CLI
+        run: pnpm add -g vercel@50.38.3
+
+      - name: Deploy to Vercel (Preview)
+        id: deploy
+        run: |
+          PREVIEW_URL=$(vercel deploy --token=${{secrets.VERCEL_PREVIEW_DEPLOYMENT_TOKEN}} --yes)
+          echo "preview_url=$PREVIEW_URL" >> $GITHUB_OUTPUT
+
+      - name: Comment Preview URL on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `✅ Preview 배포 완료\n${{ steps.deploy.outputs.preview_url }}`
+            })
+
       - name: Send Preview URL to Slack
         uses: slackapi/slack-github-action@v2.0.0
         with:
@@ -47,7 +69,7 @@ jobs:
                     },
                     {
                       "title": "Preview URL",
-                      "value": "${{ steps.vercel_preview.outputs.url }}",
+                      "value": "${{ steps.deploy.outputs.preview_url }}",
                       "short": false
                     }
                   ]
