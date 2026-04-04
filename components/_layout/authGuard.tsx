@@ -34,6 +34,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     '/', // 메인페이지
     '/login', // 로그인
     '/signup', // 회원가입
+    '/signup/social', // 소셜 회원가입
     '/reset-password', // 비밀번호 재설정
     '/oauth/kakao/callback', // 카카오 인가 페이지
   ];
