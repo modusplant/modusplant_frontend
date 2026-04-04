@@ -3,18 +3,18 @@ import { Comment } from '@/lib/types/comment';
 interface CommentRepliesProps {
   children: Comment[];
   postId: string;
-  onUpdate: () => void;
+  refetch: () => void;
   CommentItemComponent: React.ComponentType<{
     comment: Comment;
     postId: string;
-    onUpdate: () => void;
+    refetch: () => void;
   }>;
 }
 
 export default function CommentReplies({
   children,
   postId,
-  onUpdate,
+  refetch,
   CommentItemComponent,
 }: CommentRepliesProps) {
   if (!children || children.length === 0) {
@@ -28,7 +28,7 @@ export default function CommentReplies({
           key={childComment.path}
           comment={childComment}
           postId={postId}
-          onUpdate={onUpdate}
+          refetch={refetch}
         />
       ))}
     </div>
