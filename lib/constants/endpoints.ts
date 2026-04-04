@@ -8,7 +8,7 @@ const API_V1 = '/api/v1';
  */
 export const AUTH_ENDPOINTS = {
   LOGIN: `/api/auth/login`,
-  KAKAO_LOGIN: `/api/auth/kakao/social-login`,
+  KAKAO_LOGIN: `/api/v1/auth/social-login/kakao`,
   SIGNUP: `/api/members/register`,
   TOKEN_REFRESH: `/api/auth/token/refresh`,
   CHECK_NICKNAME: (nickname: string) =>
