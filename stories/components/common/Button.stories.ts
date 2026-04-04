@@ -1,5 +1,6 @@
 import Button from '@/components/_common/button';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import '@/app/globals.css';
 
 import { fn } from 'storybook/test';
 
