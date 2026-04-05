@@ -7,8 +7,9 @@ import { Upload } from 'lucide-react';
 import { useState } from 'react';
 import PreviewImage from '../common/previewImage';
 import { useForm } from 'react-hook-form';
+import { memberApi } from '@/lib/api/client/member';
 
-interface ReportFormValues {
+export interface ReportFormValues {
   title: string;
   content: string;
   image: File | null;
@@ -43,8 +44,7 @@ const ReportSection = () => {
   };
 
   const onSubmit = (data: ReportFormValues) => {
-    console.log('제출된 폼 데이터:', data);
-    // TODO: 서버 전송 로직 구현 (API 호출 등)
+    memberApi.postBugReport(data);
   };
 
   return (
