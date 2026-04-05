@@ -8,6 +8,7 @@ import { getInitialAuthState } from '@/lib/utils/getInitialAuthState';
 import { layoutMetadata } from '@/lib/metadata/layout';
 import './globals.css';
 import QueryProvider from '@/components/_layout/queryProvider';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 export { layoutMetadata as metadata };
 
@@ -72,6 +73,7 @@ export default async function RootLayout({
             <AuthGuard>{children}</AuthGuard>
           </ConditionalLayout>
           <ModalProvider />
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryProvider>
       </body>
     </html>

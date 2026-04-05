@@ -9,6 +9,7 @@ import { getThumbnail, getTextContent } from '@/lib/utils/post';
 import { formatRelativeTime } from '@/lib/utils/formatTime';
 import { cn } from '@/lib/utils/tailwindHelper';
 import { Bookmark, Heart, MessageSquare } from 'lucide-react';
+import { usePostInteraction } from '@/lib/hooks/community/usePostInteraction';
 
 export interface PostCardProps {
   post: PostData;
@@ -21,6 +22,28 @@ export interface PostCardProps {
  * - 2차 카테고리, 본문 일부(말줄임표), 업로드 일자, 닉네임
  */
 export default function PostCard({ post, className }: PostCardProps) {
+  const {
+    postId,
+    isLiked: initialIsLiked,
+    isBookmarked: initialIsBookmarked,
+    likeCount: initialLikeCount,
+  } = post;
+
+  const {
+    likeCount,
+    isLiked,
+    isLiking,
+    handleLike,
+    isBookmarked,
+    isBookmarking,
+    handleBookmark,
+  } = usePostInteraction({
+    postId,
+    initialLikeCount,
+    initialIsLiked,
+    initialIsBookmarked,
+  });
+
   // 썸네일 이미지 (content에서 추출)
   const thumbnail = getThumbnail(post);
 
@@ -81,27 +104,43 @@ export default function PostCard({ post, className }: PostCardProps) {
             {/* 작성자 / 통계 (좋아요, 댓글) / 날짜 */}
             <span className="text-neutral-60 max-w-20">{post.nickname}</span>
             <span> | </span>
-            <span className="flex items-center gap-1">
+            <button
+              className="flex items-center gap-1"
+              onClick={(e) => {
+                e.preventDefault();
+                handleLike();
+              }}
+              disabled={isLiking}
+            >
               <Heart
                 className="md:h-4 md:w-4"
-                color={post.isLiked ? 'red' : 'currentColor'}
-                fill={post.isLiked ? 'red' : 'none'}
+                color={isLiked ? 'red' : 'currentColor'}
+                fill={isLiked ? 'red' : 'none'}
               />
-              <span>{post.likeCount}</span>
-            </span>
+              <span>{likeCount}</span>
+            </button>
+
             <span className="flex items-center gap-1">
               <MessageSquare className="md:h-4 md:w-4" />
               <span>{post.commentCount}</span>
             </span>
-            <Bookmark
-              fill={post.isBookmarked ? 'currentColor' : 'none'}
-              className={cn(
-                'md:h-4 md:w-4',
-                post.isBookmarked ? 'text-primary-50' : 'text-neutral-60'
-              )}
-            />
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                handleBookmark();
+              }}
+              disabled={isBookmarking}
+            >
+              <Bookmark
+                fill={isBookmarked ? 'currentColor' : 'none'}
+                className={cn(
+                  'md:h-4 md:w-4',
+                  isBookmarked ? 'text-primary-50' : 'text-neutral-60'
+                )}
+              />
+            </button>
+            <span>{formattedDate}</span>
           </div>
-          <span>{formattedDate}</span>
         </div>
       </div>
     </Link>

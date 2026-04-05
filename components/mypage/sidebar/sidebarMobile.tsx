@@ -62,6 +62,19 @@ export default function SidebarMobile({ onLogout }: SidebarMobileProps) {
                     </Link>
                   );
                 })}
+
+                {sectionIndex === MYPAGE_MENU_SECTIONS.length - 1 && (
+                  <button
+                    onClick={onLogout}
+                    className={cn(
+                      'flex w-full rounded-[10px] px-0 py-3.25 text-left',
+                      'text-[16px] leading-[1.19] tracking-[-0.02em]',
+                      'text-neutral-30 cursor-pointer font-medium transition-colors'
+                    )}
+                  >
+                    로그아웃
+                  </button>
+                )}
               </div>
 
               {/* 구분선 */}
@@ -70,21 +83,6 @@ export default function SidebarMobile({ onLogout }: SidebarMobileProps) {
               )}
             </div>
           ))}
-
-          {/* 로그아웃 버튼 */}
-          <div className="flex flex-col">
-            <div className="bg-surface-stroke h-px" />
-            <button
-              onClick={onLogout}
-              className={cn(
-                'mt-2.5 flex rounded-[10px] px-0 py-3.25',
-                'text-[15px] leading-[1.19] font-medium tracking-[-0.02em]',
-                'text-neutral-30'
-              )}
-            >
-              로그아웃
-            </button>
-          </div>
         </div>
       )}
     </div>

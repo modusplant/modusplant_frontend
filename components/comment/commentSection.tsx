@@ -30,7 +30,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       {/* 댓글 작성 입력창 */}
       <CommentInput
         postId={postId}
-        onSuccess={refetch}
+        refetch={refetch}
         currentCommentCount={rootCount}
       />
 
@@ -48,7 +48,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
           <CommentList
             comments={commentTree}
             postId={postId}
-            onUpdate={refetch}
+            refetch={refetch}
           />
         )}
         {!isAuthenticated && <BlurOverlay variant="comment" />}

@@ -31,4 +31,8 @@ export const MYPAGE_MENU_SECTIONS: MenuSection[] = [
       { label: '북마크', href: '/mypage/bookmarks' },
     ],
   },
+  {
+    title: '설정',
+    items: [{ label: '건의/버그제보', href: '/mypage/report' }],
+  },
 ];
