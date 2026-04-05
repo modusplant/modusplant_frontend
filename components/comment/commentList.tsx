@@ -6,13 +6,13 @@ import CommentItem from './commentItem';
 interface CommentListProps {
   comments: Comment[];
   postId: string;
-  onUpdate: () => void;
+  refetch: () => void;
 }
 
 export default function CommentList({
   comments,
   postId,
-  onUpdate,
+  refetch,
 }: CommentListProps) {
   return (
     <div className="space-y-6">
@@ -21,7 +21,7 @@ export default function CommentList({
           key={comment.path}
           comment={comment}
           postId={postId}
-          onUpdate={onUpdate}
+          refetch={refetch}
         />
       ))}
     </div>

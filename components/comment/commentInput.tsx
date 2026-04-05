@@ -9,7 +9,7 @@ import { ArrowUp } from 'lucide-react';
 interface CommentInputProps {
   postId: string;
   parentPath?: string | null; // 답글인 경우 부모 path
-  onSuccess: () => void;
+  refetch: () => void;
   onCancel?: () => void;
   currentCommentCount?: number; // 현재 댓글 개수 (최상위 댓글용)
   siblingCount?: number; // 형제 댓글 개수 (답글용)
@@ -18,7 +18,7 @@ interface CommentInputProps {
 export default function CommentInput({
   postId,
   parentPath = null,
-  onSuccess,
+  refetch,
   onCancel,
   currentCommentCount = 0,
   siblingCount = 0,
@@ -30,7 +30,7 @@ export default function CommentInput({
     postId,
     onSuccess: () => {
       setContent('');
-      onSuccess();
+      refetch();
       onCancel?.();
     },
   });

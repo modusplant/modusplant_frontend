@@ -3,6 +3,7 @@ import { commentApi } from '@/lib/api/client/comment';
 import { useAuthStore } from '@/lib/store/authStore';
 import { generateCommentPath } from '@/lib/utils/parseComments';
 import { showModal } from '@/lib/store/modalStore';
+import { type Comment } from '@/lib/types/comment';
 
 interface UseCommentMutationsProps {
   postId: string;
@@ -106,15 +107,34 @@ export function useCommentMutations({
 
       await commentApi.updateComment({ content, path, postId });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
-      onSuccess?.();
+    onMutate: async ({ path, content }) => {
+      await queryClient.cancelQueries({ queryKey: ['comments', postId] });
+
+      const previousComment = queryClient.getQueryData<Comment[]>([
+        'comments',
+        postId,
+      ]);
+
+      queryClient.setQueryData<Comment[]>(['comments', postId], (old) => {
+        if (!old) return old;
+        return old.map((comment) =>
+          comment.path === path ? { ...comment, content } : comment
+        );
+      });
+      return { previousComment };
     },
-    onError: (error: Error) => {
+    onError: (error: Error, _variables, context) => {
+      if (context?.previousComment) {
+        queryClient.setQueryData(['comments', postId], context.previousComment);
+      }
       showModal({
         type: 'snackbar',
         description: error.message,
       });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
+      onSuccess?.();
     },
   });
 
