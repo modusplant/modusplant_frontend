@@ -7,6 +7,7 @@ export interface Comment {
   content: string;
   likeCount: number;
   createdAt: string;
+  updatedAt: string;
   isDeleted: boolean;
   isLiked?: boolean; // 현재 사용자의 좋아요 여부
   profileImagePath: string | undefined; // 프로필 이미지 (base64)

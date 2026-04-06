@@ -40,7 +40,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(
           // 기본 스타일
           'inline-flex items-center justify-center rounded-full transition-colors',
-          'focus-visible:ring-primary-50 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+          'focus-visible:ring-primary-50 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
           'disabled:pointer-events-none disabled:opacity-50',
 
           // Variant 스타일

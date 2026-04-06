@@ -40,6 +40,13 @@
   --font-body: var(--font-pretendard);
 }
 
+@layer base {
+  button:not([disabled]),
+  [role='button']:not([disabled]) {
+    cursor: pointer;
+  }
+}
+
 @theme inline {
   /* Primary Colors */
   --color-primary-10: var(--primary-10);

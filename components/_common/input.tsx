@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils/tailwindHelper';
 import { Eye, EyeOff } from 'lucide-react';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  error?: string;
+  error?: string | boolean;
   showPasswordToggle?: boolean;
   showCount?: boolean;
 }
