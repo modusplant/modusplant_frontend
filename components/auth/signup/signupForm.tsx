@@ -41,6 +41,7 @@ export default function SignupForm() {
       agreeToPrivacy: false,
       agreeToCommunity: false,
     },
+    mode: 'onTouched',
   });
 
   const onSubmit = async (data: SignupFormValues) => {
