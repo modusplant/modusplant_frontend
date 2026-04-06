@@ -98,7 +98,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           <input
             type={inputType}
             className={cn(
-              'text-neutral-0 placeholder:text-neutral-70 placeholder:text-regular14 w-full bg-transparent',
+              'placeholder:text-neutral-70 placeholder:typo-regular14 w-full bg-transparent',
               'rounded-lg border px-4 py-3 outline-none',
               isError ? 'border-system-alert' : 'border-surface-stroke-2',
               'focus:border-primary-50',
@@ -112,7 +112,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             onChange={handleChange}
             {...props}
           />
-          <span className="text-regular14 text-neutral-70 absolute right-4 tracking-[-0.04em]">
+          <span className="typo-regular14 text-neutral-70 absolute right-4">
             {charCount}
             {maxLength ? `/${maxLength}` : ''}
           </span>
