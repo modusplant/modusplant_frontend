@@ -36,6 +36,7 @@ export const MEMBER_ENDPOINTS = {
   MY_POSTS: `${API_V1}/communication/posts/me`,
   MY_LIKED_POSTS: `${API_V1}/communication/posts/me/likes`,
   MY_BOOKMARKED_POSTS: `${API_V1}/communication/posts/me/bookmarks`,
+  MY_BUG_REPORTS: `${API_V1}/report/proposal-or-bug`,
 } as const;
 
 /**
