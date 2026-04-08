@@ -87,6 +87,16 @@ export const COMMENT_ENDPOINTS = {
 } as const;
 
 /**
+ * 알림 관련 엔드포인트
+ */
+export const NOTIFICATION_ENDPOINTS = {
+  GET_NOTIFICATIONS: () => `${API_V1}/notifications`,
+  READ_ONE_NOTIFICATION: (id: string) => `${API_V1}/notifications/${id}/read`,
+  READ_ALL_NOTIFICATIONS: () => `${API_V1}/notifications/read-all`,
+  GET_UNREAD_NOTIFICATIONS_COUNT: () => `${API_V1}/notifications/unread-count`,
+};
+
+/**
  * 타입 안전한 쿼리 파라미터 빌더
  */
 export function buildQueryString(
