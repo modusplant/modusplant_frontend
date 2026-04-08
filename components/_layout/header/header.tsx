@@ -72,6 +72,7 @@ export default function Header({ className, initialUser }: HeaderProps) {
                 user={user}
                 onLogout={handleLogout}
                 showWriteButton={showWriteButton}
+                scrolled={scrolled}
               />
             ) : (
               <HeaderGuestActions />

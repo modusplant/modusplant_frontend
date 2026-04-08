@@ -7,19 +7,24 @@ import Dropdown from '@/components/_common/dropdown';
 import { User } from '@/lib/types/auth';
 import { Bell } from 'lucide-react';
 import { NotificationBox } from '@/components/notification/NotificationBox';
+import { useGetNotificationCountQuery } from '@/lib/hooks/notification/useGetNotificationCountQuery';
 
 interface HeaderAuthActionsProps {
   user: User;
   onLogout: () => void;
   showWriteButton?: boolean;
+  scrolled: boolean;
 }
 
 export default function HeaderAuthActions({
   user,
   onLogout,
   showWriteButton = true,
+  scrolled = false,
 }: HeaderAuthActionsProps) {
   const router = useRouter();
+  const { data: unreadNotificationsCount } = useGetNotificationCountQuery();
+
   const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] =
     React.useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
@@ -41,7 +46,14 @@ export default function HeaderAuthActions({
             onClick={() => setIsNotificationDropdownOpen((prev) => !prev)}
             aria-label="알림함"
           >
-            <Bell color="white" />
+            <Bell color={scrolled ? 'black' : 'white'} />
+            {unreadNotificationsCount && unreadNotificationsCount > 0 && (
+              <div className="absolute top-0 right-0 flex size-3.5 items-center justify-center rounded-full bg-[#f44335]">
+                <span className="typo-semibold14 text-[9px] text-white">
+                  {unreadNotificationsCount}
+                </span>
+              </div>
+            )}
           </button>
         }
         children={<NotificationBox />}

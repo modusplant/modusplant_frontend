@@ -23,7 +23,7 @@ export const notificationApi = {
   ): Promise<ApiResponse<GetNotificationResponseData>> => {
     const queryString = buildQueryString({ ...params });
 
-    const endPoint = `${NOTIFICATION_ENDPOINTS.GET_NOTIFICATIONS}${queryString}`;
+    const endPoint = `${NOTIFICATION_ENDPOINTS.GET_NOTIFICATIONS()}${queryString}`;
 
     return clientApiInstance.get(endPoint);
   },
@@ -36,4 +36,8 @@ export const notificationApi = {
   /**
    * 읽지 않은 알림 개수 조회
    */
+  getUnreadNotificationsCount: async (): Promise<ApiResponse<number>> => {
+    const endPoint = `${NOTIFICATION_ENDPOINTS.GET_UNREAD_NOTIFICATIONS_COUNT()}`;
+    return clientApiInstance.get(endPoint);
+  },
 };

@@ -16,6 +16,7 @@ export const NotificationBox = ({}: NotificationBoxProps) => {
     setTabState(tabState);
   };
 
+  // TODO: 전체 알림 읽기 API 연결
   const handleClickReadAll = () => {};
   // if (!data) return;
 
