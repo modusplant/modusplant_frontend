@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/_common/button';
 import Profile from '@/components/_common/profileImage';
 import Dropdown from '@/components/_common/dropdown';
 import { User } from '@/lib/types/auth';
+import { Bell } from 'lucide-react';
+import { NotificationBox } from '@/components/notification/NotificationBox';
 
 interface HeaderAuthActionsProps {
   user: User;
@@ -18,6 +20,8 @@ export default function HeaderAuthActions({
   showWriteButton = true,
 }: HeaderAuthActionsProps) {
   const router = useRouter();
+  const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] =
+    React.useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
   const handleLogout = () => {
@@ -27,14 +31,31 @@ export default function HeaderAuthActions({
 
   return (
     <>
+      {/* 알림 드롭다운 */}
+      <Dropdown
+        isOpen={isNotificationDropdownOpen}
+        onClose={() => setIsNotificationDropdownOpen(false)}
+        trigger={
+          <button
+            className="relative flex size-8 cursor-pointer items-center justify-center transition-opacity hover:opacity-80"
+            onClick={() => setIsNotificationDropdownOpen((prev) => !prev)}
+            aria-label="알림함"
+          >
+            <Bell color="white" />
+          </button>
+        }
+        children={<NotificationBox />}
+        className="-right-28.75 w-95 p-0"
+      />
+
       {/* 프로필 드롭다운 */}
       <Dropdown
         isOpen={isProfileDropdownOpen}
         onClose={() => setIsProfileDropdownOpen(false)}
         trigger={
           <button
-            onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-            className="relative flex h-9 w-9 cursor-pointer items-center rounded-full transition-opacity hover:opacity-80"
+            onClick={() => setIsProfileDropdownOpen((prev) => !prev)}
+            className="relative flex h-9 w-9 cursor-pointer items-center justify-center transition-opacity hover:opacity-80"
             aria-label="프로필 메뉴"
           >
             <Profile imageSrc={user?.image} />
