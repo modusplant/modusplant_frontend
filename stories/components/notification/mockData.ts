@@ -1,6 +1,6 @@
 import { type Notification } from '@/lib/types/notification';
 
-export const NotificationListMockData: Notification[] = [
+export const NOTIFICATION_LIST_MOCK_DATA: Notification[] = [
   {
     notificationId: '01JY3PPG5YJ41H7BPD0DSQW2RD',
     action: 'POST_LIKED',

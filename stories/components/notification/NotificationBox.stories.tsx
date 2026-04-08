@@ -12,6 +12,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Desktop: Story = {
+  args: {
+    isMobile: false,
+  },
   parameters: {
     layout: 'centered',
   },
@@ -25,6 +28,9 @@ export const Desktop: Story = {
 };
 
 export const Mobile: Story = {
+  args: {
+    isMobile: true,
+  },
   decorators: [
     (Story) => (
       <div className="h-full w-full">

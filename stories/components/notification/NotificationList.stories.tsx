@@ -1,6 +1,6 @@
 import { NotificationList } from '@/components/notification/NotificationList';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { NotificationListMockData } from './mockData';
+import { NOTIFICATION_LIST_MOCK_DATA } from './mockData';
 
 const meta = {
   title: 'Components/Notification/NotificationList',
@@ -21,6 +21,9 @@ const meta = {
     ),
   ],
   tags: ['autodocs'],
+  argTypes: {
+    observerTarget: { table: { disable: true } },
+  },
   args: { tabState: 'all' },
 } satisfies Meta<typeof NotificationList>;
 
@@ -28,9 +31,24 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Desktop: Story = {
   args: {
     tabState: 'all',
-    data: NotificationListMockData,
+    isMobile: false,
+    data: NOTIFICATION_LIST_MOCK_DATA,
   },
+};
+export const Mobile: Story = {
+  args: {
+    tabState: 'all',
+    isMobile: true,
+    data: NOTIFICATION_LIST_MOCK_DATA,
+  },
+  decorators: [
+    (Story) => (
+      <div className="h-50vh overflow-hidden">
+        <Story />
+      </div>
+    ),
+  ],
 };

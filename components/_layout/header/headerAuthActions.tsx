@@ -29,6 +29,14 @@ export default function HeaderAuthActions({
     React.useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
+  const handleClickNotification = () => {
+    if (window.innerWidth < 768) {
+      router.push('/notifications');
+    } else {
+      setIsNotificationDropdownOpen((prev) => !prev);
+    }
+  };
+
   const handleLogout = () => {
     setIsProfileDropdownOpen(false);
     onLogout();
@@ -43,7 +51,7 @@ export default function HeaderAuthActions({
         trigger={
           <button
             className="relative flex size-8 cursor-pointer items-center justify-center transition-opacity hover:opacity-80"
-            onClick={() => setIsNotificationDropdownOpen((prev) => !prev)}
+            onClick={handleClickNotification}
             aria-label="알림함"
           >
             <Bell color={scrolled ? 'black' : 'white'} />
@@ -56,8 +64,8 @@ export default function HeaderAuthActions({
             )}
           </button>
         }
-        children={<NotificationBox />}
-        className="-right-28.75 w-95 p-0"
+        children={<NotificationBox isMobile={false} />}
+        className="-right-28.75 h-105 w-95 overflow-hidden p-0"
       />
 
       {/* 프로필 드롭다운 */}
