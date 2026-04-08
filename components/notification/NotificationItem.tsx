@@ -1,41 +1,102 @@
+import { Notification } from '@/lib/types/notification';
+import { formatRelativeTime } from '@/lib/utils/formatTime';
 import { cn } from '@/lib/utils/tailwindHelper';
 import { Dot } from 'lucide-react';
+import Link from 'next/link';
 
-interface NotificationItemProps extends React.HTMLAttributes<HTMLDivElement> {
-  title: string;
-  content: string;
-  createdAt: string;
-  isRead: boolean;
+interface NotificationItemProps extends React.HTMLAttributes<HTMLAnchorElement> {
+  data: Notification;
 }
 
+const buildTitleString = (
+  action: Notification['action'],
+  actorNickname: Notification['actorNickname']
+): string => {
+  switch (action) {
+    case 'POST_LIKED':
+      return '내 게시글이 좋아요를 받았어요.';
+    case 'COMMENT_LIKED':
+      return '내 댓글이 좋아요를 받았어요';
+    case 'COMMENT_ADDED':
+      return `${actorNickname}님이 댓글을 달았어요.`;
+    case 'COMMENT_REPLY_ADDED':
+      return `${actorNickname}님이 대댓글을 달았어요.`;
+  }
+};
+
+const buildHrefString = (
+  postId: Notification['postId'],
+  path?: Notification['commentPath']
+): string => {
+  return `/community/${postId}${path ? '/' + path : ''}`;
+};
+
+const formatDate = (dateString: Notification['createdAt']): string => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMilliSeconds = now.getTime() - date.getTime();
+
+  const diffDays = Math.floor(diffMilliSeconds / (1000 * 60 * 60 * 24));
+
+  if (diffDays < 2) {
+    return (
+      (diffDays === 1 ? '어제 ' : '') +
+      new Intl.DateTimeFormat('ko-KR', {
+        dayPeriod: 'short',
+        hour12: true,
+        hour: 'numeric',
+        minute: '2-digit',
+      }).format(date)
+    );
+  }
+
+  return new Intl.DateTimeFormat('ko-KR', {
+    month: 'long',
+    day: 'numeric',
+  }).format(date);
+};
+
 export const NotificationItem = ({
-  title,
-  content,
-  createdAt,
-  isRead,
+  data,
   className,
   ...props
 }: NotificationItemProps) => {
-  // 최대 10개 노출 그 이상은 무한 스크롤 적용
+  const {
+    notificationId,
+    action,
+    status,
+    actorNickname,
+    postId,
+    commentPath,
+    contentType,
+    contentPreview,
+    createdAt,
+  } = data;
   return (
-    <div
-      className={cn(className, 'flex w-full items-center py-4 pr-2.5 pl-5')}
+    <Link
+      className={cn(
+        className,
+        'flex w-full min-w-75 items-center py-4 pr-5.5 pl-5'
+      )}
+      href={buildHrefString(postId, commentPath)}
       {...props}
     >
-      <div className="overflow-hidden">
+      <div className="w-full overflow-hidden">
         <div className="flex items-center justify-between pb-1">
-          <p className="text-semibold-14">{title}</p>
-          <p className="text-regular14 text-neutral-60 text-[13px]">
-            {createdAt}
+          <p className="typo-semibold14">
+            {buildTitleString(action, actorNickname)}
+          </p>
+          <p className="typo-regular14 text-neutral-60 text-[13px]">
+            {formatDate(createdAt)}
           </p>
         </div>
-        <p className="text-regular14 truncate text-[13px]">{content}</p>
+        <p className="typo-regular14 truncate text-[13px]">{contentPreview}</p>
       </div>
-      {!isRead && (
-        <div className="text-[#f44335]">
-          <Dot strokeWidth={6} />
+      {status === 'unread' && (
+        <div className="pl-3 text-[#f44335]">
+          <Dot strokeWidth={5} />
         </div>
       )}
-    </div>
+    </Link>
   );
 };
