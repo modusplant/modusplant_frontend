@@ -17,7 +17,7 @@ const buildTitleString = (
     case 'POST_LIKED':
       return '내 게시글이 좋아요를 받았어요.';
     case 'COMMENT_LIKED':
-      return '내 댓글이 좋아요를 받았어요';
+      return '내 댓글이 좋아요를 받았어요.';
     case 'COMMENT_ADDED':
       return `${actorNickname}님이 댓글을 달았어요.`;
     case 'COMMENT_REPLY_ADDED':
@@ -29,7 +29,7 @@ const buildHrefString = (
   postId: Notification['postId'],
   path?: Notification['commentPath']
 ): string => {
-  return `/community/${postId}${path ? '/' + path : ''}`;
+  return `/community/${postId}${path ? '#' + path : ''}`;
 };
 
 const formatDate = (dateString: Notification['createdAt']): string => {
@@ -77,11 +77,11 @@ export const NotificationItem = ({
   const { mutate } = useReadNotificationMutation();
 
   const handleClickNotificationItem = async () => {
-    if (status !== 'unread') return;
-
-    mutate({ notificationId });
     close();
+    if (status !== 'unread') return;
+    mutate({ notificationId });
   };
+
   return (
     <Link
       className={cn(

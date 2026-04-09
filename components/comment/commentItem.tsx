@@ -98,7 +98,7 @@ export default function CommentItem({
       {isDeleted ? (
         <DeletedComment />
       ) : (
-        <div className="mt-6 flex gap-4">
+        <div id={comment.path} className="mt-6 flex gap-4">
           <div className="relative h-7.5 w-7.5">
             <ProfileImage imageSrc={profileImagePath} />
           </div>
