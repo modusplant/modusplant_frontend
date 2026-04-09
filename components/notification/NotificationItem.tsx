@@ -75,7 +75,8 @@ export const NotificationItem = ({
   const { mutate } = useReadNotificationMutation();
 
   const handleClickNotificationItem = async () => {
-    if (status === 'unread') return;
+    if (status !== 'unread') return;
+
     mutate({ notificationId });
   };
   return (

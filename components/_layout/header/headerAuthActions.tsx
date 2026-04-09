@@ -57,7 +57,7 @@ export default function HeaderAuthActions({
             aria-label="알림함"
           >
             <Bell color={scrolled || !isRootPath ? 'black' : 'white'} />
-            {unreadNotificationsCount && unreadNotificationsCount > 0 && (
+            {!!unreadNotificationsCount && unreadNotificationsCount > 0 && (
               <div className="absolute top-0 right-0 flex size-3.5 items-center justify-center rounded-full bg-[#f44335]">
                 <span className="typo-semibold14 text-[9px] text-white">
                   {unreadNotificationsCount}
