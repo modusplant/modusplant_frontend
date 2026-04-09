@@ -4,7 +4,6 @@ import { NotificationList } from './NotificationList';
 import { NotificationTab } from './NotificationTab';
 import { useGetNotificationsQuery } from '@/lib/hooks/notification/useGetNotificationsQuery';
 import { ChevronLeft } from 'lucide-react';
-import { NOTIFICATION_LIST_MOCK_DATA } from '@/stories/components/notification/mockData';
 import Link from 'next/link';
 
 interface NotificationBoxProps {
@@ -94,7 +93,7 @@ export const NotificationBox = ({ isMobile }: NotificationBoxProps) => {
       )}
       <NotificationList
         tabState={tabState}
-        data={NOTIFICATION_LIST_MOCK_DATA}
+        data={notifications}
         isMobile={isMobile}
         observerTarget={observerTarget}
         observerRootContainer={observerRootContainer}

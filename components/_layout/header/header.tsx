@@ -73,6 +73,7 @@ export default function Header({ className, initialUser }: HeaderProps) {
                 onLogout={handleLogout}
                 showWriteButton={showWriteButton}
                 scrolled={scrolled}
+                isRootPath={isRootPath}
               />
             ) : (
               <HeaderGuestActions />

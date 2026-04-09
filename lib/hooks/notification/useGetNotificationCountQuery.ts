@@ -7,7 +7,7 @@ export const useGetNotificationCountQuery = () => {
     queryFn: async () => {
       const response = await notificationApi.getUnreadNotificationsCount();
 
-      if (response.code !== '200') {
+      if (response.status !== 200) {
         throw new Error('읽지 않은 알림 개수를 조회할 수 없습니다.');
       }
 

@@ -14,6 +14,7 @@ interface HeaderAuthActionsProps {
   onLogout: () => void;
   showWriteButton?: boolean;
   scrolled: boolean;
+  isRootPath: boolean;
 }
 
 export default function HeaderAuthActions({
@@ -21,6 +22,7 @@ export default function HeaderAuthActions({
   onLogout,
   showWriteButton = true,
   scrolled = false,
+  isRootPath,
 }: HeaderAuthActionsProps) {
   const router = useRouter();
   const { data: unreadNotificationsCount } = useGetNotificationCountQuery();
@@ -54,7 +56,7 @@ export default function HeaderAuthActions({
             onClick={handleClickNotification}
             aria-label="알림함"
           >
-            <Bell color={scrolled ? 'black' : 'white'} />
+            <Bell color={scrolled || !isRootPath ? 'black' : 'white'} />
             {unreadNotificationsCount && unreadNotificationsCount > 0 && (
               <div className="absolute top-0 right-0 flex size-3.5 items-center justify-center rounded-full bg-[#f44335]">
                 <span className="typo-semibold14 text-[9px] text-white">
