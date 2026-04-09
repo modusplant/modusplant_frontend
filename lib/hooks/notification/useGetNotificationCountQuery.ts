@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 export const useGetNotificationCountQuery = () => {
   return useQuery({
-    queryKey: ['notification', 'count'],
+    queryKey: ['notifications', 'count'],
     queryFn: async () => {
       const response = await notificationApi.getUnreadNotificationsCount();
 

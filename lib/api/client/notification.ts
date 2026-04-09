@@ -30,6 +30,12 @@ export const notificationApi = {
   /**
    * 알림 단건 읽음 처리
    */
+  readOneNotification: async (
+    notificationId: string
+  ): Promise<ApiResponse<void>> => {
+    const endPoint = `${NOTIFICATION_ENDPOINTS.READ_ONE_NOTIFICATION(notificationId)}`;
+    return clientApiInstance.patch(endPoint);
+  },
   /**
    * 알림 모두 읽음 처리
    */

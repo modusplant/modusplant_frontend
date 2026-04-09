@@ -1,5 +1,5 @@
+import { useReadNotificationMutation } from '@/lib/hooks/notification/useReadNotificationMutation';
 import { Notification } from '@/lib/types/notification';
-import { formatRelativeTime } from '@/lib/utils/formatTime';
 import { cn } from '@/lib/utils/tailwindHelper';
 import { Dot } from 'lucide-react';
 import Link from 'next/link';
@@ -72,6 +72,12 @@ export const NotificationItem = ({
     contentPreview,
     createdAt,
   } = data;
+  const { mutate } = useReadNotificationMutation();
+
+  const handleClickNotificationItem = async () => {
+    if (status === 'unread') return;
+    mutate({ notificationId });
+  };
   return (
     <Link
       className={cn(
@@ -79,6 +85,7 @@ export const NotificationItem = ({
         'flex w-full min-w-75 items-center py-4 pr-5.5 pl-5'
       )}
       href={buildHrefString(postId, commentPath)}
+      onClick={handleClickNotificationItem}
       {...props}
     >
       <div className="w-full overflow-hidden">
