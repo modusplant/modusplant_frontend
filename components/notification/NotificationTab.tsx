@@ -4,14 +4,14 @@ interface NotificationTabProps {
   tabState: 'all' | 'unread';
   handleClickTab: (tabState: 'all' | 'unread') => () => void;
   handleClickReadAll: () => void;
-  isDataEmpty: boolean;
+  shouldReadAllDisabled: boolean;
 }
 
 export const NotificationTab = ({
   handleClickTab,
   handleClickReadAll,
   tabState,
-  isDataEmpty,
+  shouldReadAllDisabled,
 }: NotificationTabProps) => {
   return (
     <div className="flex items-center justify-between border-y border-[#e9e9e9]">
@@ -34,7 +34,7 @@ export const NotificationTab = ({
       <button
         className="disabled:text-neutral-80 px-5 py-3 text-sm text-[13px] font-semibold text-[#027be5]"
         onClick={handleClickReadAll}
-        disabled={isDataEmpty}
+        disabled={shouldReadAllDisabled}
       >
         모두 읽기
       </button>

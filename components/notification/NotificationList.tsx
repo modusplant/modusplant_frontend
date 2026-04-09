@@ -58,23 +58,6 @@ export const NotificationList = ({
       </ul>
     );
   }
-
-  // return (
-  //   <div className="max-h-83 overflow-y-scroll">
-  //     {data.length > 0 ? (
-  //       data.map((notificationData) => (
-  //         <>
-  //           <NotificationItem data={notificationData} />
-  //           <hr className="border-[#e9e9e9]" />
-  //         </>
-  //       ))
-  //     ) : tabState === 'unread' ? (
-  //       <div>모든 알림을 확인했어요.</div>
-  //     ) : (
-  //       <div>최근 알림이 없어요.</div>
-  //     )}
-  //   </div>
-  // );
 };
 
 const EmptyListBox = ({
@@ -83,7 +66,7 @@ const EmptyListBox = ({
 }: React.PropsWithChildren & React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div className={cn('flex w-full items-center justify-center', className)}>
-      {children}
+      <span className="typo-regular14 text-neutral-40">{children}</span>
     </div>
   );
 };

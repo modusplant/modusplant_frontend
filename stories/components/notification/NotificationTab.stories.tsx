@@ -45,12 +45,12 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    isDataEmpty: false,
+    shouldReadAllDisabled: false,
   },
 };
 
 export const 알림없음: Story = {
   args: {
-    isDataEmpty: true,
+    shouldReadAllDisabled: true,
   },
 };

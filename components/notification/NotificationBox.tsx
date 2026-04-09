@@ -5,6 +5,7 @@ import { NotificationTab } from './NotificationTab';
 import { useGetNotificationsQuery } from '@/lib/hooks/notification/useGetNotificationsQuery';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
+import { useReadAllNotificationMutation } from '@/lib/hooks/notification/useReadAllNotificationMutation';
 
 interface NotificationBoxProps {
   isMobile: boolean;
@@ -23,18 +24,31 @@ export const NotificationBox = ({ isMobile }: NotificationBoxProps) => {
       status: tabState === 'unread' ? 'unread' : undefined,
     });
 
+  const {
+    mutate: readAllNotificationMutate,
+    isPending: isReadAllRequestPending,
+  } = useReadAllNotificationMutation();
+
   const handleClickTab = (tabState: 'all' | 'unread') => () => {
     setTabState(tabState);
   };
 
-  // TODO: 전체 알림 읽기 API 연결
-  const handleClickReadAll = () => {};
   // if (!data) return;
 
   const notifications = React.useMemo(() => {
     if (!data?.pages) return [];
     return data.pages.flatMap((p) => p?.notifications ?? []);
   }, [data]);
+
+  const doesUnreadExist = React.useMemo(
+    () => notifications.find(({ status }) => status === 'unread'),
+    [notifications]
+  );
+
+  const handleClickReadAll = () => {
+    if (!doesUnreadExist) return;
+    readAllNotificationMutate();
+  };
 
   React.useEffect(() => {
     const observer = new IntersectionObserver(
@@ -60,6 +74,9 @@ export const NotificationBox = ({ isMobile }: NotificationBoxProps) => {
     };
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+  const shouldReadAllDisabled =
+    notifications.length === 0 || isReadAllRequestPending || !doesUnreadExist;
+
   return (
     <div className="relative">
       {isMobile ? (
@@ -77,7 +94,7 @@ export const NotificationBox = ({ isMobile }: NotificationBoxProps) => {
             tabState={tabState}
             handleClickTab={handleClickTab}
             handleClickReadAll={handleClickReadAll}
-            isDataEmpty={notifications.length === 0}
+            shouldReadAllDisabled={shouldReadAllDisabled}
           />
         </div>
       ) : (
@@ -87,7 +104,7 @@ export const NotificationBox = ({ isMobile }: NotificationBoxProps) => {
             tabState={tabState}
             handleClickTab={handleClickTab}
             handleClickReadAll={handleClickReadAll}
-            isDataEmpty={notifications.length === 0}
+            shouldReadAllDisabled={shouldReadAllDisabled}
           />
         </>
       )}

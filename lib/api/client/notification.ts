@@ -39,6 +39,10 @@ export const notificationApi = {
   /**
    * 알림 모두 읽음 처리
    */
+  readAllNotifications: async (): Promise<ApiResponse<void>> => {
+    const endPoint = `${NOTIFICATION_ENDPOINTS.READ_ALL_NOTIFICATIONS()}`;
+    return clientApiInstance.patch(endPoint);
+  },
   /**
    * 읽지 않은 알림 개수 조회
    */

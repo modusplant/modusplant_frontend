@@ -43,10 +43,9 @@ const formatDate = (dateString: Notification['createdAt']): string => {
     return (
       (diffDays === 1 ? '어제 ' : '') +
       new Intl.DateTimeFormat('ko-KR', {
-        dayPeriod: 'short',
         hour12: true,
         hour: 'numeric',
-        minute: '2-digit',
+        minute: 'numeric',
       }).format(date)
     );
   }
