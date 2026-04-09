@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/_common/button';
@@ -8,6 +8,7 @@ import { User } from '@/lib/types/auth';
 import { Bell } from 'lucide-react';
 import { NotificationBox } from '@/components/notification/NotificationBox';
 import { useGetNotificationCountQuery } from '@/lib/hooks/notification/useGetNotificationCountQuery';
+import { useNotificationStore } from '@/lib/store/notificationStore';
 
 interface HeaderAuthActionsProps {
   user: User;
@@ -25,17 +26,17 @@ export default function HeaderAuthActions({
   isRootPath,
 }: HeaderAuthActionsProps) {
   const router = useRouter();
+  const { isOpen, close, toggle } = useNotificationStore();
   const { data: unreadNotificationsCount } = useGetNotificationCountQuery();
 
-  const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] =
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] =
     React.useState(false);
-  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
   const handleClickNotification = () => {
     if (window.innerWidth < 768) {
       router.push('/notifications');
     } else {
-      setIsNotificationDropdownOpen((prev) => !prev);
+      toggle(isOpen);
     }
   };
 
@@ -48,8 +49,8 @@ export default function HeaderAuthActions({
     <>
       {/* 알림 드롭다운 */}
       <Dropdown
-        isOpen={isNotificationDropdownOpen}
-        onClose={() => setIsNotificationDropdownOpen(false)}
+        isOpen={isOpen}
+        onClose={close}
         trigger={
           <button
             className="relative flex size-8 cursor-pointer items-center justify-center transition-opacity hover:opacity-80"

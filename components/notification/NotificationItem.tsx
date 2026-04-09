@@ -1,4 +1,5 @@
 import { useReadNotificationMutation } from '@/lib/hooks/notification/useReadNotificationMutation';
+import { useNotificationStore } from '@/lib/store/notificationStore';
 import { Notification } from '@/lib/types/notification';
 import { cn } from '@/lib/utils/tailwindHelper';
 import { Dot } from 'lucide-react';
@@ -72,12 +73,14 @@ export const NotificationItem = ({
     contentPreview,
     createdAt,
   } = data;
+  const { close } = useNotificationStore();
   const { mutate } = useReadNotificationMutation();
 
   const handleClickNotificationItem = async () => {
     if (status !== 'unread') return;
 
     mutate({ notificationId });
+    close();
   };
   return (
     <Link
