@@ -47,6 +47,15 @@ export const passwordConfirmSchema = z
   .min(1, '비밀번호 확인을 입력해주세요');
 
 /**
+ * 공통 닉네임 스키마
+ */
+
+export const nicknameSchema = z
+  .string()
+  .min(1, '닉네임을 입력해주세요')
+  .max(20, '닉네임은 20자 이내로 입력해주세요');
+
+/**
  * 회원가입 폼 스키마
  */
 export const signupSchema = z
@@ -55,10 +64,7 @@ export const signupSchema = z
     verificationCode: verificationCodeSchema,
     password: passwordSchema,
     passwordConfirm: passwordConfirmSchema,
-    nickname: z
-      .string()
-      .min(1, '닉네임을 입력해주세요')
-      .max(20, '닉네임은 20자 이내로 입력해주세요'),
+    nickname: nicknameSchema,
     agreeToTerms: z.boolean().refine((val) => val === true, {
       message: '이용약관에 동의해주세요',
     }),
