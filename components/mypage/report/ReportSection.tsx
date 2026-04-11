@@ -7,9 +7,24 @@ import { Upload } from 'lucide-react';
 import { useState } from 'react';
 import PreviewImage from '../common/previewImage';
 import { useForm } from 'react-hook-form';
+import { memberApi } from '@/lib/api/client/member';
+
+export interface ReportFormValues {
+  title: string;
+  content: string;
+  image: File | null;
+}
 
 const ReportSection = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const { register, handleSubmit, setValue } = useForm<ReportFormValues>({
+    defaultValues: {
+      title: '',
+      content: '',
+      image: null,
+    },
+  });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -17,6 +32,7 @@ const ReportSection = () => {
     if (file) {
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);
+      setValue('image', file);
     }
     e.target.value = '';
   };
@@ -24,16 +40,18 @@ const ReportSection = () => {
   const handleRemoveImage = () => {
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
+    setValue('image', null);
   };
 
-  // TODO: react-hook-form 연동
-  const { register, handleSubmit } = useForm();
+  const onSubmit = (data: ReportFormValues) => {
+    memberApi.postBugReport(data);
+  };
 
   return (
     <MypageBox className="px-10 py-12">
-      <form action="">
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex w-full flex-col gap-6">
-          <h1 className="text-bold-20 text-neutral-5 leading-[1.2]">
+          <h1 className="typo-bold20 text-neutral-5 leading-[1.2]">
             건의/버그제보
           </h1>
 
@@ -45,21 +63,21 @@ const ReportSection = () => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <p className="text-medium14 text-neutral-20">제목</p>
+            <p className="typo-medium text-neutral-20">제목</p>
             <Input
+              {...register('title', { required: true })}
               maxLength={60}
               showCount
               placeholder="건의사항이나 버그에 대해 간단한 제목을 입력해주세요."
-              className="placeholder:text-neutral-70 text-neutral-40 text-regular14"
+              className="text-neutral-40 typo-regular14"
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <p className="text-medium14 placeholder:text-neutral-20 text-neutral-40">
-              내용
-            </p>
+            <p className="typo-medium text-neutral-40">내용</p>
             <textarea
-              className="border-surface-stroke-2 text-neutral-40 text-regular14 placeholder:text-neutral-70 placeholder:text-regular14 focus:border-primary-50 h-[180px] w-full resize-none rounded-[10px] border bg-transparent p-4 transition-colors outline-none"
+              {...register('content', { required: true })}
+              className="border-surface-stroke-2 text-neutral-40 typo-regular14 placeholder:text-neutral-70 focus:border-primary-50 h-[180px] w-full resize-none rounded-[10px] border bg-transparent p-4 transition-colors outline-none"
               placeholder="자세한 내용을 입력해주세요. 버그 제보의 경우 발생 상황과 재현 방법을 구체적으로 설명해주시면 더욱 도움이 됩니다."
             />
           </div>
@@ -89,11 +107,15 @@ const ReportSection = () => {
                 className="border-primary-40 text-primary-50 hover:bg-primary-10 inline-flex cursor-pointer items-center justify-center gap-[6px] rounded-full border px-[18px] py-3 transition-colors"
               >
                 <Upload size={14} />
-                <span className="text-medium14">사진 첨부</span>
+                <span className="typo-medium">사진 첨부</span>
               </label>
             </div>
-            <Button variant="point" className="cursor-pointer px-[18px] py-3">
-              <span className="text-medium14">제출하기</span>
+            <Button
+              type="submit"
+              variant="point"
+              className="cursor-pointer px-[18px] py-3"
+            >
+              <span className="typo-medium">제출하기</span>
             </Button>
           </div>
         </div>

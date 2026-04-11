@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/_common/button';
+import { KAKAO_AUTH_URL } from '@/lib/constants/oauth';
 
 interface LoginFormActionsProps {
   isLoading: boolean;
@@ -14,6 +15,29 @@ interface LoginFormActionsProps {
  * - 하단 네비게이션 링크 (비밀번호 재설정, 회원가입)
  * - 소셜 로그인
  */
+
+const SOCIAL_PLATFORMS = [
+  {
+    id: 'google',
+    label: '구글 로그인',
+    icon: '/icon/google-enabled.svg',
+    url: '', // TODO: 구글 로그인 구현 시 교체
+  },
+  {
+    id: 'kakao',
+    label: '카카오 로그인',
+    icon: '/icon/kakao-enabled.svg',
+    url: KAKAO_AUTH_URL,
+  },
+] as const;
+
+const handleSocialLoginClick = (id: string) => {
+  const platform = SOCIAL_PLATFORMS.find((s) => s.id === id);
+  if (platform) {
+    window.location.href = platform.url;
+  }
+};
+
 export default function LoginFormActions({ isLoading }: LoginFormActionsProps) {
   return (
     <div>
@@ -61,22 +85,11 @@ export default function LoginFormActions({ isLoading }: LoginFormActionsProps) {
 
       {/* 소셜 로그인 */}
       <div className="mt-10 mb-3 flex items-center justify-center gap-4">
-        {[
-          {
-            id: 'google',
-            label: '구글 로그인',
-            icon: '/icon/google-enabled.svg',
-          },
-          {
-            id: 'kakao',
-            label: '카카오 로그인',
-            icon: '/icon/kakao-enabled.svg',
-          },
-        ].map(({ id, label, icon }) => (
+        {SOCIAL_PLATFORMS.map(({ id, label, icon }) => (
           <button
             key={id}
             type="button"
-            onClick={() => console.log(`${id} 로그인`)}
+            onClick={() => handleSocialLoginClick(id)}
             aria-label={label}
             className="transition-opacity hover:opacity-80"
           >

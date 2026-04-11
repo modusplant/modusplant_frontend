@@ -8,6 +8,7 @@ const API_V1 = '/api/v1';
  */
 export const AUTH_ENDPOINTS = {
   LOGIN: `/api/auth/login`,
+  KAKAO_LOGIN: `/api/v1/auth/social-login/kakao`,
   SIGNUP: `/api/members/register`,
   TOKEN_REFRESH: `/api/auth/token/refresh`,
   CHECK_NICKNAME: (nickname: string) =>
@@ -35,6 +36,7 @@ export const MEMBER_ENDPOINTS = {
   MY_POSTS: `${API_V1}/communication/posts/me`,
   MY_LIKED_POSTS: `${API_V1}/communication/posts/me/likes`,
   MY_BOOKMARKED_POSTS: `${API_V1}/communication/posts/me/bookmarks`,
+  MY_BUG_REPORTS: `${API_V1}/report/proposal-or-bug`,
 } as const;
 
 /**
