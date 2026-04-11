@@ -30,9 +30,15 @@ export default function TermsSection<T extends FieldValues & WithTermsFields>({
 
   const handleAllAgreementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;
-    setValue('agreeToTerms' as Path<T>, checked as PathValue<T, Path<T>>);
-    setValue('agreeToPrivacy' as Path<T>, checked as PathValue<T, Path<T>>);
-    setValue('agreeToCommunity' as Path<T>, checked as PathValue<T, Path<T>>);
+    setValue('agreeToTerms' as Path<T>, checked as PathValue<T, Path<T>>, {
+      shouldValidate: true,
+    });
+    setValue('agreeToPrivacy' as Path<T>, checked as PathValue<T, Path<T>>, {
+      shouldValidate: true,
+    });
+    setValue('agreeToCommunity' as Path<T>, checked as PathValue<T, Path<T>>, {
+      shouldValidate: true,
+    });
   };
 
   return (
