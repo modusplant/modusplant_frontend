@@ -7,24 +7,31 @@ import { Upload } from 'lucide-react';
 import { useState } from 'react';
 import PreviewImage from '../common/previewImage';
 import { useForm } from 'react-hook-form';
-import { memberApi } from '@/lib/api/client/member';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useBugReportMutation } from '@/lib/hooks/mypage/useBugReportMutation';
 
-export interface ReportFormValues {
-  title: string;
-  content: string;
-  image: File | null;
-}
+const reportFormSchema = z.object({
+  title: z.string().min(1, '제목을 입력해주세요.'),
+  content: z.string().min(1, '내용을 입력해주세요.'),
+  image: z.file().nullable(),
+});
+
+export type ReportFormValues = z.infer<typeof reportFormSchema>;
 
 const ReportSection = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const { register, handleSubmit, setValue } = useForm<ReportFormValues>({
+    resolver: zodResolver(reportFormSchema),
     defaultValues: {
       title: '',
       content: '',
       image: null,
     },
   });
+
+  const { mutate } = useBugReportMutation();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -44,7 +51,7 @@ const ReportSection = () => {
   };
 
   const onSubmit = (data: ReportFormValues) => {
-    memberApi.postBugReport(data);
+    mutate(data);
   };
 
   return (
@@ -65,7 +72,7 @@ const ReportSection = () => {
           <div className="flex flex-col gap-2">
             <p className="typo-medium text-neutral-20">제목</p>
             <Input
-              {...register('title', { required: true })}
+              {...register('title')}
               maxLength={60}
               showCount
               placeholder="건의사항이나 버그에 대해 간단한 제목을 입력해주세요."
@@ -76,7 +83,7 @@ const ReportSection = () => {
           <div className="flex flex-col gap-2">
             <p className="typo-medium text-neutral-40">내용</p>
             <textarea
-              {...register('content', { required: true })}
+              {...register('content')}
               className="border-surface-stroke-2 text-neutral-40 typo-regular14 placeholder:text-neutral-70 focus:border-primary-50 h-[180px] w-full resize-none rounded-[10px] border bg-transparent p-4 transition-colors outline-none"
               placeholder="자세한 내용을 입력해주세요. 버그 제보의 경우 발생 상황과 재현 방법을 구체적으로 설명해주시면 더욱 도움이 됩니다."
             />
