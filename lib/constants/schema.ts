@@ -81,6 +81,24 @@ export const signupSchema = z
   });
 
 /**
+ * 소셜 회원가입 폼 스키마
+ */
+export const socialSignupSchema = z.object({
+  nickname: nicknameSchema,
+  // TODO: 프로필 소개글 최대 글자 수 체크
+  introduction: z.string().optional(),
+  agreeToTerms: z.boolean().refine((val) => val === true, {
+    message: '이용약관에 동의해주세요',
+  }),
+  agreeToPrivacy: z.boolean().refine((val) => val === true, {
+    message: '개인정보처리방침에 동의해주세요',
+  }),
+  agreeToCommunity: z.boolean().refine((val) => val === true, {
+    message: '커뮤니티 운영정책에 동의해주세요',
+  }),
+});
+
+/**
  * 비밀번호 재설정 폼 스키마 (이메일 인증 포함)
  */
 export const resetPasswordSchema = z
@@ -111,5 +129,6 @@ export const newPasswordSchema = z
 // 타입 추출
 export type LoginFormValues = z.infer<typeof loginSchema>;
 export type SignupFormValues = z.infer<typeof signupSchema>;
+export type SocialSignupFormValues = z.infer<typeof socialSignupSchema>;
 export type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 export type NewPasswordFormValues = z.infer<typeof newPasswordSchema>;
