@@ -28,7 +28,7 @@ export const AUTH_ENDPOINTS = {
  * 회원 관련 엔드포인트
  */
 export const MEMBER_ENDPOINTS = {
-  PROFILE: (userId: string) => `${API_V1}/members/${userId}/profile`,
+  PROFILE: () => `${API_V1}/members/profile`,
   AUTH_INFO: (userId: string) => `${API_V1}/members/${userId}/auth-info`,
 
   // 마이페이지
@@ -49,10 +49,10 @@ export const POST_ENDPOINTS = {
   POST_DETAIL_EDIT: (postId: string) =>
     `${API_V1}/communication/posts/${postId}/data`,
 
-  LIKE_POST: (memberId: string, postUlid: string) =>
-    `${API_V1}/members/${memberId}/like/communication/post/${postUlid}`,
-  BOOKMARK_POST: (memberId: string, postUlid: string) =>
-    `${API_V1}/members/${memberId}/bookmark/communication/post/${postUlid}`,
+  LIKE_POST: (postUlid: string) =>
+    `${API_V1}/members/like/communication/post/${postUlid}`,
+  BOOKMARK_POST: (postUlid: string) =>
+    `${API_V1}/members/bookmark/communication/post/${postUlid}`,
 
   // 쿼리 파라미터를 포함한 엔드포인트 빌더
   withQueryParams: (
@@ -80,8 +80,8 @@ export const COMMENT_ENDPOINTS = {
   UPDATE_COMMENTS: () => `${API_V1}/communication/comments/update`,
   DELETE_COMMENT: (postUlid: string, path: string) =>
     `${API_V1}/communication/comments/post/${postUlid}/path/${path}`,
-  LIKE_COMMENT: (memberId: string, postUlid: string, path: string) =>
-    `${API_V1}/members/${memberId}/like/communication/post/${postUlid}/path/${path}`,
+  LIKE_COMMENT: (postUlid: string, path: string) =>
+    `${API_V1}/members/like/communication/post/${postUlid}/path/${path}`,
   MY_COMMENTS: (uuid: string) =>
     `${API_V1}/communication/comments/member/auth/${uuid}`,
 } as const;

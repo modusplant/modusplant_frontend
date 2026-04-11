@@ -35,10 +35,10 @@ export function useCommentLike({
       }
 
       if (isCurrentlyLiked) {
-        await commentApi.unlikeComment(user.id, postId, commentPath);
+        await commentApi.unlikeComment(postId, commentPath);
         return -1; // 좋아요 취소
       } else {
-        await commentApi.likeComment(user.id, postId, commentPath);
+        await commentApi.likeComment(postId, commentPath);
         return 1; // 좋아요
       }
     },
