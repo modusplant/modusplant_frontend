@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useBugReportMutation } from '@/lib/hooks/mypage/useBugReportMutation';
+import { useBlockNavigation } from '@/lib/hooks/common/useBlockNavigation';
 
 const reportFormSchema = z.object({
   title: z.string().min(1, '제목을 입력해주세요.'),
@@ -22,7 +23,13 @@ export type ReportFormValues = z.infer<typeof reportFormSchema>;
 const ReportSection = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const { register, handleSubmit, setValue } = useForm<ReportFormValues>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    reset,
+    formState: { isDirty },
+  } = useForm<ReportFormValues>({
     resolver: zodResolver(reportFormSchema),
     defaultValues: {
       title: '',
@@ -31,7 +38,9 @@ const ReportSection = () => {
     },
   });
 
-  const { mutate } = useBugReportMutation();
+  const { mutate } = useBugReportMutation({ onSuccess: reset });
+
+  useBlockNavigation(isDirty);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
