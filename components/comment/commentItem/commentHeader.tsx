@@ -30,35 +30,45 @@ export default function CommentHeader({
         {nickname}
       </span>
 
-      {isMyComment && (
-        <Dropdown
-          isOpen={isDropdownOpen}
-          onClose={() => setIsDropdownOpen(false)}
-          trigger={
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full"
-              aria-label="댓글 옵션"
-            >
-              <EllipsisVertical className="text-neutral-60 h-4 w-4" />
-            </button>
-          }
-          items={[
-            {
-              label: '삭제',
-              onClick: onDelete,
-              disabled: isDeleting,
-            },
-            {
-              label: '수정',
-              onClick: onUpdate,
-              disabled: false,
-            },
-          ]}
-          position="right"
-          width="w-24"
-        />
-      )}
+      {/* {isMyComment && ( */}
+      <Dropdown
+        isOpen={isDropdownOpen}
+        onClose={() => setIsDropdownOpen(false)}
+        trigger={
+          <button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full"
+            aria-label="댓글 옵션"
+          >
+            <EllipsisVertical className="text-neutral-60 h-4 w-4" />
+          </button>
+        }
+        items={
+          isMyComment
+            ? [
+                {
+                  label: '삭제',
+                  onClick: onDelete,
+                  disabled: isDeleting,
+                },
+                {
+                  label: '수정',
+                  onClick: onUpdate,
+                  disabled: false,
+                },
+              ]
+            : [
+                {
+                  label: '신고',
+                  onClick: () => {},
+                  disabled: false,
+                },
+              ]
+        }
+        position="right"
+        width="w-24"
+      />
+      {/* )} */}
     </div>
   );
 }
