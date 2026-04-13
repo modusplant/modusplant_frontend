@@ -4,17 +4,14 @@ import { cn } from '@/lib/utils/tailwindHelper';
 import { useNicknameVerification } from '@/lib/hooks/auth/useNicknameVerification';
 import { Input } from '@/components/_common/input';
 import Button from '@/components/_common/button';
-import { NicknameSectionProps } from '@/lib/types/auth';
+import { NicknameSectionProps, WithNicknameField } from '@/lib/types/auth';
 import Image from 'next/image';
+import { FieldValues, Path } from 'react-hook-form';
 
-export default function NicknameSection({
-  register,
-  trigger,
-  watch,
-  errors,
-  className,
-}: NicknameSectionProps) {
-  const watchedNickname = watch('nickname');
+export default function NicknameSection<
+  T extends FieldValues & WithNicknameField,
+>({ register, trigger, watch, errors, className }: NicknameSectionProps<T>) {
+  const watchedNickname = watch('nickname' as Path<T>);
 
   const {
     isChecked,
@@ -29,7 +26,7 @@ export default function NicknameSection({
 
   // 닉네임 중복 확인 핸들러
   const handleCheckNickname = async () => {
-    const nicknameValid = await trigger('nickname');
+    const nicknameValid = await trigger('nickname' as Path<T>);
     if (!nicknameValid) return;
 
     await checkNickname(watchedNickname);
@@ -37,7 +34,7 @@ export default function NicknameSection({
 
   // 닉네임 변경 핸들러
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    register('nickname').onChange(e);
+    register('nickname' as Path<T>).onChange(e);
     // 닉네임 변경 시 검증 상태 초기화
     resetVerification();
   };
@@ -51,7 +48,7 @@ export default function NicknameSection({
       <div className="flex flex-col gap-2 sm:flex-row">
         <div className="flex-1">
           <Input
-            {...register('nickname')}
+            {...register('nickname' as Path<T>)}
             type="text"
             placeholder="닉네임을 입력해주세요"
             className={cn(
