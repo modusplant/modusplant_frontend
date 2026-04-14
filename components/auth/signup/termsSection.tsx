@@ -1,24 +1,25 @@
-"use client";
+'use client';
 
-import { useTermsAgreement } from "@/lib/hooks/auth/useTermsAgreement";
-import { Checkbox } from "@/components/_common/checkbox";
-import { TERMS_MAP, TERMS_LABELS } from "@/lib/constants/terms";
-import { TermsSectionProps } from "@/lib/types/auth";
-import TermsItem from "./termsItem";
+import { useTermsAgreement } from '@/lib/hooks/auth/useTermsAgreement';
+import { Checkbox } from '@/components/_common/checkbox';
+import { TERMS_MAP, TERMS_LABELS } from '@/lib/constants/terms';
+import { TermsSectionProps, WithTermsFields } from '@/lib/types/auth';
+import TermsItem from './termsItem';
+import { FieldValues, Path, PathValue } from 'react-hook-form';
 
-export default function TermsSection({
+export default function TermsSection<T extends FieldValues & WithTermsFields>({
   register,
   errors,
   watch,
   setValue,
-}: TermsSectionProps) {
+}: TermsSectionProps<T>) {
   const { contentState, toggleContent } = useTermsAgreement();
 
   // 현재 폼의 동의 상태 확인
   const agreementValues = {
-    agreeToTerms: watch("agreeToTerms"),
-    agreeToPrivacy: watch("agreeToPrivacy"),
-    agreeToCommunity: watch("agreeToCommunity"),
+    agreeToTerms: watch('agreeToTerms' as Path<T>),
+    agreeToPrivacy: watch('agreeToPrivacy' as Path<T>),
+    agreeToCommunity: watch('agreeToCommunity' as Path<T>),
   };
 
   // 모든 필수 약관 동의 상태
@@ -29,9 +30,15 @@ export default function TermsSection({
 
   const handleAllAgreementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;
-    setValue("agreeToTerms", checked);
-    setValue("agreeToPrivacy", checked);
-    setValue("agreeToCommunity", checked);
+    setValue('agreeToTerms' as Path<T>, checked as PathValue<T, Path<T>>, {
+      shouldValidate: true,
+    });
+    setValue('agreeToPrivacy' as Path<T>, checked as PathValue<T, Path<T>>, {
+      shouldValidate: true,
+    });
+    setValue('agreeToCommunity' as Path<T>, checked as PathValue<T, Path<T>>, {
+      shouldValidate: true,
+    });
   };
 
   return (
@@ -60,10 +67,10 @@ export default function TermsSection({
         <TermsItem
           id="agreeToTerms"
           label={TERMS_LABELS.terms}
-          checked={agreementValues.agreeToTerms || false}
-          register={register("agreeToTerms")}
+          checked={agreementValues.agreeToTerms}
+          register={register('agreeToTerms' as Path<T>)}
           isExpanded={contentState.showTermsContent}
-          onToggle={() => toggleContent("showTermsContent")}
+          onToggle={() => toggleContent('showTermsContent')}
           content={TERMS_MAP.terms}
         />
 
@@ -71,10 +78,10 @@ export default function TermsSection({
         <TermsItem
           id="agreeToPrivacy"
           label={TERMS_LABELS.privacy}
-          checked={agreementValues.agreeToPrivacy || false}
-          register={register("agreeToPrivacy")}
+          checked={agreementValues.agreeToPrivacy}
+          register={register('agreeToPrivacy' as Path<T>)}
           isExpanded={contentState.showPrivacyContent}
-          onToggle={() => toggleContent("showPrivacyContent")}
+          onToggle={() => toggleContent('showPrivacyContent')}
           content={TERMS_MAP.privacy}
         />
 
@@ -82,10 +89,10 @@ export default function TermsSection({
         <TermsItem
           id="agreeToCommunity"
           label={TERMS_LABELS.community}
-          checked={agreementValues.agreeToCommunity || false}
-          register={register("agreeToCommunity")}
+          checked={agreementValues.agreeToCommunity}
+          register={register('agreeToCommunity' as Path<T>)}
           isExpanded={contentState.showCommunityContent}
-          onToggle={() => toggleContent("showCommunityContent")}
+          onToggle={() => toggleContent('showCommunityContent')}
           content={TERMS_MAP.community}
         />
       </div>

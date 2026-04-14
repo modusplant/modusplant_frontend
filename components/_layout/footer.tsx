@@ -1,6 +1,6 @@
-import Link from "next/link";
-import { cn } from "@/lib/utils/tailwindHelper";
-import Image from "next/image";
+import Link from 'next/link';
+import { cn } from '@/lib/utils/tailwindHelper';
+import Image from 'next/image';
 
 export interface FooterProps {
   className?: string;
@@ -10,7 +10,7 @@ export default function Footer({ className }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className={cn("bg-surface-99 w-full", className)}>
+    <footer className={cn('bg-surface-99 w-full', className)}>
       <div className="mx-auto w-full max-w-[68vw] px-4 py-8 md:px-6 md:py-12 lg:px-8">
         <div className="flex flex-col items-center gap-6 lg:flex-row lg:justify-between lg:gap-0">
           <Image

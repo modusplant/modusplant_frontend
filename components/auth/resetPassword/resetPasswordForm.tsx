@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { Input } from "@/components/_common/input";
-import { useRouter } from "next/navigation";
-import Button from "@/components/_common/button";
-import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { authApi } from "@/lib/api/client/auth";
-import { ApiError } from "@/lib/types/common";
-import { showModal } from "@/lib/store/modalStore";
+import { Input } from '@/components/_common/input';
+import { useRouter } from 'next/navigation';
+import Button from '@/components/_common/button';
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { authApi } from '@/lib/api/client/auth';
+import { ApiError } from '@/lib/types/common';
+import { showModal } from '@/lib/store/modalStore';
 import {
   newPasswordSchema,
   NewPasswordFormValues,
-} from "@/lib/constants/schema";
-import { cn } from "@/lib/utils/tailwindHelper";
+} from '@/lib/constants/schema';
+import { cn } from '@/lib/utils/tailwindHelper';
 
 interface ResetPasswordFormProps {
   uuid: string;
@@ -50,18 +50,18 @@ export default function ResetPasswordForm({ uuid }: ResetPasswordFormProps) {
       await authApi.resetPassword(data.password);
 
       showModal({
-        type: "one-button",
-        title: "비밀번호가 변경되었습니다.",
-        description: "아래 버튼을 누르면 로그인 페이지로 이동합니다.",
-        buttonText: "로그인 하기",
+        type: 'one-button',
+        title: '비밀번호가 변경되었습니다.',
+        description: '아래 버튼을 누르면 로그인 페이지로 이동합니다.',
+        buttonText: '로그인 하기',
         onConfirm: async () => {
-          router.push("/login");
+          router.push('/login');
         },
       });
     } catch (err) {
       const error = err as ApiError;
       setApiError(
-        error.message || "비밀번호 변경에 실패했습니다. 다시 시도해주세요."
+        error.message || '비밀번호 변경에 실패했습니다. 다시 시도해주세요.'
       );
     }
   };
@@ -90,11 +90,11 @@ export default function ResetPasswordForm({ uuid }: ResetPasswordFormProps) {
         {/* 비밀번호 입력 */}
         <p>새 비밀번호</p>
         <Input
-          {...register("password")}
+          {...register('password')}
           type="password"
           placeholder="새 비밀번호를 입력해주세요."
           showPasswordToggle
-          className={cn("w-full", errors.password && "border-system-alert")}
+          className={cn('w-full', errors.password && 'border-system-alert')}
         />
         {errors.password && (
           <p className="text-system-alert mt-1 text-sm">
@@ -104,13 +104,13 @@ export default function ResetPasswordForm({ uuid }: ResetPasswordFormProps) {
 
         {/* 비밀번호 확인 입력 */}
         <Input
-          {...register("passwordConfirm")}
+          {...register('passwordConfirm')}
           type="password"
           placeholder="새 비밀번호를 다시 한번 입력해주세요."
           showPasswordToggle
           className={cn(
-            "w-full",
-            errors.passwordConfirm && "border-system-alert"
+            'w-full',
+            errors.passwordConfirm && 'border-system-alert'
           )}
         />
         {errors.passwordConfirm && (
@@ -143,7 +143,7 @@ export default function ResetPasswordForm({ uuid }: ResetPasswordFormProps) {
         disabled={isSubmitting}
         fullWidth
       >
-        {isSubmitting ? "처리 중..." : "재설정"}
+        {isSubmitting ? '처리 중...' : '재설정'}
       </Button>
     </form>
   );

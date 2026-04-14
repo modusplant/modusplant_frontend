@@ -1,24 +1,44 @@
-import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/_common/button";
-import Profile from "@/components/_common/profileImage";
-import Dropdown from "@/components/_common/dropdown";
-import { User } from "@/lib/types/auth";
+import React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/_common/button';
+import Profile from '@/components/_common/profileImage';
+import Dropdown from '@/components/_common/dropdown';
+import { User } from '@/lib/types/auth';
+import { Bell } from 'lucide-react';
+import { NotificationBox } from '@/components/notification/NotificationBox';
+import { useGetNotificationCountQuery } from '@/lib/hooks/notification/useGetNotificationCountQuery';
+import { useNotificationStore } from '@/lib/store/notificationStore';
 
 interface HeaderAuthActionsProps {
   user: User;
   onLogout: () => void;
   showWriteButton?: boolean;
+  scrolled: boolean;
+  isRootPath: boolean;
 }
 
 export default function HeaderAuthActions({
   user,
   onLogout,
   showWriteButton = true,
+  scrolled = false,
+  isRootPath,
 }: HeaderAuthActionsProps) {
   const router = useRouter();
-  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const { isOpen, close, toggle } = useNotificationStore();
+  const { data: unreadNotificationsCount } = useGetNotificationCountQuery();
+
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] =
+    React.useState(false);
+
+  const handleClickNotification = () => {
+    if (window.innerWidth < 768) {
+      router.push('/notifications');
+    } else {
+      toggle(isOpen);
+    }
+  };
 
   const handleLogout = () => {
     setIsProfileDropdownOpen(false);
@@ -27,14 +47,38 @@ export default function HeaderAuthActions({
 
   return (
     <>
+      {/* 알림 드롭다운 */}
+      <Dropdown
+        isOpen={isOpen}
+        onClose={close}
+        trigger={
+          <button
+            className="relative flex size-8 cursor-pointer items-center justify-center transition-opacity hover:opacity-80"
+            onClick={handleClickNotification}
+            aria-label="알림함"
+          >
+            <Bell color={scrolled || !isRootPath ? 'black' : 'white'} />
+            {!!unreadNotificationsCount && unreadNotificationsCount > 0 && (
+              <div className="absolute top-0 right-0 flex size-3.5 items-center justify-center rounded-full bg-[#f44335]">
+                <span className="typo-semibold14 text-[9px] text-white">
+                  {unreadNotificationsCount}
+                </span>
+              </div>
+            )}
+          </button>
+        }
+        children={<NotificationBox isMobile={false} />}
+        className="-right-28.75 h-105 w-95 overflow-hidden p-0"
+      />
+
       {/* 프로필 드롭다운 */}
       <Dropdown
         isOpen={isProfileDropdownOpen}
         onClose={() => setIsProfileDropdownOpen(false)}
         trigger={
           <button
-            onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-            className="relative flex h-9 w-9 cursor-pointer items-center rounded-full transition-opacity hover:opacity-80"
+            onClick={() => setIsProfileDropdownOpen((prev) => !prev)}
+            className="relative flex h-9 w-9 cursor-pointer items-center justify-center transition-opacity hover:opacity-80"
             aria-label="프로필 메뉴"
           >
             <Profile imageSrc={user?.image} />
@@ -42,19 +86,19 @@ export default function HeaderAuthActions({
         }
         items={[
           {
-            label: "마이페이지",
-            onClick: () => router.push("/mypage"),
-            textAlign: "left",
+            label: '마이페이지',
+            onClick: () => router.push('/mypage'),
+            textAlign: 'left',
           },
           {
-            label: "내 활동",
-            onClick: () => router.push("/mypage/recent"),
-            textAlign: "left",
+            label: '내 활동',
+            onClick: () => router.push('/mypage/recent'),
+            textAlign: 'left',
           },
           {
-            label: "로그아웃",
+            label: '로그아웃',
             onClick: handleLogout,
-            textAlign: "left",
+            textAlign: 'left',
           },
         ]}
         position="center"

@@ -1,20 +1,17 @@
-"use client";
+'use client';
 
-import { cn } from "@/lib/utils/tailwindHelper";
-import { useNicknameVerification } from "@/lib/hooks/auth/useNicknameVerification";
-import { Input } from "@/components/_common/input";
-import Button from "@/components/_common/button";
-import { NicknameSectionProps } from "@/lib/types/auth";
-import Image from "next/image";
+import { cn } from '@/lib/utils/tailwindHelper';
+import { useNicknameVerification } from '@/lib/hooks/auth/useNicknameVerification';
+import { Input } from '@/components/_common/input';
+import Button from '@/components/_common/button';
+import { NicknameSectionProps, WithNicknameField } from '@/lib/types/auth';
+import Image from 'next/image';
+import { FieldValues, Path } from 'react-hook-form';
 
-export default function NicknameSection({
-  register,
-  trigger,
-  watch,
-  errors,
-  className,
-}: NicknameSectionProps) {
-  const watchedNickname = watch("nickname");
+export default function NicknameSection<
+  T extends FieldValues & WithNicknameField,
+>({ register, trigger, watch, errors, className }: NicknameSectionProps<T>) {
+  const watchedNickname = watch('nickname' as Path<T>);
 
   const {
     isChecked,
@@ -29,7 +26,7 @@ export default function NicknameSection({
 
   // 닉네임 중복 확인 핸들러
   const handleCheckNickname = async () => {
-    const nicknameValid = await trigger("nickname");
+    const nicknameValid = await trigger('nickname' as Path<T>);
     if (!nicknameValid) return;
 
     await checkNickname(watchedNickname);
@@ -37,13 +34,13 @@ export default function NicknameSection({
 
   // 닉네임 변경 핸들러
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    register("nickname").onChange(e);
+    register('nickname' as Path<T>).onChange(e);
     // 닉네임 변경 시 검증 상태 초기화
     resetVerification();
   };
 
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn('space-y-2', className)}>
       <label className="text-neutral-20 block text-sm font-medium">
         닉네임
       </label>
@@ -51,13 +48,13 @@ export default function NicknameSection({
       <div className="flex flex-col gap-2 sm:flex-row">
         <div className="flex-1">
           <Input
-            {...register("nickname")}
+            {...register('nickname' as Path<T>)}
             type="text"
             placeholder="닉네임을 입력해주세요"
             className={cn(
-              "w-full",
-              errors.nickname && "border-system-alert",
-              isChecked && !isAvailable && "border-system-alert"
+              'w-full',
+              errors.nickname && 'border-system-alert',
+              isChecked && !isAvailable && 'border-system-alert'
             )}
             onChange={handleNicknameChange}
           />
@@ -67,18 +64,18 @@ export default function NicknameSection({
           onClick={handleCheckNickname}
           disabled={nicknameDisabled}
           className="min-w-23 cursor-pointer rounded-lg px-5 py-3 text-sm sm:w-auto"
-          variant={nicknameDisabled && !isLoading ? "secondary" : "point"}
+          variant={nicknameDisabled && !isLoading ? 'secondary' : 'point'}
         >
           {isLoading ? (
             <Image
-              src={"/icon/loading.gif"}
+              src={'/icon/loading.gif'}
               alt="Loading"
               width={20}
               height={20}
               unoptimized
             />
           ) : (
-            "중복확인"
+            '중복확인'
           )}
         </Button>
       </div>

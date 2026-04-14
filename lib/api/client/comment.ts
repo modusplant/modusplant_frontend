@@ -1,12 +1,12 @@
-import { clientApiInstance } from "../instances/clientInstance";
-import { ApiResponse } from "@/lib/types/common";
+import { clientApiInstance } from '../instances/clientInstance';
+import { ApiResponse } from '@/lib/types/common';
 import {
   Comment,
   CommentCreatePayload,
   GetMyCommentsRequest,
   GetMyCommentsResponseData,
-} from "@/lib/types/comment";
-import { COMMENT_ENDPOINTS, buildQueryString } from "@/lib/constants/endpoints";
+} from '@/lib/types/comment';
+import { COMMENT_ENDPOINTS, buildQueryString } from '@/lib/constants/endpoints';
 
 /**
  * 댓글 관련 API
@@ -32,6 +32,20 @@ export const commentApi = {
     payload: CommentCreatePayload
   ): Promise<ApiResponse<void>> {
     return clientApiInstance.post<void>(COMMENT_ENDPOINTS.COMMENTS, payload);
+  },
+
+  /**
+   * 댓글 수정
+   * @param payload 댓글 수정 페이로드
+   * @returns 성공 응답
+   */
+  async updateComment(
+    payload: CommentCreatePayload
+  ): Promise<ApiResponse<void>> {
+    return clientApiInstance.put<void>(
+      COMMENT_ENDPOINTS.UPDATE_COMMENTS(),
+      payload
+    );
   },
 
   /**
@@ -94,7 +108,7 @@ export const commentApi = {
     const { page, size = 8, uuid } = params;
 
     if (!uuid) {
-      throw new Error("uuid is required for getMyComments");
+      throw new Error('uuid is required for getMyComments');
     }
 
     const queryString = buildQueryString({ page, size });

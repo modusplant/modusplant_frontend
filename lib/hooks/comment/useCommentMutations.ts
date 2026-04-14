@@ -1,8 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { commentApi } from "@/lib/api/client/comment";
-import { useAuthStore } from "@/lib/store/authStore";
-import { generateCommentPath } from "@/lib/utils/parseComments";
-import { showModal } from "@/lib/store/modalStore";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { commentApi } from '@/lib/api/client/comment';
+import { useAuthStore } from '@/lib/store/authStore';
+import { generateCommentPath } from '@/lib/utils/parseComments';
+import { showModal } from '@/lib/store/modalStore';
+import { type Comment } from '@/lib/types/comment';
 
 interface UseCommentMutationsProps {
   postId: string;
@@ -16,6 +17,11 @@ interface CreateCommentParams {
   content: string;
 }
 
+interface UpdateCommentParams {
+  path: string;
+  content: string;
+}
+
 interface DeleteCommentParams {
   commentPath: string;
 }
@@ -24,6 +30,10 @@ interface UseCommentMutationsReturn {
   // 생성
   createComment: (params: CreateCommentParams) => Promise<void>;
   isCreating: boolean;
+
+  // 수정
+  updateComment: (params: UpdateCommentParams) => Promise<void>;
+  isUpdating: boolean;
 
   // 삭제
   deleteComment: (params: DeleteCommentParams) => Promise<void>;
@@ -47,14 +57,14 @@ export function useCommentMutations({
     }: CreateCommentParams) => {
       if (!isAuthenticated) {
         showModal({
-          description: "로그인이 필요합니다.",
-          type: "snackbar",
+          description: '로그인이 필요합니다.',
+          type: 'snackbar',
         });
         return;
       }
 
       if (content.trim().length === 0) {
-        throw new Error("댓글 내용을 입력해주세요.");
+        throw new Error('댓글 내용을 입력해주세요.');
       }
 
       const path = parentPath
@@ -68,35 +78,83 @@ export function useCommentMutations({
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments", postId] });
+      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
       onSuccess?.();
     },
     onError: (error: Error) => {
-      console.error("댓글 작성 실패:", error);
+      console.error('댓글 작성 실패:', error);
       showModal({
-        type: "snackbar",
+        type: 'snackbar',
         description: error.message,
       });
+    },
+  });
+
+  // 댓글 수정 mutation
+  const updateMutation = useMutation({
+    mutationFn: async ({ path, content }: UpdateCommentParams) => {
+      if (!isAuthenticated) {
+        showModal({
+          description: '로그인이 필요합니다.',
+          type: 'snackbar',
+        });
+        return;
+      }
+
+      if (content.trim().length === 0) {
+        throw new Error('댓글 내용을 입력해주세요.');
+      }
+
+      await commentApi.updateComment({ content, path, postId });
+    },
+    onMutate: async ({ path, content }) => {
+      await queryClient.cancelQueries({ queryKey: ['comments', postId] });
+
+      const previousComment = queryClient.getQueryData<Comment[]>([
+        'comments',
+        postId,
+      ]);
+
+      queryClient.setQueryData<Comment[]>(['comments', postId], (old) => {
+        if (!old) return old;
+        return old.map((comment) =>
+          comment.path === path ? { ...comment, content } : comment
+        );
+      });
+      return { previousComment };
+    },
+    onError: (error: Error, _variables, context) => {
+      if (context?.previousComment) {
+        queryClient.setQueryData(['comments', postId], context.previousComment);
+      }
+      showModal({
+        type: 'snackbar',
+        description: error.message,
+      });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
+      onSuccess?.();
     },
   });
 
   // 댓글 삭제 mutation
   const deleteMutation = useMutation({
     mutationFn: async ({ commentPath }: DeleteCommentParams) => {
-      if (!window.confirm("댓글을 삭제하시겠습니까?")) {
-        throw new Error("취소됨");
+      if (!window.confirm('댓글을 삭제하시겠습니까?')) {
+        throw new Error('취소됨');
       }
       await commentApi.deleteComment(postId, commentPath);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments", postId] });
+      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
       onSuccess?.();
     },
     onError: (error: Error) => {
-      if (error.message !== "취소됨") {
-        console.error("댓글 삭제 실패:", error);
+      if (error.message !== '취소됨') {
+        console.error('댓글 삭제 실패:', error);
         showModal({
-          type: "snackbar",
+          type: 'snackbar',
           description: error.message,
         });
       }
@@ -108,5 +166,7 @@ export function useCommentMutations({
     isCreating: createMutation.isPending,
     deleteComment: deleteMutation.mutateAsync,
     isDeleting: deleteMutation.isPending,
+    updateComment: updateMutation.mutateAsync,
+    isUpdating: updateMutation.isPending,
   };
 }

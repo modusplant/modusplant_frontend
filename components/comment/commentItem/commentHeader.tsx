@@ -1,15 +1,16 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { EllipsisVertical } from "lucide-react";
-import ProfileImage from "@/components/_common/profileImage";
-import Dropdown from "@/components/_common/dropdown";
+import { useState } from 'react';
+import { EllipsisVertical } from 'lucide-react';
+import ProfileImage from '@/components/_common/profileImage';
+import Dropdown from '@/components/_common/dropdown';
 
 interface CommentHeaderProps {
   nickname: string;
   profileImagePath?: string;
   isMyComment: boolean;
   onDelete: () => void;
+  onUpdate: () => void;
   isDeleting: boolean;
 }
 
@@ -18,6 +19,7 @@ export default function CommentHeader({
   profileImagePath,
   isMyComment,
   onDelete,
+  onUpdate,
   isDeleting,
 }: CommentHeaderProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -43,9 +45,14 @@ export default function CommentHeader({
           }
           items={[
             {
-              label: "삭제",
+              label: '삭제',
               onClick: onDelete,
               disabled: isDeleting,
+            },
+            {
+              label: '수정',
+              onClick: onUpdate,
+              disabled: false,
             },
           ]}
           position="right"

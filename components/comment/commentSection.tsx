@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useCommentTree } from "@/lib/hooks/comment/useCommentTree";
-import { useCommentsQuery } from "@/lib/hooks/comment/useCommentsQuery";
-import CommentList from "./commentList";
-import CommentInput from "./commentInput";
-import BlurOverlay from "../_layout/blurOverlay";
-import { useAuthStore } from "@/lib/store/authStore";
+import { useCommentTree } from '@/lib/hooks/comment/useCommentTree';
+import { useCommentsQuery } from '@/lib/hooks/comment/useCommentsQuery';
+import CommentList from './commentList';
+import CommentInput from './commentInput';
+import BlurOverlay from '../_layout/blurOverlay';
+import { useAuthStore } from '@/lib/store/authStore';
 
 interface CommentSectionProps {
   postId: string;
@@ -30,7 +30,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       {/* 댓글 작성 입력창 */}
       <CommentInput
         postId={postId}
-        onSuccess={refetch}
+        refetch={refetch}
         currentCommentCount={rootCount}
       />
 
@@ -48,7 +48,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
           <CommentList
             comments={commentTree}
             postId={postId}
-            onUpdate={refetch}
+            refetch={refetch}
           />
         )}
         {!isAuthenticated && <BlurOverlay variant="comment" />}

@@ -1,25 +1,19 @@
-import { clientApiInstance } from "../instances/clientInstance";
-import { ApiResponse } from "@/lib/types/common";
+import { clientApiInstance } from '../instances/clientInstance';
+import { ApiResponse } from '@/lib/types/common';
 import {
-  GetMyPostsRequest,
-  GetMyPostsResponseData,
+  GetMyDraftsRequest,
+  GetMyDraftsResponseData,
   GetPostsRequest,
   GetPostsResponseData,
-  GetRecentPostsRequest,
-  GetRecentPostsResponseData,
   PostDetail,
   PostEditData,
   PostWritePayload,
-} from "@/lib/types/post";
-import {
-  POST_ENDPOINTS,
-  MEMBER_ENDPOINTS,
-  buildQueryString,
-} from "@/lib/constants/endpoints";
+} from '@/lib/types/post';
+import { POST_ENDPOINTS, buildQueryString } from '@/lib/constants/endpoints';
 import {
   buildPostFormData,
   buildPostQueryParams,
-} from "../../utils/postFormData";
+} from '../../utils/postFormData';
 
 /**
  * 게시글 관련 API
@@ -135,7 +129,7 @@ export const postApi = {
    * 게시글 작성
    * @param payload 게시글 작성 데이터
    */
-  async createPost(payload: PostWritePayload): Promise<ApiResponse<void>> {
+  async createPost(payload: PostWritePayload) {
     const formData = await buildPostFormData(payload);
     const queryParams = buildPostQueryParams(payload);
 
@@ -146,16 +140,29 @@ export const postApi = {
   },
 
   /**
+   * 내 임시저장 목록 조회 (페이지네이션)
+   * @param params 조회 파라미터
+   * @returns 내 임시저장 목록 응답
+   */
+  async getDraftList(params: GetMyDraftsRequest) {
+    const queryString = buildQueryString({
+      page: params.page ?? 1,
+      size: params.size,
+    });
+    const endpoint = `${POST_ENDPOINTS.MY_DRAFTS}${queryString}`;
+
+    return clientApiInstance.get<GetMyDraftsResponseData>(endpoint);
+  },
+
+  /**
    * 게시글 수정
    * @param postId 게시글 ID (ULID)
    * @param payload 게시글 수정 데이터
    */
-  async updatePost(
-    postId: string,
-    payload: PostWritePayload
-  ): Promise<ApiResponse<void>> {
+  async updatePost(postId: string, payload: PostWritePayload) {
     const formData = await buildPostFormData(payload);
     const queryParams = buildPostQueryParams(payload);
+
     return clientApiInstance.put<void>(
       `${POST_ENDPOINTS.POST_DETAIL(postId)}?${queryParams}`,
       formData

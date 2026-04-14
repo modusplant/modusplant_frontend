@@ -1,5 +1,5 @@
-import SignupForm from "@/components/auth/signup/signupForm";
-import { signupMetadata as metadata } from "@/lib/metadata/auth";
+import SignupForm from '@/components/auth/signup/signupForm';
+import { signupMetadata as metadata } from '@/lib/metadata/auth';
 
 export { metadata };
 

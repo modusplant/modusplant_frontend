@@ -2,7 +2,7 @@
  * 콘텐츠 타입 (멀티파트)
  */
 export interface ContentPart {
-  type: "text" | "image" | "video" | "audio" | "file";
+  type: 'text' | 'image' | 'video' | 'audio' | 'file';
   order: number;
   filename: string;
   data?: string; // 텍스트인 경우만 존재
@@ -61,14 +61,14 @@ export interface PostDetail extends PostData {
 /**
  * 게시글 수정용 데이터 타입 (API 응답)
  */
-export interface PostEditData
-  extends Omit<
-    PostData,
-    "likeCount" | "commentCount" | "isLiked" | "isBookmarked"
-  > {
+export interface PostEditData extends Omit<
+  PostData,
+  'likeCount' | 'commentCount' | 'isLiked' | 'isBookmarked'
+> {
   primaryCategoryId: string;
   secondaryCategoryId: string;
-  authorUuid: string;
+  authorId: string;
+  thumbnailFilename: string;
   isPublished: boolean;
   updatedAt: string;
 }
@@ -82,6 +82,50 @@ export interface PostWritePayload {
   title: string; // 최대 60자
   textContent: string; // 본문 텍스트
   images: (File | string)[]; // 이미지 파일들 또는 URL (최대 10개, 각 10MB)
+  thumbnailFilename?: string;
+  isPublished: boolean; // true: 게시글 저장, false: 임시저장
+}
+
+/**
+ * 임시저장 콘텐츠 타입
+ */
+export interface DraftContentPart {
+  type: 'text' | 'image';
+  data?: string | null;
+  src?: string | null;
+}
+
+/**
+ * 임시저장 게시글 목록 응답 데이터 (개별 게시글)
+ */
+export interface DraftPostData {
+  postId: string;
+  primaryCategory: string | null;
+  secondaryCategory: string | null;
+  title: string | null;
+  content: DraftContentPart[] | null;
+  updatedAt: string;
+}
+
+/**
+ * 임시저장 목록 조회 요청 파라미터
+ */
+export interface GetMyDraftsRequest {
+  page?: number;
+  size: number;
+}
+
+/**
+ * 임시저장 목록 조회 응답 데이터
+ */
+export interface GetMyDraftsResponseData {
+  posts: DraftPostData[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
 }
 
 /**

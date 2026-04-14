@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useQuery } from "@tanstack/react-query";
-import { memberApi } from "@/lib/api/client/member";
-import { GetMyPostsResponseData } from "@/lib/types/post";
+import { useQuery } from '@tanstack/react-query';
+import { memberApi } from '@/lib/api/client/member';
+import { GetMyPostsResponseData } from '@/lib/types/post';
 
 /**
  * 내가 작성한 게시글 목록 조회 커스텀 훅
@@ -18,12 +18,12 @@ import { GetMyPostsResponseData } from "@/lib/types/post";
  */
 export function useMyPostsQuery(page: number = 1, size: number = 8) {
   return useQuery<GetMyPostsResponseData | undefined>({
-    queryKey: ["myPosts", page, size],
+    queryKey: ['myPosts', page, size],
     queryFn: async () => {
       const response = await memberApi.getMyPosts({ page, size });
 
       if (response.status !== 200) {
-        throw new Error(response.message || "게시글 목록 조회에 실패했습니다.");
+        throw new Error(response.message || '게시글 목록 조회에 실패했습니다.');
       }
 
       return response.data;

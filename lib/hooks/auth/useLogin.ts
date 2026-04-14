@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/lib/store/authStore";
-import { authApi } from "@/lib/api/client/auth";
-import { LoginFormValues } from "@/lib/constants/schema";
-import { processSuccessfulAuth } from "@/lib/utils/auth/processSuccessfulAuth";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/lib/store/authStore';
+import { authApi } from '@/lib/api/client/auth';
+import { LoginFormValues } from '@/lib/constants/schema';
+import { processSuccessfulAuth } from '@/lib/utils/auth/processSuccessfulAuth';
 
 /**
  * 로그인 커스텀 훅
@@ -34,13 +34,13 @@ export function useLogin() {
 
         // 로그인 성공 - 사용자 정보 저장
         login(user);
-        router.push("/");
+        router.push('/');
       }
     } catch (error: any) {
       // 로그인 시도 횟수 증가
       incrementLoginAttempts();
 
-      setServerError(error.message || "로그인 중 오류가 발생했습니다.");
+      setServerError(error.message || '로그인 중 오류가 발생했습니다.');
     } finally {
       setIsLoading(false);
     }

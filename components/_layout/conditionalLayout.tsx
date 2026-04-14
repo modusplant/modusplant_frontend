@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { usePathname } from "next/navigation";
-import Header from "./header/header";
-import Footer from "./footer";
-import { User } from "@/lib/types/auth";
+import { usePathname } from 'next/navigation';
+import Header from './header/header';
+import Footer from './footer';
+import { User } from '@/lib/types/auth';
 
 export default function ConditionalLayout({
   children,
@@ -15,9 +15,10 @@ export default function ConditionalLayout({
   const pathname = usePathname();
 
   // auth 관련 페이지에서는 Header와 Footer를 표시하지 않음
-  const isAuthPage = pathname?.startsWith("/login");
-
-  if (isAuthPage) {
+  const isAuthPage = pathname?.startsWith('/login');
+  // 알림 페이지에서도 Header와 Footer 표시하지 않음
+  const isNotificationPage = pathname?.startsWith('/notifications');
+  if (isAuthPage || isNotificationPage) {
     return <>{children}</>;
   }
 

@@ -1,31 +1,25 @@
-"use client";
+'use client';
 
-import { useState, ReactNode } from "react";
-import PostCard from "@/components/_common/postCard";
-import Pagination from "./pagination";
-import { PostData } from "@/lib/types/post";
+import { ReactNode } from 'react';
+import PostCard from '@/components/_common/postCard';
+import Pagination from './pagination';
+import { GetMyPostsResponseData } from '@/lib/types/post';
 
-interface PostCardGridProps<T> {
-  /**
-   * React Query 훅
-   */
-  useQueryHook: (
-    page: number,
-    size: number
-  ) => {
-    data: T | undefined;
-    isLoading: boolean;
-    error: Error | null;
-  };
+interface PostCardGridProps {
+  data?: GetMyPostsResponseData;
+  isPending: boolean;
+  isError: boolean;
   /**
    * 빈 상태 컴포넌트
    */
   emptyComponent: ReactNode;
+  currentPage: number;
   /**
    * 페이지당 아이템 개수
    * @default 9
    */
   pageSize?: number;
+  onChangePage: (pageCount: number) => void;
 }
 
 /**
@@ -34,17 +28,16 @@ interface PostCardGridProps<T> {
  * - 카드 그리드 렌더링 (3열)
  * - 페이지네이션
  */
-export default function PostCardGrid<
-  T extends {
-    posts: PostData[];
-    totalPages: number;
-  },
->({ useQueryHook, emptyComponent, pageSize = 9 }: PostCardGridProps<T>) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const { data, isLoading, error } = useQueryHook(currentPage, pageSize);
-
+export default function PostCardGrid({
+  data,
+  isPending,
+  isError,
+  emptyComponent,
+  currentPage,
+  onChangePage,
+}: PostCardGridProps) {
   // 로딩 상태
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="text-neutral-40 text-base">로딩 중...</div>
@@ -53,7 +46,7 @@ export default function PostCardGrid<
   }
 
   // 에러 상태
-  if (error) {
+  if (isError) {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="text-system-alert text-base">
@@ -83,7 +76,7 @@ export default function PostCardGrid<
           <Pagination
             currentPage={currentPage}
             totalPages={data.totalPages}
-            onPageChange={setCurrentPage}
+            onPageChange={onChangePage}
           />
         </div>
       )}

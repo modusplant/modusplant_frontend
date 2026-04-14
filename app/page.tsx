@@ -1,8 +1,8 @@
-import PostList from "@/components/home/postList";
-import HeroBanner from "@/components/home/heroBanner";
-import ScrollToTop from "@/components/home/scrollToTop";
-import { serverPostApi } from "@/lib/api/server/post";
-import { homeMetadata } from "@/lib/metadata/home";
+import HeroBanner from '@/components/home/heroBanner';
+import PostList from '@/components/home/postList';
+import ScrollToTop from '@/components/home/scrollToTop';
+import { serverPostApi } from '@/lib/api/server/post';
+import { homeMetadata } from '@/lib/metadata/home';
 
 export { homeMetadata as metadata };
 

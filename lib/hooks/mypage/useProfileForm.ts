@@ -1,6 +1,6 @@
-import { useState, useCallback, useEffect } from "react";
-import { ProfileFormData } from "@/lib/types/member";
-import { useAuthStore } from "@/lib/store/authStore";
+import { useState, useCallback, useEffect } from 'react';
+import { ProfileFormData } from '@/lib/types/member';
+import { useAuthStore } from '@/lib/store/authStore';
 
 /**
  * 프로필 폼 상태 관리 훅
@@ -11,8 +11,8 @@ import { useAuthStore } from "@/lib/store/authStore";
 export function useProfileForm() {
   const { user } = useAuthStore();
   const [formData, setFormData] = useState<ProfileFormData>({
-    nickname: user?.nickname || "",
-    introduction: user?.introduction || "",
+    nickname: user?.nickname || '',
+    introduction: user?.introduction || '',
     imageFile: null,
     imagePreview: user?.image || null,
     shouldDeleteImage: false,
@@ -22,8 +22,8 @@ export function useProfileForm() {
   useEffect(() => {
     setFormData((prev) => ({
       ...prev,
-      nickname: user?.nickname || "",
-      introduction: user?.introduction || "",
+      nickname: user?.nickname || '',
+      introduction: user?.introduction || '',
       imagePreview: user?.image || null,
     }));
   }, [user]);
@@ -70,18 +70,18 @@ export function useProfileForm() {
     const data = new FormData();
 
     // 닉네임 추가
-    data.append("nickname", formData.nickname);
+    data.append('nickname', formData.nickname);
 
     // 소개글 추가
-    data.append("introduction", formData.introduction);
+    data.append('introduction', formData.introduction);
 
     // 이미지 처리
     if (formData.shouldDeleteImage) {
       // 이미지 삭제 시 null 전송
-      data.append("image", "null");
+      data.append('image', 'null');
     } else if (formData.imageFile) {
       // 새 이미지 업로드
-      data.append("image", formData.imageFile);
+      data.append('image', formData.imageFile);
     }
     // 변경사항 없으면 image 필드를 포함하지 않음
 

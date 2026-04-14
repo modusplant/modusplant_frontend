@@ -1,4 +1,4 @@
-import EmptyState from "@/components/_common/emptyState";
+import EmptyState from '@/components/_common/emptyState';
 
 export default function EmptyMyComments() {
   return (

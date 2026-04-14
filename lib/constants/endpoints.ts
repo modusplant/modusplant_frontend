@@ -1,13 +1,14 @@
 /**
  * API 베이스 경로
  */
-const API_V1 = "/api/v1";
+const API_V1 = '/api/v1';
 
 /**
  * 인증 관련 엔드포인트
  */
 export const AUTH_ENDPOINTS = {
   LOGIN: `/api/auth/login`,
+  KAKAO_LOGIN: `/api/v1/auth/social-login/kakao`,
   SIGNUP: `/api/members/register`,
   TOKEN_REFRESH: `/api/auth/token/refresh`,
   CHECK_NICKNAME: (nickname: string) =>
@@ -35,6 +36,7 @@ export const MEMBER_ENDPOINTS = {
   MY_POSTS: `${API_V1}/communication/posts/me`,
   MY_LIKED_POSTS: `${API_V1}/communication/posts/me/likes`,
   MY_BOOKMARKED_POSTS: `${API_V1}/communication/posts/me/bookmarks`,
+  MY_BUG_REPORTS: `${API_V1}/report/proposal-or-bug`,
 } as const;
 
 /**
@@ -43,6 +45,7 @@ export const MEMBER_ENDPOINTS = {
 export const POST_ENDPOINTS = {
   // 기본 CRUD
   POSTS: `${API_V1}/communication/posts`,
+  MY_DRAFTS: `${API_V1}/communication/posts/me/drafts`,
   POST_DETAIL: (postId: string) => `${API_V1}/communication/posts/${postId}`,
   POST_DETAIL_EDIT: (postId: string) =>
     `${API_V1}/communication/posts/${postId}/data`,
@@ -75,6 +78,7 @@ export const COMMENT_ENDPOINTS = {
   COMMENTS: `${API_V1}/communication/comments`,
   POST_COMMENTS: (postId: string) =>
     `${API_V1}/communication/comments/post/${postId}`,
+  UPDATE_COMMENTS: () => `${API_V1}/communication/comments/update`,
   DELETE_COMMENT: (postUlid: string, path: string) =>
     `${API_V1}/communication/comments/post/${postUlid}/path/${path}`,
   LIKE_COMMENT: (memberId: string, postUlid: string, path: string) =>
@@ -82,6 +86,16 @@ export const COMMENT_ENDPOINTS = {
   MY_COMMENTS: (uuid: string) =>
     `${API_V1}/communication/comments/member/auth/${uuid}`,
 } as const;
+
+/**
+ * 알림 관련 엔드포인트
+ */
+export const NOTIFICATION_ENDPOINTS = {
+  GET_NOTIFICATIONS: () => `${API_V1}/notifications`,
+  READ_ONE_NOTIFICATION: (id: string) => `${API_V1}/notifications/${id}/read`,
+  READ_ALL_NOTIFICATIONS: () => `${API_V1}/notifications/read-all`,
+  GET_UNREAD_NOTIFICATIONS_COUNT: () => `${API_V1}/notifications/unread-count`,
+};
 
 /**
  * 타입 안전한 쿼리 파라미터 빌더
@@ -92,11 +106,11 @@ export function buildQueryString(
   const queryParams = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== "") {
+    if (value !== undefined && value !== null && value !== '') {
       queryParams.append(key, String(value));
     }
   });
 
   const queryString = queryParams.toString();
-  return queryString ? `?${queryString}` : "";
+  return queryString ? `?${queryString}` : '';
 }

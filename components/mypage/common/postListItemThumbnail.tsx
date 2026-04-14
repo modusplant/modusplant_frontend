@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { getThumbnail } from "@/lib/utils/post";
-import { PostData } from "@/lib/types/post";
+import Image from 'next/image';
+import { getThumbnail } from '@/lib/utils/post';
+import { PostData } from '@/lib/types/post';
 
 export interface PostListItemThumbnailProps {
   post: PostData;

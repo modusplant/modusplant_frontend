@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useRef } from "react";
-import { Upload } from "lucide-react";
-import Image from "next/image";
-import Profile from "@/components/_common/profileImage";
+import { useRef } from 'react';
+import { Upload } from 'lucide-react';
+import Image from 'next/image';
+import Profile from '@/components/_common/profileImage';
 
 interface ProfileImageUploaderProps {
   imagePreview: string | null;

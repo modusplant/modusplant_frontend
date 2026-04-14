@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { ReactNode } from "react";
-import { usePathname } from "next/navigation";
-import { useAuthStore } from "@/lib/store/authStore";
-import EmptyState from "@/components/_common/emptyState";
+import { ReactNode } from 'react';
+import { usePathname } from 'next/navigation';
+import { useAuthStore } from '@/lib/store/authStore';
+import EmptyState from '@/components/_common/emptyState';
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -31,17 +31,19 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
   // 인증이 필요없는 공개 경로 목록
   const publicPaths = [
-    "/", // 메인페이지
-    "/login", // 로그인
-    "/signup", // 회원가입
-    "/reset-password", // 비밀번호 재설정
+    '/', // 메인페이지
+    '/login', // 로그인
+    '/signup', // 회원가입
+    '/signup/social', // 소셜 회원가입
+    '/reset-password', // 비밀번호 재설정
+    '/oauth/kakao/callback', // 카카오 인가 페이지
   ];
 
   // 현재 경로가 공개 경로인지 확인
   const isPublicPath =
     publicPaths.includes(pathname) ||
-    (pathname.startsWith("/community/") &&
-      !pathname.startsWith("/community/write")); // 게시글 상세만 허용
+    (pathname.startsWith('/community/') &&
+      !pathname.startsWith('/community/write')); // 게시글 상세만 허용
 
   // 공개 경로거나 인증된 경우 children 렌더링
   if (isPublicPath || isAuthenticated) {

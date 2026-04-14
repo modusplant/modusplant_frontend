@@ -33,7 +33,7 @@ export interface ProfileFormData {
   shouldDeleteImage: boolean; // 이미지 삭제 플래그
 }
 
-export type AuthProvider = "BASIC" | "Google" | "Kakao" | "Naver";
+export type AuthProvider = 'BASIC' | 'Google' | 'Kakao' | 'Naver';
 
 /**
  * 회원 인증 정보 (API 응답)
