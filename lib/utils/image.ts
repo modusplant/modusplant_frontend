@@ -45,3 +45,10 @@ export function getProxiedImageUrl(
   // URL 전체를 쿼리 파라미터로 전달 (presigned URL의 쿼리 파라미터 보존)
   return `/api/image-proxy?url=${encodeURIComponent(fullUrl)}`;
 }
+
+export function createUuid() {
+  return typeof crypto !== 'undefined' &&
+    typeof crypto.randomUUID === 'function'
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}

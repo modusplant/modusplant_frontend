@@ -1,7 +1,6 @@
 import {
   PRIMARY_CATEGORIES,
   SECONDARY_CATEGORIES,
-  type Category,
 } from '@/lib/constants/categories';
 
 /**
@@ -71,4 +70,17 @@ export function getCategoryIdByName(categoryName: string): string {
   }
 
   return '';
+}
+
+/**
+ * 1차 카테고리 이름 기준으로 2차 카테고리 ID 조회
+ */
+export function getSecondaryCategoryIdByName(
+  categoryName: string,
+  primaryCategoryName: string
+): string {
+  const categories = SECONDARY_CATEGORIES[primaryCategoryName] || [];
+  const secondaryCategory = categories.find((c) => c.name === categoryName);
+
+  return secondaryCategory?.id || '';
 }
