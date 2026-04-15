@@ -30,7 +30,7 @@ function KakaoCallbackInner() {
             true // TODO: 소셜 로그인 rememberMe, refreshToken 정책 확인
           );
           useAuthStore.getState().login(user);
-          router.push('/');
+          router.replace('/');
         } else if (type === 'NEED_SIGNUP' || type === 'NEED_LINK') {
           // 신규 유저, 기존 이메일 계정 연동 처리
           const { email, nickname } = response.data;
@@ -39,7 +39,7 @@ function KakaoCallbackInner() {
         }
       } catch (error) {
         console.error('카카오 로그인 실패', error);
-        router.push('/login');
+        router.replace('/login');
       }
     };
     handleKakaoLogin();
