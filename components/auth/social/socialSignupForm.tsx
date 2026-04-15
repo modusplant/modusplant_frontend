@@ -71,7 +71,11 @@ export default function SocialSignupForm() {
           >
             프로필 소개글
           </label>
-          <Textarea id="introduction" placeholder="한 줄 소개를 입력해주세요" />
+          <Textarea
+            id="introduction"
+            placeholder="한 줄 소개를 입력해주세요"
+            {...register('introduction')}
+          />
         </div>
       </div>
 
