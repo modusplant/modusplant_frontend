@@ -113,6 +113,7 @@ export const config = {
      * - favicon.ico (favicon file)
      * - public folder
      */
+    // TODO: api/v1/communication/posts 삭제
     '/((?!_next/static|_next/image|favicon.ico|api/v1/communication/posts|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };

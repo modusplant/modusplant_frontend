@@ -51,7 +51,8 @@ async function requestCore<T = any>(
     const token = await opts.getAccessToken();
     if (token) headers['Authorization'] = `Bearer ${token}`;
   }
-
+  // TODO: 실제 요청 URL 확인 테스트
+  console.log({ url, ...fetchConfig });
   try {
     const response = await fetch(url, {
       ...fetchConfig,
