@@ -11,7 +11,6 @@ function KakaoCallbackInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const code = searchParams.get('code');
-  const { login } = useAuthStore();
 
   useEffect(() => {
     if (!code) return;
@@ -30,7 +29,7 @@ function KakaoCallbackInner() {
             accessToken,
             true // TODO: 소셜 로그인 rememberMe, refreshToken 정책 확인
           );
-          login(user);
+          useAuthStore.getState().login(user);
           router.push('/');
         } else if (type === 'NEED_SIGNUP' || type === 'NEED_LINK') {
           // 신규 유저, 기존 이메일 계정 연동 처리
