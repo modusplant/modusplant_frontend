@@ -12,8 +12,11 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
+import { useOAuthStore } from '@/lib/store/oauthStore';
 
 export default function SocialSignupForm() {
+  const { signupData } = useOAuthStore();
+
   const {
     register,
     handleSubmit,
@@ -25,7 +28,7 @@ export default function SocialSignupForm() {
     resolver: zodResolver(socialSignupSchema),
     mode: 'onTouched',
     defaultValues: {
-      nickname: '',
+      nickname: signupData?.nickname ?? '',
       introduction: '',
       agreeToTerms: false,
       agreeToPrivacy: false,
@@ -50,7 +53,7 @@ export default function SocialSignupForm() {
     <form className="flex flex-col gap-10" onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col gap-7.5">
         {/* 이메일 영역 */}
-        <SocialEmailSection />
+        <SocialEmailSection email={signupData.email} />
 
         {/* 닉네임 영역 */}
         <NicknameSection
