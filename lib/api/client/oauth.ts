@@ -9,6 +9,15 @@ type KakaoLoginResponse =
   | { type: 'LOGIN'; accessToken: string }
   | { type: 'NEED_SIGNUP'; email: string; nickname: string }
   | { type: 'NEED_LINK'; email: string; nickname: string };
+
+interface SocialSignupRequest {
+  nickname: string;
+  introduction?: string;
+  agreedTermsOfUseVersion: string;
+  agreedPrivacyPolicyVersion: string;
+  agreedCommunityPolicyVersion: string;
+}
+
 export const OauthApi = {
   /**
    * 카카오 로그인
@@ -19,6 +28,19 @@ export const OauthApi = {
       { code },
       { skipAuth: true }
     );
+    return response;
+  },
+
+  /**
+   * 카카오 회원가입
+   */
+  async kakaoSignup(
+    body: SocialSignupRequest
+  ): Promise<ApiResponse<{ type: 'LOGIN'; accessToken: string }>> {
+    const response = await clientApiInstance.post<{
+      type: 'LOGIN';
+      accessToken: string;
+    }>(AUTH_ENDPOINTS.SOCIAL_SIGNUP, body, { skipAuth: true });
     return response;
   },
 };

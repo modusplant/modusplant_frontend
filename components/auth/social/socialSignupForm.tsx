@@ -12,10 +12,18 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useOAuthStore } from '@/lib/store/oauthStore';
+import { useEffect } from 'react';
+import { OauthApi } from '@/lib/api/client/oauth';
+import { TERMS_VERSIONS } from '@/lib/constants/terms';
+import { processSuccessfulAuth } from '@/lib/utils/auth/processSuccessfulAuth';
+import { useAuthStore } from '@/lib/store/authStore';
 
 export default function SocialSignupForm() {
-  const { signupData } = useOAuthStore();
+  const router = useRouter();
+  const { signupData, clearSignupData } = useOAuthStore();
+  const login = useAuthStore((state) => state.login);
 
   const {
     register,
@@ -36,9 +44,38 @@ export default function SocialSignupForm() {
     },
   });
 
-  const onSubmit = (data: SocialSignupFormValues) => {
-    // TODO: 회원가입 API 호출 및 인증 처리 추가
-    console.log(data);
+  useEffect(() => {
+    if (!signupData) {
+      router.replace('/login');
+    }
+  }, [signupData, router]);
+
+  if (!signupData) return null;
+
+  const onSubmit = async (data: SocialSignupFormValues) => {
+    try {
+      if (signupData.type === 'NEED_SIGNUP') {
+        const result = await OauthApi.kakaoSignup({
+          nickname: data.nickname,
+          introduction: data.introduction || undefined,
+          agreedTermsOfUseVersion: TERMS_VERSIONS.termsOfUse,
+          agreedPrivacyPolicyVersion: TERMS_VERSIONS.privacyPolicy,
+          agreedCommunityPolicyVersion: TERMS_VERSIONS.adInfoReceiving,
+        });
+
+        if (result.status === 200 && result.data?.accessToken) {
+          const user = await processSuccessfulAuth(
+            result.data.accessToken,
+            true
+          );
+          login(user);
+          clearSignupData();
+          router.replace('/');
+        }
+      }
+    } catch (error) {
+      console.error('소셜 회원가입 실패', error);
+    }
   };
 
   const formData = watch();
