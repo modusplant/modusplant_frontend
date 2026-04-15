@@ -99,5 +99,5 @@ export type TermsType = (typeof ALL_TERMS)[number];
 export const TERMS_VERSIONS = {
   termsOfUse: 'v1.0.0',
   privacyPolicy: 'v1.0.0',
-  adInfoReceiving: 'v1.0.0',
+  communityPolicy: 'v1.0.0',
 } as const;
