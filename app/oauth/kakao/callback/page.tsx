@@ -32,16 +32,11 @@ function KakaoCallbackInner() {
           );
           login(user);
           router.push('/');
-        } else if (type === 'NEED_SIGNUP') {
-          // 신규 유저 처리
+        } else if (type === 'NEED_SIGNUP' || type === 'NEED_LINK') {
+          // 신규 유저, 기존 이메일 계정 연동 처리
           const { email, nickname } = response.data;
           useOAuthStore.getState().setSignupData({ email, nickname, type });
           router.replace('/signup/social');
-        } else if (type === 'NEED_LINK') {
-          // 기존 이메일 계정 연동
-          const { email, nickname } = response.data;
-          useOAuthStore.getState().setSignupData({ email, nickname, type });
-          router.replace(`/signup/social`);
         }
       } catch (error) {
         console.error('카카오 로그인 실패', error);
