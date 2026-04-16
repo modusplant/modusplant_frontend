@@ -11,7 +11,7 @@ const BASE_URL = ''; // 클라이언트는 상대 경로 사용 (rewrites 적용
 /**
  * 클라이언트 전용: 리프레시 토큰으로 새 액세스 토큰 발급
  */
-async function refreshAccessToken(): Promise<string> {
+export async function refreshAccessToken(): Promise<string> {
   try {
     const response = await fetch(`${BASE_URL}${AUTH_ENDPOINTS.TOKEN_REFRESH}`, {
       method: 'POST',
