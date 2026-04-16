@@ -71,7 +71,16 @@ async function requestCore<T = any>(
       );
     }
 
-    const data: ApiResponse<T> = await response.json();
+    let data: ApiResponse<T>;
+    try {
+      data = await response.json();
+    } catch {
+      throw new ApiError(
+        response.status,
+        'invalid_response',
+        `서버 응답을 처리할 수 없습니다 (${response.status})`
+      );
+    }
 
     if (data.status === 401 && !skipAuth) {
       if (!isRetry && opts.onUnauthorized) {
