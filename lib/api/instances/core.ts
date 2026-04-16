@@ -59,6 +59,18 @@ async function requestCore<T = any>(
       ...(opts.includeCredentials ? { credentials: 'include' as const } : {}),
     });
 
+    // 디버깅용 로그 (확인 후 제거)
+    if (!response.ok) {
+      const text = await response.text();
+      console.error('[API Error] status:', response.status);
+      console.error('[API Error body:', text);
+      throw new ApiError(
+        response.status,
+        'invalid_response',
+        `서버 오류가 발생했습니다 (${response.status})`
+      );
+    }
+
     const data: ApiResponse<T> = await response.json();
 
     if (data.status === 401 && !skipAuth) {
