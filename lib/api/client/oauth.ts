@@ -43,4 +43,16 @@ export const OauthApi = {
     }>(AUTH_ENDPOINTS.SOCIAL_SIGNUP, body, { skipAuth: true });
     return response;
   },
+
+  /**
+   * 구글 로그인
+   */
+  async googleLogin(code: string): Promise<ApiResponse<SocialLoginResponse>> {
+    const response = await clientApiInstance.post<SocialLoginResponse>(
+      AUTH_ENDPOINTS.GOOGLE_LOGIN,
+      { code },
+      { skipAuth: true }
+    );
+    return response;
+  },
 };

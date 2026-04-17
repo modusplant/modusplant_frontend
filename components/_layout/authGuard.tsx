@@ -37,6 +37,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     '/signup/social', // 소셜 회원가입
     '/reset-password', // 비밀번호 재설정
     '/oauth/kakao/callback', // 카카오 인가 페이지
+    '/oauth/google/callback', // 구글 인가 페이지
   ];
 
   // 현재 경로가 공개 경로인지 확인
