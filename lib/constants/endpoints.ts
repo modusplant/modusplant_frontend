@@ -9,6 +9,7 @@ const API_V1 = '/api/v1';
 export const AUTH_ENDPOINTS = {
   LOGIN: `/api/auth/login`,
   KAKAO_LOGIN: `/api/v1/auth/social-login/kakao`,
+  GOOGLE_LOGIN: `/api/v1/auth/social-login/google`,
   SOCIAL_SIGNUP: `/api/v1/auth/social-signup`,
   SIGNUP: `/api/members/register`,
   TOKEN_REFRESH: `/api/auth/token/refresh`,
