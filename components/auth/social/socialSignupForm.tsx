@@ -12,8 +12,19 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useOAuthStore } from '@/lib/store/oauthStore';
+import { useEffect } from 'react';
+import { OauthApi } from '@/lib/api/client/oauth';
+import { TERMS_VERSIONS } from '@/lib/constants/terms';
+import { processSuccessfulAuth } from '@/lib/utils/auth/processSuccessfulAuth';
+import { useAuthStore } from '@/lib/store/authStore';
 
 export default function SocialSignupForm() {
+  const router = useRouter();
+  const { signupData, clearSignupData } = useOAuthStore();
+  const login = useAuthStore((state) => state.login);
+
   const {
     register,
     handleSubmit,
@@ -25,7 +36,7 @@ export default function SocialSignupForm() {
     resolver: zodResolver(socialSignupSchema),
     mode: 'onTouched',
     defaultValues: {
-      nickname: '',
+      nickname: signupData?.nickname ?? '',
       introduction: '',
       agreeToTerms: false,
       agreeToPrivacy: false,
@@ -33,9 +44,38 @@ export default function SocialSignupForm() {
     },
   });
 
-  const onSubmit = (data: SocialSignupFormValues) => {
-    // TODO: 회원가입 API 호출 및 인증 처리 추가
-    console.log(data);
+  useEffect(() => {
+    if (!signupData) {
+      router.replace('/login');
+    }
+  }, [signupData, router]);
+
+  if (!signupData) return null;
+
+  const onSubmit = async (data: SocialSignupFormValues) => {
+    try {
+      if (signupData.type === 'NEED_SIGNUP') {
+        const result = await OauthApi.kakaoSignup({
+          nickname: data.nickname,
+          introduction: data.introduction || undefined,
+          agreedTermsOfUseVersion: TERMS_VERSIONS.termsOfUse,
+          agreedPrivacyPolicyVersion: TERMS_VERSIONS.privacyPolicy,
+          agreedCommunityPolicyVersion: TERMS_VERSIONS.adInfoReceiving,
+        });
+
+        if (result.status === 200 && result.data?.accessToken) {
+          const user = await processSuccessfulAuth(
+            result.data.accessToken,
+            true
+          );
+          login(user);
+          clearSignupData();
+          router.replace('/');
+        }
+      }
+    } catch (error) {
+      console.error('소셜 회원가입 실패', error);
+    }
   };
 
   const formData = watch();
@@ -50,7 +90,7 @@ export default function SocialSignupForm() {
     <form className="flex flex-col gap-10" onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col gap-7.5">
         {/* 이메일 영역 */}
-        <SocialEmailSection />
+        <SocialEmailSection email={signupData.email} />
 
         {/* 닉네임 영역 */}
         <NicknameSection
@@ -68,7 +108,11 @@ export default function SocialSignupForm() {
           >
             프로필 소개글
           </label>
-          <Textarea id="introduction" placeholder="한 줄 소개를 입력해주세요" />
+          <Textarea
+            id="introduction"
+            placeholder="한 줄 소개를 입력해주세요"
+            {...register('introduction')}
+          />
         </div>
       </div>
 

@@ -7,7 +7,11 @@
 
 import { Input } from '@/components/_common/input';
 
-export default function SocialEmailSection() {
+interface SocialEmailSectionProps {
+  email: string;
+}
+
+export default function SocialEmailSection({ email }: SocialEmailSectionProps) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex gap-0.5">
@@ -19,7 +23,7 @@ export default function SocialEmailSection() {
       <Input
         id="email"
         type="email"
-        value="modusplant@modusplant.co.kr" // TODO: 전달받은 이메일로 변경
+        value={email}
         readOnly
         className="bg-surface-98 pointer-events-none"
       />
