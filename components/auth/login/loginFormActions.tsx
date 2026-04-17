@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/_common/button';
-import { KAKAO_AUTH_URL } from '@/lib/constants/oauth';
+import { KAKAO_AUTH_URL, GOOGLE_AUTH_URL } from '@/lib/constants/oauth';
 
 interface LoginFormActionsProps {
   isLoading: boolean;
@@ -21,7 +21,7 @@ const SOCIAL_PLATFORMS = [
     id: 'google',
     label: '구글 로그인',
     icon: '/icon/google-enabled.svg',
-    url: '', // TODO: 구글 로그인 구현 시 교체
+    url: GOOGLE_AUTH_URL,
   },
   {
     id: 'kakao',

@@ -53,9 +53,7 @@ export default function SignupForm() {
         nickname: data.nickname,
         agreedTermsOfUseVersion: TERMS_VERSIONS.termsOfUse,
         agreedPrivacyPolicyVersion: TERMS_VERSIONS.privacyPolicy,
-        agreedAdInfoReceivingVersion: data.agreeToCommunity
-          ? TERMS_VERSIONS.adInfoReceiving
-          : '',
+        agreedCommunityPolicyVersion: TERMS_VERSIONS.communityPolicy,
       };
 
       const signupResult = await authApi.signup(signupData);

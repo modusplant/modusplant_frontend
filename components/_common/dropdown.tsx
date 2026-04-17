@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils/tailwindHelper';
 
 interface DropdownItem {
@@ -15,7 +15,8 @@ interface DropdownItem {
 interface DropdownProps {
   isOpen: boolean;
   onClose: () => void;
-  items: DropdownItem[];
+  items?: DropdownItem[];
+  children?: React.ReactNode;
   trigger: React.ReactNode;
   position?: 'right' | 'left' | 'center';
   width?: string;
@@ -26,6 +27,7 @@ export default function Dropdown({
   isOpen,
   onClose,
   items,
+  children,
   trigger,
   position = 'right',
   width = 'w-24',
@@ -75,39 +77,40 @@ export default function Dropdown({
             className
           )}
         >
-          {items.map((item, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                item.onClick();
-                onClose();
-              }}
-              disabled={item.disabled}
-              className={cn(
-                'h-10 w-full cursor-pointer transition-colors',
-
-                {
-                  'first:rounded-t-[10px]': true,
-                  'last:rounded-b-[10px]': true,
-                },
-                item.className
-              )}
-            >
-              <div
+          {children ??
+            items?.map((item, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  item.onClick();
+                  onClose();
+                }}
+                disabled={item.disabled}
                 className={cn(
-                  'w-full rounded-[10px] px-5 py-2.5',
-                  item.variant === 'danger'
-                    ? 'hover:bg-surface-98 text-red-500'
-                    : 'text-neutral-20 hover:bg-surface-98',
-                  item.textAlign === 'left' && 'text-left',
-                  item.textAlign === 'center' && 'text-center',
-                  item.textAlign === 'right' && 'text-right'
+                  'h-10 w-full cursor-pointer transition-colors',
+
+                  {
+                    'first:rounded-t-[10px]': true,
+                    'last:rounded-b-[10px]': true,
+                  },
+                  item.className
                 )}
               >
-                {item.label}
-              </div>
-            </button>
-          ))}
+                <div
+                  className={cn(
+                    'w-full rounded-[10px] px-5 py-2.5',
+                    item.variant === 'danger'
+                      ? 'hover:bg-surface-98 text-red-500'
+                      : 'text-neutral-20 hover:bg-surface-98',
+                    item.textAlign === 'left' && 'text-left',
+                    item.textAlign === 'center' && 'text-center',
+                    item.textAlign === 'right' && 'text-right'
+                  )}
+                >
+                  {item.label}
+                </div>
+              </button>
+            ))}
         </div>
       )}
     </div>

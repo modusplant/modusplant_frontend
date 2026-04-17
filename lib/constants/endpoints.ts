@@ -9,6 +9,8 @@ const API_V1 = '/api/v1';
 export const AUTH_ENDPOINTS = {
   LOGIN: `/api/auth/login`,
   KAKAO_LOGIN: `/api/v1/auth/social-login/kakao`,
+  GOOGLE_LOGIN: `/api/v1/auth/social-login/google`,
+  SOCIAL_SIGNUP: `/api/v1/auth/social-signup`,
   SIGNUP: `/api/members/register`,
   TOKEN_REFRESH: `/api/auth/token/refresh`,
   CHECK_NICKNAME: (nickname: string) =>
@@ -45,6 +47,7 @@ export const MEMBER_ENDPOINTS = {
 export const POST_ENDPOINTS = {
   // 기본 CRUD
   POSTS: `${API_V1}/communication/posts`,
+  MY_DRAFTS: `${API_V1}/communication/posts/me/drafts`,
   POST_DETAIL: (postId: string) => `${API_V1}/communication/posts/${postId}`,
   POST_DETAIL_EDIT: (postId: string) =>
     `${API_V1}/communication/posts/${postId}/data`,
@@ -85,6 +88,16 @@ export const COMMENT_ENDPOINTS = {
   MY_COMMENTS: (uuid: string) =>
     `${API_V1}/communication/comments/member/auth/${uuid}`,
 } as const;
+
+/**
+ * 알림 관련 엔드포인트
+ */
+export const NOTIFICATION_ENDPOINTS = {
+  GET_NOTIFICATIONS: () => `${API_V1}/notifications`,
+  READ_ONE_NOTIFICATION: (id: string) => `${API_V1}/notifications/${id}/read`,
+  READ_ALL_NOTIFICATIONS: () => `${API_V1}/notifications/read-all`,
+  GET_UNREAD_NOTIFICATIONS_COUNT: () => `${API_V1}/notifications/unread-count`,
+};
 
 /**
  * 타입 안전한 쿼리 파라미터 빌더

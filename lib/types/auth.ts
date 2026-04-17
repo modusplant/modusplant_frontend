@@ -4,6 +4,8 @@ import {
   UseFormWatch,
   FieldErrors,
   UseFormSetValue,
+  FieldValues,
+  FieldError,
 } from 'react-hook-form';
 import { SignupFormValues } from '@/lib/constants/schema';
 
@@ -60,7 +62,7 @@ export interface SignupRequest {
   nickname: string;
   agreedTermsOfUseVersion: string;
   agreedPrivacyPolicyVersion: string;
-  agreedAdInfoReceivingVersion: string;
+  agreedCommunityPolicyVersion: string;
 }
 
 /**
@@ -182,21 +184,33 @@ export interface PasswordSectionProps {
 
 /**
  * 닉네임 섹션 컴포넌트 props 타입
+ * 닉네임이 있는 폼 어디든 수용
  */
-export interface NicknameSectionProps {
-  register: UseFormRegister<SignupFormValues>;
-  trigger: UseFormTrigger<SignupFormValues>;
-  watch: UseFormWatch<SignupFormValues>;
-  errors: Pick<FieldErrors<SignupFormValues>, 'nickname'>;
+
+export type WithNicknameField = { nickname: string };
+export interface NicknameSectionProps<
+  T extends FieldValues & WithNicknameField,
+> {
+  register: UseFormRegister<T>;
+  trigger: UseFormTrigger<T>;
+  watch: UseFormWatch<T>;
+  errors: { nickname?: FieldError };
   className?: string;
 }
 
 /**
  * 약관 동의 섹션 컴포넌트 props 타입
+ * 약관 동의 있는 폼 어디든 수용
  */
-export interface TermsSectionProps {
-  register: UseFormRegister<SignupFormValues>;
-  errors: FieldErrors<SignupFormValues>;
-  watch: (name: keyof SignupFormValues) => any;
-  setValue: UseFormSetValue<SignupFormValues>;
+
+export type WithTermsFields = {
+  agreeToTerms: boolean;
+  agreeToPrivacy: boolean;
+  agreeToCommunity: boolean;
+};
+export interface TermsSectionProps<T extends FieldValues & WithTermsFields> {
+  register: UseFormRegister<T>;
+  errors: FieldErrors<T>;
+  watch: UseFormWatch<T>;
+  setValue: UseFormSetValue<T>;
 }

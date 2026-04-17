@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postApi } from '@/lib/api/client/post';
 import { PostWritePayload } from '@/lib/types/post';
 import { showModal } from '@/lib/store/modalStore';
@@ -10,61 +10,58 @@ import { showModal } from '@/lib/store/modalStore';
  * 게시글 작성/수정 커스텀 훅
  * @param postId 수정 모드일 경우 게시글 ID
  */
-export default function usePostWrite(postId?: string) {
+export default function usePostWrite() {
   const router = useRouter();
-  const isEditMode = !!postId;
+  const queryClient = useQueryClient();
+
+  const showMsg = (message: string) => {
+    showModal({ type: 'snackbar', description: message });
+  };
+
+  const handleError = (error: unknown) => {
+    const _getErrorMessage = (err: unknown): string => {
+      if (err instanceof Error) return err.message;
+      return '알 수 없는 오류가 발생했습니다.';
+    };
+
+    const errorMessage = _getErrorMessage(error);
+    showMsg(errorMessage);
+  };
 
   // 게시글 작성 Mutation
-  const createMutation = useMutation({
+  const createPostMutation = useMutation({
     mutationFn: (payload: PostWritePayload) => postApi.createPost(payload),
-    onSuccess: () => {
-      showModal({
-        type: 'snackbar',
-        description: '게시글이 등록되었습니다.',
-      });
-      router.push('/'); // 메인페이지로 이동
+    onSuccess: (_, payload) => {
+      if (payload.isPublished) {
+        showMsg('게시글이 작성되었습니다.');
+        router.push('/');
+      } else {
+        showMsg('임시 저장되었습니다.');
+        queryClient.invalidateQueries({ queryKey: ['draftList'] });
+      }
     },
-    onError: (error: Error) => {
-      console.error('게시글 작성 실패:', error);
-      showModal({
-        type: 'snackbar',
-        description: error.message,
-      });
-    },
+    onError: handleError,
   });
 
   // 게시글 수정 Mutation
-  const updateMutation = useMutation({
-    mutationFn: (payload: PostWritePayload) =>
-      postApi.updatePost(postId!, payload),
-    onSuccess: () => {
-      showModal({
-        type: 'snackbar',
-        description: '게시글이 수정되었습니다.',
-      });
-      router.push(`/community/${postId}`); // 상세 페이지로 이동
+  type UpdatePostParams = { postId: string; payload: PostWritePayload };
+  const updatePostMutation = useMutation({
+    mutationFn: ({ postId, payload }: UpdatePostParams) =>
+      postApi.updatePost(postId, payload),
+    onSuccess: (_, { postId, payload }) => {
+      if (payload.isPublished) {
+        showMsg('게시글이 수정되었습니다.');
+        router.push(`/community/${postId}`);
+      } else {
+        showMsg('임시 저장되었습니다.');
+        queryClient.invalidateQueries({ queryKey: ['draftList'] });
+      }
     },
-    onError: (error: Error) => {
-      console.error('게시글 수정 실패:', error);
-      showModal({
-        type: 'snackbar',
-        description: error.message,
-      });
-    },
+    onError: handleError,
   });
 
-  // 제출 함수
-  const handleSubmit = (payload: PostWritePayload) => {
-    if (isEditMode) {
-      updateMutation.mutate(payload);
-    } else {
-      createMutation.mutate(payload);
-    }
-  };
-
   return {
-    isEditMode,
-    isSubmitting: createMutation.isPending || updateMutation.isPending,
-    handleSubmit,
+    createPost: createPostMutation.mutate,
+    updatePost: updatePostMutation.mutate,
   };
 }
