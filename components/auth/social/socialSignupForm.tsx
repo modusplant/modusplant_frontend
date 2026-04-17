@@ -78,7 +78,7 @@ export default function SocialSignupForm() {
   const onSubmit = async (data: SocialSignupFormValues) => {
     try {
       if (signupData.type === 'NEED_SIGNUP') {
-        const result = await OauthApi.kakaoSignup({
+        const result = await OauthApi.socialSignup({
           nickname: data.nickname,
           introduction: data.introduction || undefined,
           agreedTermsOfUseVersion: TERMS_VERSIONS.termsOfUse,

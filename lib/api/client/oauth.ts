@@ -20,6 +20,19 @@ interface SocialSignupRequest {
 
 export const OauthApi = {
   /**
+   * 소셜 회원가입
+   */
+  async socialSignup(
+    body: SocialSignupRequest
+  ): Promise<ApiResponse<{ type: 'LOGIN'; accessToken: string }>> {
+    const response = await clientApiInstance.post<{
+      type: 'LOGIN';
+      accessToken: string;
+    }>(AUTH_ENDPOINTS.SOCIAL_SIGNUP, body, { skipAuth: true });
+    return response;
+  },
+
+  /**
    * 카카오 로그인
    */
   async kakaoLogin(code: string): Promise<ApiResponse<SocialLoginResponse>> {
@@ -28,19 +41,6 @@ export const OauthApi = {
       { code },
       { skipAuth: true }
     );
-    return response;
-  },
-
-  /**
-   * 카카오 회원가입
-   */
-  async kakaoSignup(
-    body: SocialSignupRequest
-  ): Promise<ApiResponse<{ type: 'LOGIN'; accessToken: string }>> {
-    const response = await clientApiInstance.post<{
-      type: 'LOGIN';
-      accessToken: string;
-    }>(AUTH_ENDPOINTS.SOCIAL_SIGNUP, body, { skipAuth: true });
     return response;
   },
 
