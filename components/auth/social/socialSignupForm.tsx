@@ -65,9 +65,13 @@ export default function SocialSignupForm() {
         description: `${PROVIDER_LABEL[signupData.provider]} 로그인 연동을 하시겠어요?`,
         type: 'two-button',
         buttonText: '연동하기',
+        onCancel: () => {
+          clearSignupData();
+          router.replace('/login');
+        },
       });
     }
-  }, [signupData, showModal]);
+  }, [signupData, showModal, clearSignupData, router]);
 
   if (!signupData) return null;
 

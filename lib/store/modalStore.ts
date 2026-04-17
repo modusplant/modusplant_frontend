@@ -7,6 +7,7 @@ export interface ModalStore {
   type: 'one-button' | 'two-button' | 'snackbar';
   buttonText?: string;
   onConfirm?: () => void;
+  onCancel?: () => void;
   showModal: (
     modalData: Omit<ModalStore, 'isVisible' | 'showModal' | 'hideModal'>
   ) => void;
@@ -22,6 +23,7 @@ const useModalStore = create<ModalStore>((set) => ({
   type: 'one-button',
   buttonText: undefined,
   onConfirm: undefined,
+  onCancel: undefined,
   align: undefined,
   preserveLineBreak: false,
 
@@ -42,6 +44,7 @@ const useModalStore = create<ModalStore>((set) => ({
       type: 'one-button',
       buttonText: undefined,
       onConfirm: undefined,
+      onCancel: undefined,
     }));
   },
 }));

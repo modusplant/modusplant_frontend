@@ -24,6 +24,7 @@ export default function ModalProvider() {
     description,
     buttonText,
     onConfirm,
+    onCancel,
     align,
     preserveLineBreak,
   } = useModalStore.getState();
@@ -41,6 +42,7 @@ export default function ModalProvider() {
       type={type}
       buttonText={buttonText}
       onConfirm={onConfirm}
+      onCancel={onCancel}
       hideModal={hideModal}
       align={align}
       preserveLineBreak={preserveLineBreak}

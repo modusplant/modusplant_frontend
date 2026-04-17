@@ -7,6 +7,7 @@ interface DialogModalProps {
   type: 'one-button' | 'two-button';
   buttonText?: string;
   onConfirm?: () => void;
+  onCancel?: () => void;
   hideModal: () => void;
   align?: 'center';
   preserveLineBreak?: boolean;
@@ -18,6 +19,7 @@ export default function DialogModal({
   type,
   buttonText,
   onConfirm,
+  onCancel,
   hideModal,
   align,
   preserveLineBreak,
@@ -48,7 +50,10 @@ export default function DialogModal({
             <Button
               variant="default"
               size="lg"
-              onClick={hideModal}
+              onClick={() => {
+                onCancel?.();
+                hideModal();
+              }}
               className="text-neutral-10 min-w-20 rounded-[7px] px-5 py-3 text-[15px]"
             >
               취소
