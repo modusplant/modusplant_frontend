@@ -42,8 +42,12 @@ export default function SocialSignupForm() {
       }
     } catch (error) {
       console.error('연동 실패:', error);
+      showModal({
+        type: 'snackbar',
+        description: '연동에 실패하였습니다.',
+      });
     }
-  }, [login, router, clearSignupData]);
+  }, [login, router, clearSignupData, showModal]);
 
   const {
     register,
@@ -112,6 +116,10 @@ export default function SocialSignupForm() {
       }
     } catch (error) {
       console.error('소셜 회원가입 실패', error);
+      showModal({
+        type: 'snackbar',
+        description: '회원가입 중 오류가 발생했습니다.',
+      });
     }
   };
 
