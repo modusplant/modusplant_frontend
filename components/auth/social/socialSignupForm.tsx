@@ -60,7 +60,7 @@ export default function SocialSignupForm() {
           introduction: data.introduction || undefined,
           agreedTermsOfUseVersion: TERMS_VERSIONS.termsOfUse,
           agreedPrivacyPolicyVersion: TERMS_VERSIONS.privacyPolicy,
-          agreedCommunityPolicyVersion: TERMS_VERSIONS.adInfoReceiving,
+          agreedCommunityPolicyVersion: TERMS_VERSIONS.communityPolicy,
         });
 
         if (result.status === 200 && result.data?.accessToken) {
