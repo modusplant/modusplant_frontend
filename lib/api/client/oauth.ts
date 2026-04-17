@@ -55,4 +55,17 @@ export const OauthApi = {
     );
     return response;
   },
+
+  /**
+   * 소셜 연동
+   */
+  async socialLink(): Promise<
+    ApiResponse<{ type: 'LOGIN'; accessToken: string }>
+  > {
+    const response = await clientApiInstance.post<{
+      type: 'LOGIN';
+      accessToken: string;
+    }>(AUTH_ENDPOINTS.SOCIAL_LINK, { skipAuth: true });
+    return response;
+  },
 };

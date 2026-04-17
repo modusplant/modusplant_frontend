@@ -19,7 +19,7 @@ import { TERMS_VERSIONS } from '@/lib/constants/terms';
 import { processSuccessfulAuth } from '@/lib/utils/auth/processSuccessfulAuth';
 import { useAuthStore } from '@/lib/store/authStore';
 import useModalStore from '@/lib/store/modalStore';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 const PROVIDER_LABEL = {
   kakao: '카카오',
@@ -31,6 +31,19 @@ export default function SocialSignupForm() {
   const { signupData, clearSignupData } = useOAuthStore();
   const login = useAuthStore((state) => state.login);
   const showModal = useModalStore((state) => state.showModal);
+  const handleLinkConfirm = useCallback(async () => {
+    try {
+      const result = await OauthApi.socialLink();
+      if (result.status === 200 && result.data?.accessToken) {
+        const user = await processSuccessfulAuth(result.data.accessToken, true);
+        login(user);
+        router.replace('/');
+        clearSignupData();
+      }
+    } catch (error) {
+      console.error('연동 실패:', error);
+    }
+  }, [login, router, clearSignupData]);
 
   const {
     register,
@@ -69,9 +82,10 @@ export default function SocialSignupForm() {
           clearSignupData();
           router.replace('/login');
         },
+        onConfirm: handleLinkConfirm,
       });
     }
-  }, [signupData, showModal, clearSignupData, router]);
+  }, [signupData, showModal, clearSignupData, router, handleLinkConfirm]);
 
   if (!signupData) return null;
 

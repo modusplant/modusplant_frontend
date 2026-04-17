@@ -11,6 +11,7 @@ export const AUTH_ENDPOINTS = {
   KAKAO_LOGIN: `/api/v1/auth/social-login/kakao`,
   GOOGLE_LOGIN: `/api/v1/auth/social-login/google`,
   SOCIAL_SIGNUP: `/api/v1/auth/social-signup`,
+  SOCIAL_LINK: `/api/v1/auth/social-link`,
   SIGNUP: `/api/members/register`,
   TOKEN_REFRESH: `/api/auth/token/refresh`,
   CHECK_NICKNAME: (nickname: string) =>
