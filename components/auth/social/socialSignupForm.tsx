@@ -14,7 +14,6 @@ import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useOAuthStore } from '@/lib/store/oauthStore';
-import { useEffect } from 'react';
 import { OauthApi } from '@/lib/api/client/oauth';
 import { TERMS_VERSIONS } from '@/lib/constants/terms';
 import { processSuccessfulAuth } from '@/lib/utils/auth/processSuccessfulAuth';
@@ -44,12 +43,6 @@ export default function SocialSignupForm() {
     },
   });
 
-  useEffect(() => {
-    if (!signupData) {
-      router.replace('/login');
-    }
-  }, [signupData, router]);
-
   if (!signupData) return null;
 
   const onSubmit = async (data: SocialSignupFormValues) => {
@@ -69,8 +62,8 @@ export default function SocialSignupForm() {
             true
           );
           login(user);
-          clearSignupData();
           router.replace('/');
+          clearSignupData();
         }
       }
     } catch (error) {
