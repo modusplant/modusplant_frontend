@@ -18,11 +18,19 @@ import { OauthApi } from '@/lib/api/client/oauth';
 import { TERMS_VERSIONS } from '@/lib/constants/terms';
 import { processSuccessfulAuth } from '@/lib/utils/auth/processSuccessfulAuth';
 import { useAuthStore } from '@/lib/store/authStore';
+import useModalStore from '@/lib/store/modalStore';
+import { useEffect } from 'react';
+
+const PROVIDER_LABEL = {
+  kakao: '카카오',
+  google: '구글',
+} as const;
 
 export default function SocialSignupForm() {
   const router = useRouter();
   const { signupData, clearSignupData } = useOAuthStore();
   const login = useAuthStore((state) => state.login);
+  const showModal = useModalStore((state) => state.showModal);
 
   const {
     register,
@@ -42,6 +50,24 @@ export default function SocialSignupForm() {
       agreeToCommunity: false,
     },
   });
+
+  useEffect(() => {
+    if (!signupData) return;
+
+    if (signupData.type === 'NEED_LINK') {
+      showModal({
+        title: [
+          '기존 가입된 계정 중',
+          '동일한 이메일이 사용된 계정이 있습니다.',
+        ].join('\n'),
+        align: 'center',
+        preserveLineBreak: true,
+        description: `${PROVIDER_LABEL[signupData.provider]} 로그인 연동을 하시겠어요?`,
+        type: 'two-button',
+        buttonText: '연동하기',
+      });
+    }
+  }, [signupData, showModal]);
 
   if (!signupData) return null;
 

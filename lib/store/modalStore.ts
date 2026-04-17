@@ -11,6 +11,8 @@ export interface ModalStore {
     modalData: Omit<ModalStore, 'isVisible' | 'showModal' | 'hideModal'>
   ) => void;
   hideModal: () => void;
+  align?: 'center';
+  preserveLineBreak?: boolean;
 }
 
 const useModalStore = create<ModalStore>((set) => ({
@@ -20,6 +22,8 @@ const useModalStore = create<ModalStore>((set) => ({
   type: 'one-button',
   buttonText: undefined,
   onConfirm: undefined,
+  align: undefined,
+  preserveLineBreak: false,
 
   showModal: (
     modalData: Omit<ModalStore, 'isVisible' | 'showModal' | 'hideModal'>
