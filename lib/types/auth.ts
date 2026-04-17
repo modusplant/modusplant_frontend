@@ -62,7 +62,7 @@ export interface SignupRequest {
   nickname: string;
   agreedTermsOfUseVersion: string;
   agreedPrivacyPolicyVersion: string;
-  agreedAdInfoReceivingVersion: string;
+  agreedCommunityPolicyVersion: string;
 }
 
 /**
