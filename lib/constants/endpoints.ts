@@ -88,6 +88,8 @@ export const COMMENT_ENDPOINTS = {
     `${API_V1}/members/${memberId}/like/communication/post/${postUlid}/path/${path}`,
   MY_COMMENTS: (uuid: string) =>
     `${API_V1}/communication/comments/member/auth/${uuid}`,
+  REPORT_COMMENTS: (postUlid: string, path: string) =>
+    `/api/v1/report/abuse/post/${postUlid}/path/${path}`,
 } as const;
 
 /**
