@@ -126,6 +126,14 @@ export const postApi = {
   },
 
   /**
+   * 게시글 신고
+   * @param postUlid 게시글 ULID
+   */
+  async reportPost(postUlid: string): Promise<ApiResponse<void>> {
+    return clientApiInstance.post<void>(POST_ENDPOINTS.REPORT_POST(postUlid));
+  },
+
+  /**
    * 게시글 작성
    * @param payload 게시글 작성 데이터
    */
