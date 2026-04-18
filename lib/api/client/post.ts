@@ -1,4 +1,7 @@
-import { clientApiInstance } from '../instances/clientInstance';
+import {
+  clientApiInstance,
+  refreshAccessToken,
+} from '../instances/clientInstance';
 import { ApiResponse } from '@/lib/types/common';
 import {
   GetMyDraftsRequest,
@@ -14,6 +17,9 @@ import {
   buildPostFormData,
   buildPostQueryParams,
 } from '../../utils/postFormData';
+import { createApi } from '../instances/core';
+import { deleteCookie, getCookie } from '@/lib/utils/cookies/client';
+import { ACCESS_TOKEN_COOKIE_NAME } from '@/lib/constants/auth';
 
 /**
  * 게시글 관련 API
@@ -132,11 +138,26 @@ export const postApi = {
   async createPost(payload: PostWritePayload) {
     const formData = await buildPostFormData(payload);
     const queryParams = buildPostQueryParams(payload);
-
-    return clientApiInstance.post<void>(
-      `${POST_ENDPOINTS.POSTS}?${queryParams}`,
-      formData
-    );
+    // 백엔드 서버로 직접 요청(임시)
+    return createApi({
+      baseUrl: `${process.env.NEXT_PUBLIC_API_URL}`,
+      getAccessToken: () => getCookie(ACCESS_TOKEN_COOKIE_NAME),
+      includeCredentials: true,
+      onUnauthorized: async () => {
+        try {
+          await refreshAccessToken();
+          return 'retry' as const;
+        } catch (e) {
+          deleteCookie(ACCESS_TOKEN_COOKIE_NAME, { path: '/' });
+          deleteCookie('rememberMe', { path: '/' });
+          return 'fail' as const;
+        }
+      },
+    }).post(`${POST_ENDPOINTS.POSTS}?${queryParams}`, formData);
+    // return clientApiInstance.post<void>(
+    //   `${POST_ENDPOINTS.POSTS}?${queryParams}`,
+    //   formData
+    // );
   },
 
   /**
