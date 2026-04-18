@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { EllipsisVertical } from 'lucide-react';
 import Dropdown from '@/components/_common/dropdown';
 import { useCommentReportMutation } from '@/lib/hooks/comment/useCommentReportMutation';
+import { showModal } from '@/lib/store/modalStore';
 
 interface CommentHeaderProps {
   nickname: string;
@@ -30,10 +31,17 @@ export default function CommentHeader({
       onSuccess: () => setIsDropdownOpen(false),
     });
 
-  const handleCommentReport = () => {
-    console.log(postUlid, path);
-
-    reportComment({ postUlid, path });
+  const handleOpenReportModal = () => {
+    setIsDropdownOpen(false);
+    showModal({
+      type: 'two-button',
+      title: '부적절한 댓글로 신고하시겠어요?',
+      description: '신고 내용은 운영 정책에 따라 검토됩니다.',
+      buttonText: '신고하기',
+      onConfirm: () => {
+        reportComment({ postUlid, path });
+      },
+    });
   };
 
   const dropdownItems = isMyComment
@@ -52,7 +60,7 @@ export default function CommentHeader({
     : [
         {
           label: '신고',
-          onClick: handleCommentReport,
+          onClick: handleOpenReportModal,
           disabled: isReporting,
         },
       ];
