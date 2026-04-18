@@ -1,7 +1,11 @@
 import { clientApiInstance } from '@/lib/api/instances/clientInstance';
 import { ApiResponse } from '@/lib/types/common';
 import { ProfileData, AuthInfo } from '@/lib/types/member';
-import { MEMBER_ENDPOINTS, buildQueryString } from '@/lib/constants/endpoints';
+import {
+  MEMBER_ENDPOINTS,
+  COMMENT_ENDPOINTS,
+  buildQueryString,
+} from '@/lib/constants/endpoints';
 import {
   GetMyPostsRequest,
   GetMyPostsResponseData,
@@ -126,5 +130,20 @@ export const memberApi = {
     if (formData.image) form.append('image', formData.image);
 
     return clientApiInstance.post<void>(MEMBER_ENDPOINTS.MY_BUG_REPORTS, form);
+  },
+
+  /**
+   * 댓글 신고
+   * @param postUlid 게시글 ULID
+   * @param path 댓글 경로
+   * @returns 응답
+   */
+  async postCommentReport(
+    postUlid: string,
+    path: string
+  ): Promise<ApiResponse<void>> {
+    return clientApiInstance.post<void>(
+      COMMENT_ENDPOINTS.REPORT_COMMENTS(postUlid, path)
+    );
   },
 };

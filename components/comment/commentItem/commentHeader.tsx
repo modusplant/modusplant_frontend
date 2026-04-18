@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import { EllipsisVertical } from 'lucide-react';
-import ProfileImage from '@/components/_common/profileImage';
 import Dropdown from '@/components/_common/dropdown';
+import { useCommentReportMutation } from '@/lib/hooks/comment/useCommentReportMutation';
 
 interface CommentHeaderProps {
   nickname: string;
-  profileImagePath?: string;
+  postUlid: string;
+  path: string;
   isMyComment: boolean;
   onDelete: () => void;
   onUpdate: () => void;
@@ -16,13 +17,45 @@ interface CommentHeaderProps {
 
 export default function CommentHeader({
   nickname,
-  profileImagePath,
+  postUlid,
+  path,
   isMyComment,
   onDelete,
   onUpdate,
   isDeleting,
 }: CommentHeaderProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { mutate: reportComment, isPending: isReporting } =
+    useCommentReportMutation({
+      onSuccess: () => setIsDropdownOpen(false),
+    });
+
+  const handleCommentReport = () => {
+    console.log(postUlid, path);
+
+    reportComment({ postUlid, path });
+  };
+
+  const dropdownItems = isMyComment
+    ? [
+        {
+          label: '삭제',
+          onClick: onDelete,
+          disabled: isDeleting,
+        },
+        {
+          label: '수정',
+          onClick: onUpdate,
+          disabled: false,
+        },
+      ]
+    : [
+        {
+          label: '신고',
+          onClick: handleCommentReport,
+          disabled: isReporting,
+        },
+      ];
 
   return (
     <div className="mb-2 flex items-center justify-between">
@@ -30,7 +63,6 @@ export default function CommentHeader({
         {nickname}
       </span>
 
-      {/* {isMyComment && ( */}
       <Dropdown
         isOpen={isDropdownOpen}
         onClose={() => setIsDropdownOpen(false)}
@@ -43,32 +75,10 @@ export default function CommentHeader({
             <EllipsisVertical className="text-neutral-60 h-4 w-4" />
           </button>
         }
-        items={
-          isMyComment
-            ? [
-                {
-                  label: '삭제',
-                  onClick: onDelete,
-                  disabled: isDeleting,
-                },
-                {
-                  label: '수정',
-                  onClick: onUpdate,
-                  disabled: false,
-                },
-              ]
-            : [
-                {
-                  label: '신고',
-                  onClick: () => {},
-                  disabled: false,
-                },
-              ]
-        }
+        items={dropdownItems}
         position="right"
         width="w-24"
       />
-      {/* )} */}
     </div>
   );
 }
