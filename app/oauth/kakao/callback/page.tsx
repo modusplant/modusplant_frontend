@@ -39,8 +39,12 @@ function KakaoCallbackInner() {
             .setSignupData({ email, nickname, type, provider: 'kakao' });
           router.replace('/signup/social');
         }
-      } catch (error) {
-        console.error('카카오 로그인 실패', error);
+      } catch (error: any) {
+        sessionStorage.setItem(
+          'authError',
+          error.message || '카카오 로그인에 실패했습니다.'
+        );
+        sessionStorage.setItem('authCode', error.code);
         router.replace('/login');
       }
     };
