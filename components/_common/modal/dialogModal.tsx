@@ -1,4 +1,5 @@
 import Button from '@/components/_common/button';
+import { cn } from '@/lib/utils/tailwindHelper';
 
 interface DialogModalProps {
   title: string;
@@ -6,7 +7,10 @@ interface DialogModalProps {
   type: 'one-button' | 'two-button';
   buttonText?: string;
   onConfirm?: () => void;
+  onCancel?: () => void;
   hideModal: () => void;
+  align?: 'center';
+  preserveLineBreak?: boolean;
 }
 
 export default function DialogModal({
@@ -15,7 +19,10 @@ export default function DialogModal({
   type,
   buttonText,
   onConfirm,
+  onCancel,
   hideModal,
+  align,
+  preserveLineBreak,
 }: DialogModalProps) {
   return (
     <div
@@ -27,7 +34,13 @@ export default function DialogModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col items-center gap-1 py-10">
-          <h2 className="text-neutral-10 text-xl text-[17px] font-semibold">
+          <h2
+            className={cn(
+              'text-neutral-10 text-xl text-[17px] font-semibold',
+              align === 'center' && 'text-center',
+              preserveLineBreak && 'whitespace-pre-line'
+            )}
+          >
             {title}
           </h2>
           <p className="text-neutral-30 text-[16px]">{description}</p>
@@ -37,7 +50,10 @@ export default function DialogModal({
             <Button
               variant="default"
               size="lg"
-              onClick={hideModal}
+              onClick={() => {
+                onCancel?.();
+                hideModal();
+              }}
               className="text-neutral-10 min-w-20 rounded-[7px] px-5 py-3 text-[15px]"
             >
               취소

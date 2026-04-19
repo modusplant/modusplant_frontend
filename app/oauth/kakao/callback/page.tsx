@@ -34,7 +34,9 @@ function KakaoCallbackInner() {
         } else if (type === 'NEED_SIGNUP' || type === 'NEED_LINK') {
           // 신규 유저, 기존 이메일 계정 연동 처리
           const { email, nickname } = response.data;
-          useOAuthStore.getState().setSignupData({ email, nickname, type });
+          useOAuthStore
+            .getState()
+            .setSignupData({ email, nickname, type, provider: 'kakao' });
           router.replace('/signup/social');
         }
       } catch (error) {

@@ -19,8 +19,15 @@ export default function ModalProvider() {
     return null;
   }
 
-  const { title, description, buttonText, onConfirm } =
-    useModalStore.getState();
+  const {
+    title,
+    description,
+    buttonText,
+    onConfirm,
+    onCancel,
+    align,
+    preserveLineBreak,
+  } = useModalStore.getState();
 
   if (type === 'snackbar') {
     return (
@@ -35,7 +42,10 @@ export default function ModalProvider() {
       type={type}
       buttonText={buttonText}
       onConfirm={onConfirm}
+      onCancel={onCancel}
       hideModal={hideModal}
+      align={align}
+      preserveLineBreak={preserveLineBreak}
     />
   );
 }
