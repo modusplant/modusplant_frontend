@@ -37,8 +37,8 @@ export default function SocialSignupForm() {
       if (result.status === 200 && result.data?.accessToken) {
         const user = await processSuccessfulAuth(result.data.accessToken, true);
         login(user);
-        router.replace('/');
         clearSignupData();
+        router.replace('/');
       }
     } catch (error) {
       console.error('연동 실패:', error);
@@ -85,6 +85,15 @@ export default function SocialSignupForm() {
   });
 
   useEffect(() => {
+    return () => {
+      if (useOAuthStore.getState().signupData) {
+        OauthApi.cancelSocialConnect();
+        clearSignupData();
+      }
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
     if (!signupData) return;
 
     if (signupData.type === 'NEED_LINK') {
@@ -123,8 +132,8 @@ export default function SocialSignupForm() {
             true
           );
           login(user);
-          router.replace('/');
           clearSignupData();
+          router.replace('/');
         }
       }
     } catch (error) {
