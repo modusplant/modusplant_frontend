@@ -68,4 +68,15 @@ export const OauthApi = {
     }>(AUTH_ENDPOINTS.SOCIAL_LINK, { skipAuth: true });
     return response;
   },
+
+  /**
+   * 소셜 연결 취소 (연동 거부, 소셜 회원가입 중단)
+   */
+  async cancelSocialConnect(): Promise<ApiResponse<void>> {
+    const response = await clientApiInstance.delete<void>(
+      AUTH_ENDPOINTS.CANCEL_SOCIAL_CONNECT,
+      { skipAuth: true }
+    );
+    return response;
+  },
 };

@@ -49,6 +49,22 @@ export default function SocialSignupForm() {
     }
   }, [login, router, clearSignupData, showModal]);
 
+  const handleConnectCancel = useCallback(async () => {
+    try {
+      const result = await OauthApi.cancelSocialConnect();
+      if (result.status === 200) {
+        clearSignupData();
+        router.replace('/login');
+      }
+    } catch (error) {
+      console.error('취소 실패:', error);
+      showModal({
+        type: 'snackbar',
+        description: '처리 중 오류가 발생했습니다.',
+      });
+    }
+  }, [router, clearSignupData, showModal]);
+
   const {
     register,
     handleSubmit,
@@ -82,14 +98,11 @@ export default function SocialSignupForm() {
         description: `${PROVIDER_LABEL[signupData.provider]} 로그인 연동을 하시겠어요?`,
         type: 'two-button',
         buttonText: '연동하기',
-        onCancel: () => {
-          clearSignupData();
-          router.replace('/login');
-        },
+        onCancel: handleConnectCancel,
         onConfirm: handleLinkConfirm,
       });
     }
-  }, [signupData, showModal, clearSignupData, router, handleLinkConfirm]);
+  }, [signupData, showModal, handleConnectCancel, handleLinkConfirm]);
 
   if (!signupData) return null;
 
