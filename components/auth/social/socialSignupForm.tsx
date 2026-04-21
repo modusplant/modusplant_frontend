@@ -12,58 +12,10 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { useOAuthStore } from '@/lib/store/oauthStore';
-import { OauthApi } from '@/lib/api/client/oauth';
-import { TERMS_VERSIONS } from '@/lib/constants/terms';
-import { processSuccessfulAuth } from '@/lib/utils/auth/processSuccessfulAuth';
-import { useAuthStore } from '@/lib/store/authStore';
-import useModalStore from '@/lib/store/modalStore';
-import { useCallback, useEffect } from 'react';
-
-const PROVIDER_LABEL = {
-  kakao: '카카오',
-  google: '구글',
-} as const;
+import { useSocialAuth } from '@/lib/hooks/auth/useSocialAuth';
 
 export default function SocialSignupForm() {
-  const router = useRouter();
-  const { signupData, clearSignupData } = useOAuthStore();
-  const login = useAuthStore((state) => state.login);
-  const showModal = useModalStore((state) => state.showModal);
-  const handleLinkConfirm = useCallback(async () => {
-    try {
-      const result = await OauthApi.socialLink();
-      if (result.status === 200 && result.data?.accessToken) {
-        const user = await processSuccessfulAuth(result.data.accessToken, true);
-        login(user);
-        clearSignupData();
-        router.replace('/');
-      }
-    } catch (error) {
-      console.error('연동 실패:', error);
-      showModal({
-        type: 'snackbar',
-        description: '연동에 실패하였습니다.',
-      });
-    }
-  }, [login, router, clearSignupData, showModal]);
-
-  const handleConnectCancel = useCallback(async () => {
-    try {
-      const result = await OauthApi.cancelSocialConnect();
-      if (result.status === 200) {
-        clearSignupData();
-        router.replace('/login');
-      }
-    } catch (error) {
-      console.error('취소 실패:', error);
-      showModal({
-        type: 'snackbar',
-        description: '처리 중 오류가 발생했습니다.',
-      });
-    }
-  }, [router, clearSignupData, showModal]);
+  const { signupData, handleSignupSubmit } = useSocialAuth();
 
   const {
     register,
@@ -84,66 +36,7 @@ export default function SocialSignupForm() {
     },
   });
 
-  useEffect(() => {
-    return () => {
-      if (useOAuthStore.getState().signupData) {
-        OauthApi.cancelSocialConnect();
-        clearSignupData();
-      }
-    };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (!signupData) return;
-
-    if (signupData.type === 'NEED_LINK') {
-      showModal({
-        title: [
-          '기존 가입된 계정 중',
-          '동일한 이메일이 사용된 계정이 있습니다.',
-        ].join('\n'),
-        align: 'center',
-        preserveLineBreak: true,
-        description: `${PROVIDER_LABEL[signupData.provider]} 로그인 연동을 하시겠어요?`,
-        type: 'two-button',
-        buttonText: '연동하기',
-        onCancel: handleConnectCancel,
-        onConfirm: handleLinkConfirm,
-      });
-    }
-  }, [signupData, showModal, handleConnectCancel, handleLinkConfirm]);
-
   if (!signupData) return null;
-
-  const onSubmit = async (data: SocialSignupFormValues) => {
-    try {
-      if (signupData.type === 'NEED_SIGNUP') {
-        const result = await OauthApi.socialSignup({
-          nickname: data.nickname,
-          introduction: data.introduction || undefined,
-          agreedTermsOfUseVersion: TERMS_VERSIONS.termsOfUse,
-          agreedPrivacyPolicyVersion: TERMS_VERSIONS.privacyPolicy,
-          agreedCommunityPolicyVersion: TERMS_VERSIONS.communityPolicy,
-        });
-
-        if (result.status === 200 && result.data?.accessToken) {
-          const user = await processSuccessfulAuth(
-            result.data.accessToken,
-            true
-          );
-          login(user);
-          clearSignupData();
-          router.replace('/');
-        }
-      }
-    } catch (error) {
-      console.error('소셜 회원가입 실패', error);
-      showModal({
-        type: 'snackbar',
-        description: '회원가입 중 오류가 발생했습니다.',
-      });
-    }
-  };
 
   const formData = watch();
   const isFormValid =
@@ -154,7 +47,10 @@ export default function SocialSignupForm() {
     formData.agreeToCommunity;
 
   return (
-    <form className="flex flex-col gap-10" onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className="flex flex-col gap-10"
+      onSubmit={handleSubmit(handleSignupSubmit)}
+    >
       <div className="flex flex-col gap-7.5">
         {/* 이메일 영역 */}
         <SocialEmailSection email={signupData.email} />
