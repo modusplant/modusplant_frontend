@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { EmailVerificationState } from '@/lib/types/auth';
 import { authApi } from '@/lib/api/client/auth';
 import { showModal } from '@/lib/store/modalStore';
+import { useRouter } from 'next/navigation';
 
 const DEFAULT_EXPIRES_IN = 300; // 5분 = 300초
 
@@ -16,6 +17,8 @@ export const useEmailVerification = ({
   trigger,
   watch,
 }: UseEmailVerificationProps = {}) => {
+  const router = useRouter();
+
   const [verificationState, setVerificationState] =
     useState<EmailVerificationState>({
       isCodeSent: false,
@@ -50,30 +53,15 @@ export const useEmailVerification = ({
 
   // 인증 요청
   const requestVerification = useCallback(async (email: string) => {
-    try {
-      const response = await authApi.requestEmailVerification(email);
+    await authApi.requestEmailVerification(email);
 
-      if (response.success) {
-        setVerificationState({
-          isCodeSent: true,
-          isVerified: false,
-          timeRemaining: DEFAULT_EXPIRES_IN,
-          canResend: false,
-        });
-        return { success: true, message: '인증코드가 발송되었습니다.' };
-      } else {
-        return {
-          success: false,
-          message: response.message || '인증코드 발송에 실패했습니다.',
-        };
-      }
-    } catch (error: any) {
-      return {
-        success: false,
-        message:
-          error.message || '인증코드 발송에 실패했습니다. 다시 시도해주세요.',
-      };
-    }
+    setVerificationState({
+      isCodeSent: true,
+      isVerified: false,
+      timeRemaining: DEFAULT_EXPIRES_IN,
+      canResend: false,
+    });
+    return { success: true, message: '인증코드가 발송되었습니다.' };
   }, []);
 
   // 재요청
@@ -172,14 +160,33 @@ export const useEmailVerification = ({
         if (!emailValid) return { success: false, message: '' };
       }
 
-      const result = await requestVerification(email);
-      showModal({
-        type: 'snackbar',
-        description: result.message,
-      });
-      return result;
+      try {
+        const result = await requestVerification(email);
+        showModal({
+          type: 'snackbar',
+          description: result.message,
+        });
+        return result;
+      } catch (error: any) {
+        if (error.status === 409) {
+          showModal({
+            type: 'two-button',
+            title: error.message,
+            description: '로그인 페이지로 이동하시겠습니까?',
+            buttonText: '이동하기',
+            onConfirm: () => {
+              router.push('/login');
+            },
+          });
+        } else {
+          showModal({
+            type: 'snackbar',
+            description: error.message || '인증 메일 발송에 실패했습니다.',
+          });
+        }
+      }
     },
-    [trigger, requestVerification]
+    [trigger, requestVerification, router]
   );
 
   // 재요청 핸들러
