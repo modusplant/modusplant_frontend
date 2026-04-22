@@ -8,10 +8,10 @@ const API_V1 = '/api/v1';
  */
 export const AUTH_ENDPOINTS = {
   LOGIN: `/api/auth/login`,
-  KAKAO_LOGIN: `/api/v1/auth/social-login/kakao`,
-  GOOGLE_LOGIN: `/api/v1/auth/social-login/google`,
-  SOCIAL_SIGNUP: `/api/v1/auth/social-signup`,
-  SOCIAL_LINK: `/api/v1/auth/social-link`,
+  KAKAO_LOGIN: `${API_V1}/auth/social-login/kakao`,
+  GOOGLE_LOGIN: `${API_V1}/auth/social-login/google`,
+  SOCIAL_SIGNUP: `${API_V1}/auth/social-signup`,
+  SOCIAL_LINK: `${API_V1}/auth/social-link`,
   SIGNUP: `/api/members/register`,
   TOKEN_REFRESH: `/api/auth/token/refresh`,
   CHECK_NICKNAME: (nickname: string) =>
@@ -25,6 +25,8 @@ export const AUTH_ENDPOINTS = {
   VERIFY_EMAIL_CODE: `/api/members/verify-email`,
   VERIFY_EMAIL_CODE_SEND: `/api/members/verify-email/send`,
   CHANGE_EMAIL: (userId: string) => `${API_V1}/members/${userId}/modify/email`,
+  // 회원탈퇴
+  SIGNOUT: `${API_V1}/members`,
 } as const;
 
 /**

@@ -214,3 +214,14 @@ export interface TermsSectionProps<T extends FieldValues & WithTermsFields> {
   watch: UseFormWatch<T>;
   setValue: UseFormSetValue<T>;
 }
+
+/**
+ * 회원 탈퇴 요청 body 타입
+ */
+
+export type SignoutRequestBody = {
+  authCode: string;
+  authProvider: string
+  reason: 'UNCOMFORTABLE_TO_USE' | 'NOT_NEED_THIS' | 'CONTENT_OR_INFO_NOT_SATISFY' | 'NOT_MATCHED_COMMUNITY_MOOD' | 'OTHERS';
+  opinion: string;
+}
