@@ -12,6 +12,7 @@ export const AUTH_ENDPOINTS = {
   GOOGLE_LOGIN: `${API_V1}/auth/social-login/google`,
   SOCIAL_SIGNUP: `${API_V1}/auth/social-signup`,
   SOCIAL_LINK: `${API_V1}/auth/social-link`,
+  CANCEL_SOCIAL_CONNECT: `${API_V1}/auth/social-connect`,
   SIGNUP: `/api/members/register`,
   TOKEN_REFRESH: `/api/auth/token/refresh`,
   CHECK_NICKNAME: (nickname: string) =>
