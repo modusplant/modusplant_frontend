@@ -41,6 +41,7 @@ function GoogleCallbackInner() {
         }
       } catch (error) {
         console.error('구글 로그인 실패', error);
+        await OauthApi.cancelSocialConnect();
         router.replace('/login');
       }
     };
