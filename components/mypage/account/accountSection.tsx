@@ -7,6 +7,8 @@ import PasswordSection from './passwordSection';
 import SocialLoginInfo from './socialLoginInfo';
 import ChangeEmailModal from './changeEmailModal';
 import { useState } from 'react';
+import SignoutModal from './SignoutModal';
+import { useDropdownState } from '@/lib/hooks/category/useDropdownState';
 
 /**
  * 계정 설정 섹션
@@ -16,6 +18,9 @@ import { useState } from 'react';
  */
 export default function AccountSection() {
   const { user } = useAuthStore();
+
+  const { isOpen, open, close } = useDropdownState();
+
   const [emailModalVisible, setEmailModalVisible] = useState(false);
 
   const { data: authInfo, isLoading, error } = useMemberAuthInfo(user?.id);
@@ -54,6 +59,15 @@ export default function AccountSection() {
           onChangeEmail={() => setEmailModalVisible(true)}
         />
         <PasswordSection />
+        <div className="flex justify-end">
+          <button
+            className="typo-regular14 text-neutral-40 text-[15px] underline underline-offset-4"
+            onClick={open}
+          >
+            회원 탈퇴
+          </button>
+        </div>
+        {isOpen && <SignoutModal onClose={close} />}
       </div>
     );
   }

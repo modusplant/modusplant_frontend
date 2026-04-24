@@ -8,6 +8,7 @@ import {
   FieldError,
 } from 'react-hook-form';
 import { SignupFormValues } from '@/lib/constants/schema';
+import { SignoutFormValues } from '@/components/mypage/account/SignoutForm';
 
 /**
  * 로그인 요청 데이터
@@ -220,8 +221,8 @@ export interface TermsSectionProps<T extends FieldValues & WithTermsFields> {
  */
 
 export type SignoutRequestBody = {
-  authCode: string;
-  authProvider: string
-  reason: 'UNCOMFORTABLE_TO_USE' | 'NOT_NEED_THIS' | 'CONTENT_OR_INFO_NOT_SATISFY' | 'NOT_MATCHED_COMMUNITY_MOOD' | 'OTHERS';
-  opinion: string;
-}
+  authCode?: string;
+  authProvider?: string;
+  reason: SignoutFormValues['reason'];
+  opinion?: SignoutFormValues['opinion'];
+};
