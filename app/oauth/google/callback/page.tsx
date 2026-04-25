@@ -39,8 +39,12 @@ function GoogleCallbackInner() {
             .setSignupData({ email, nickname, type, provider: 'google' });
           router.replace('/signup/social');
         }
-      } catch (error) {
-        console.error('구글 로그인 실패', error);
+      } catch (error: any) {
+        sessionStorage.setItem(
+          'authError',
+          error.message || '구글 로그인에 실패했습니다.'
+        );
+        sessionStorage.setItem('authCode', error.code);
         await OauthApi.cancelSocialConnect();
         router.replace('/login');
       }
