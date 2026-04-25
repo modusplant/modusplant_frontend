@@ -3,11 +3,19 @@
 import { useEffect } from 'react';
 import { X } from 'lucide-react';
 import SearchBar from './searchbar';
+import SearchHistory from './searchHistory';
 
 interface SearchOverlayProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+const mockSearchHistoryResponse = {
+  status: 200,
+  code: 'generic_success',
+  message: '',
+  data: ['벌레', '다육이', '선인장', '화분', '식물 영양제', '식물 병충해'],
+};
 
 const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
   useEffect(() => {
@@ -46,6 +54,7 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
           </button>
         </div>
         <SearchBar placeholder="검색어를 입력해 주세요" autoFocus />
+        <SearchHistory data={mockSearchHistoryResponse.data} />
       </div>
     </div>
   );
