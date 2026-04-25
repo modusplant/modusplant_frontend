@@ -4,7 +4,7 @@ import { useAuthStore } from '@/lib/store/authStore';
 import { useMemberAuthInfo } from '@/lib/hooks/mypage/useMemberAuthInfo';
 import EmailInfoSection from './emailInfoSection';
 import PasswordSection from './passwordSection';
-import SocialLoginInfo from './socialLoginInfo';
+import SocialLinkSection from './socialLinkSection';
 import ChangeEmailModal from './changeEmailModal';
 import { useState } from 'react';
 import SignoutModal from './SignoutModal';
@@ -12,7 +12,7 @@ import { useDropdownState } from '@/lib/hooks/category/useDropdownState';
 
 /**
  * 계정 설정 섹션
- * - 이메일 정보 (일반 로그인만 표시)
+ * - 이메일 정보
  * - 비밀번호 변경
  * - 가입일 (읽기 전용)
  */
@@ -41,40 +41,22 @@ export default function AccountSection() {
     );
   }
 
-  const isBasicAuth = authInfo.authProvider === 'BASIC';
-
-  if (isBasicAuth) {
-    return (
-      <div className="flex flex-col gap-6">
-        {emailModalVisible && (
-          <ChangeEmailModal
-            userId={user!.id}
-            email={user?.email || authInfo.email}
-            close={() => setEmailModalVisible(false)}
-          />
-        )}
-        <EmailInfoSection
-          email={user?.email || authInfo.email}
-          createdAt={authInfo.createdAt}
-          onChangeEmail={() => setEmailModalVisible(true)}
-        />
-        <PasswordSection />
-        <div className="flex justify-end">
-          <button
-            className="typo-regular14 text-neutral-40 text-[15px] underline underline-offset-4"
-            onClick={open}
-          >
-            회원 탈퇴
-          </button>
-        </div>
-        {isOpen && <SignoutModal onClose={close} />}
-      </div>
-    );
-  }
-
   return (
-    <>
-      <SocialLoginInfo authProvider={authInfo.authProvider} />
+    <div className="flex flex-col gap-6">
+      {emailModalVisible && (
+        <ChangeEmailModal
+          userId={user!.id}
+          email={user?.email || authInfo.email}
+          close={() => setEmailModalVisible(false)}
+        />
+      )}
+      <EmailInfoSection
+        email={user?.email || authInfo.email}
+        createdAt={authInfo.createdAt}
+        onChangeEmail={() => setEmailModalVisible(true)}
+      />
+      <SocialLinkSection authProvider={authInfo.authProvider} />
+      <PasswordSection />
       <div className="flex justify-end">
         <button
           className="typo-regular14 text-neutral-40 text-[15px] underline underline-offset-4"
@@ -84,6 +66,6 @@ export default function AccountSection() {
         </button>
       </div>
       {isOpen && <SignoutModal onClose={close} />}
-    </>
+    </div>
   );
 }
