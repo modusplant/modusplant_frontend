@@ -17,7 +17,6 @@ export default function PasswordSection() {
           <p className="text-neutral-20">
             보안을 위해 정기적으로 비밀번호를 변경하는 것을 권장합니다.
           </p>
-          <hr className="border-surface-stroke-2" />
           <div className="flex items-center gap-3">
             <Link href="/reset-password">
               <Button

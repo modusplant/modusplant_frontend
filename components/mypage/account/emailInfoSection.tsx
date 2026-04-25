@@ -36,7 +36,6 @@ export default function EmailInfoSection({
           <p className="text-neutral-60 text-sm leading-normal">
             가입일: {createdAt ? formatDate(createdAt) : '-'}
           </p>
-          <hr className="border-surface-stroke-2" />
           <div>
             <Button
               variant="point2"
