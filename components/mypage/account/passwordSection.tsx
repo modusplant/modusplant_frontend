@@ -23,15 +23,25 @@ export default function PasswordSection({ disabled }: PasswordSectionProps) {
             보안을 위해 정기적으로 비밀번호를 변경하는 것을 권장합니다.
           </p>
           <div className="flex items-center gap-3">
-            <Link href="/reset-password">
+            {disabled ? (
               <Button
-                variant={disabled ? 'deactivate' : 'point2'}
+                variant="deactivate"
                 size="md"
                 className="h-10.5 text-[15px] font-medium"
               >
                 비밀번호 변경하기
               </Button>
-            </Link>
+            ) : (
+              <Link href="/reset-password">
+                <Button
+                  variant="point2"
+                  size="md"
+                  className="h-10.5 text-[15px] font-medium"
+                >
+                  비밀번호 변경하기
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>
