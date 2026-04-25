@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Button } from '@/components/_common/button';
 import { buildAuthUrl } from '@/lib/utils/oauth/buildAuthUrl';
 
+import SocialIconButton from './socialIconButton';
 interface LoginFormActionsProps {
   isLoading: boolean;
 }
@@ -85,17 +86,7 @@ export default function LoginFormActions({ isLoading }: LoginFormActionsProps) {
 
       {/* 소셜 로그인 */}
       <div className="mt-10 mb-3 flex items-center justify-center gap-4">
-        {SOCIAL_PLATFORMS.map(({ id, label, icon }) => (
-          <button
-            key={id}
-            type="button"
-            onClick={() => handleSocialLoginClick(id)}
-            aria-label={label}
-            className="transition-opacity hover:opacity-80"
-          >
-            <Image src={icon} alt={label} width={45} height={45} />
-          </button>
-        ))}
+        <SocialIconButton />
       </div>
     </div>
   );
