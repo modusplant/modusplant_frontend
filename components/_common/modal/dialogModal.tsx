@@ -10,7 +10,7 @@ interface DialogModalProps {
   onCancel?: () => void;
   hideModal: () => void;
   align?: 'center';
-  preserveLineBreak?: boolean;
+  shouldUseLineBreak?: boolean;
 }
 
 export default function DialogModal({
@@ -22,7 +22,7 @@ export default function DialogModal({
   onCancel,
   hideModal,
   align,
-  preserveLineBreak,
+  shouldUseLineBreak,
 }: DialogModalProps) {
   return (
     <div
@@ -41,7 +41,7 @@ export default function DialogModal({
             className={cn(
               'text-neutral-10 text-xl text-[17px] font-semibold',
               align === 'center' && 'text-center',
-              preserveLineBreak && 'whitespace-pre-line'
+              shouldUseLineBreak && 'whitespace-pre-line'
             )}
           >
             {title}
