@@ -6,7 +6,12 @@ import { Button } from '@/components/_common/button';
  * - 비밀번호 변경 안내 메시지
  * - 비밀번호 변경 버튼
  */
-export default function PasswordSection() {
+
+interface PasswordSectionProps {
+  disabled?: boolean;
+}
+
+export default function PasswordSection({ disabled }: PasswordSectionProps) {
   return (
     <div className="border-surface-98 rounded-xl border bg-white p-10">
       <div className="flex flex-col gap-5">
@@ -20,7 +25,7 @@ export default function PasswordSection() {
           <div className="flex items-center gap-3">
             <Link href="/reset-password">
               <Button
-                variant="point2"
+                variant={disabled ? 'deactivate' : 'point2'}
                 size="md"
                 className="h-10.5 text-[15px] font-medium"
               >

@@ -7,6 +7,7 @@ interface EmailInfoSectionProps {
   email: string;
   createdAt?: string;
   onChangeEmail?: () => void;
+  disabled?: boolean;
 }
 
 /**
@@ -19,6 +20,7 @@ export default function EmailInfoSection({
   email,
   createdAt,
   onChangeEmail,
+  disabled,
 }: EmailInfoSectionProps) {
   return (
     <div className="border-surface-98 flex flex-col gap-5 rounded-xl border bg-white p-10">
@@ -38,7 +40,7 @@ export default function EmailInfoSection({
           </p>
           <div>
             <Button
-              variant="point2"
+              variant={disabled ? 'deactivate' : 'point2'}
               size="md"
               onClick={onChangeEmail}
               className="h-10.5 text-[15px] font-medium"

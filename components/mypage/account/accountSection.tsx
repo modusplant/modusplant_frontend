@@ -25,6 +25,8 @@ export default function AccountSection() {
 
   const { data: authInfo, isLoading, error } = useMemberAuthInfo(user?.id);
 
+  const isSocialMember = authInfo?.authProvider !== 'BASIC';
+
   if (isLoading) {
     return (
       <div className="flex min-h-100 items-center justify-center">
@@ -54,9 +56,10 @@ export default function AccountSection() {
         email={user?.email || authInfo.email}
         createdAt={authInfo.createdAt}
         onChangeEmail={() => setEmailModalVisible(true)}
+        disabled={isSocialMember}
       />
       <SocialLinkSection authProvider={authInfo.authProvider} />
-      <PasswordSection />
+      <PasswordSection disabled={isSocialMember} />
       <div className="flex justify-end">
         <button
           className="typo-regular14 text-neutral-40 text-[15px] underline underline-offset-4"
