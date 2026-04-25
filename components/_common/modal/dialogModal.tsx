@@ -27,7 +27,10 @@ export default function DialogModal({
   return (
     <div
       className="fixed inset-0 z-99 flex items-center justify-center bg-black/20"
-      onClick={hideModal}
+      onClick={() => {
+        onCancel?.();
+        hideModal();
+      }}
     >
       <div
         className="w-85 rounded-2xl bg-neutral-100 py-4 shadow-lg"
