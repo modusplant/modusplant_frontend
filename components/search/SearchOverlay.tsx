@@ -9,6 +9,7 @@ import SearchHistory from './searchHistory';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useGetSearchHistory } from '@/lib/hooks/search/useGetSearchHistory';
 import { useGetSearchResult } from '@/lib/hooks/search/useGetSearchResult';
+import Image from 'next/image';
 
 interface SearchOverlayProps {
   isOpen: boolean;
@@ -106,9 +107,15 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
         {submittedKeyword && (
           <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-2">
             {isSearchResultFetching && (
-              <p className="px-2 text-sm text-neutral-50">
-                검색 결과를 불러오는 중입니다.
-              </p>
+              <div className="flex items-center justify-center p-4">
+                <Image
+                  src={'/icon/loading.gif'}
+                  alt="Loading"
+                  width={20}
+                  height={20}
+                  unoptimized
+                />
+              </div>
             )}
 
             {isSearchResultError && (
@@ -125,11 +132,11 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
                 </p>
               )}
 
-            {/* {!isSearchResultFetching &&
+            {!isSearchResultFetching &&
               !isSearchResultError &&
               searchPosts.map((post) => (
                 <PostListItem key={post.postId} post={post} />
-              ))} */}
+              ))}
           </div>
         )}
 
