@@ -8,10 +8,7 @@ import { SearchRequest } from '@/lib/types/search';
  * @param params 검색 요청 파라미터
  * @param enabled 쿼리 활성화 여부
  */
-export const useGetSearchResult = (
-  params: SearchRequest,
-  enabled = true
-) => {
+export const useGetSearchResult = (params: SearchRequest, enabled = true) => {
   return useQuery<GetPostsResponseData>({
     queryKey: ['searchResult', params],
     enabled: enabled && !!params.keyword,
