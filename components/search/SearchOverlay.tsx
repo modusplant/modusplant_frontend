@@ -4,20 +4,20 @@ import { useEffect } from 'react';
 import { X } from 'lucide-react';
 import SearchBar from './searchbar';
 import SearchHistory from './searchHistory';
+import { useAuthStore } from '@/lib/store/authStore';
+import { useGetSearchHistory } from '@/lib/hooks/search/useGetSearchHistory';
 
 interface SearchOverlayProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const mockSearchHistoryResponse = {
-  status: 200,
-  code: 'generic_success',
-  message: '',
-  data: ['벌레', '다육이', '선인장', '화분', '식물 영양제', '식물 병충해'],
-};
-
 const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
+  const { isAuthenticated, user } = useAuthStore();
+  const { data: searchHistory = [] } = useGetSearchHistory(
+    isOpen && isAuthenticated && !!user
+  );
+
   useEffect(() => {
     if (!isOpen) return;
 
@@ -54,7 +54,9 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
           </button>
         </div>
         <SearchBar placeholder="검색어를 입력해 주세요" autoFocus />
-        <SearchHistory data={mockSearchHistoryResponse.data} />
+
+        {/* 로그인 한 사용자에게만 검색 기록 표출 */}
+        {isAuthenticated && user && <SearchHistory data={searchHistory} />}
       </div>
     </div>
   );
