@@ -17,20 +17,17 @@ export const memberApi = {
   /**
    * 프로필 조회
    */
-  async getProfile(userId: string): Promise<ApiResponse<ProfileData>> {
-    return clientApiInstance.get<ProfileData>(MEMBER_ENDPOINTS.PROFILE(userId));
+  async getProfile(): Promise<ApiResponse<ProfileData>> {
+    return clientApiInstance.get<ProfileData>(MEMBER_ENDPOINTS.PROFILE());
   },
 
   /**
    * 프로필 수정 (덮어쓰기)
    * Content-Type: multipart/form-data
    */
-  async updateProfile(
-    userId: string,
-    formData: FormData
-  ): Promise<ApiResponse<ProfileData>> {
+  async updateProfile(formData: FormData): Promise<ApiResponse<ProfileData>> {
     return clientApiInstance.put<ProfileData>(
-      MEMBER_ENDPOINTS.PROFILE(userId),
+      MEMBER_ENDPOINTS.PROFILE(),
       formData
     );
   },

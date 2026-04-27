@@ -60,9 +60,9 @@ export function usePostInteraction({
       }
 
       if (currentIsLiked) {
-        await postApi.unlikePost(user.id, postId);
+        await postApi.unlikePost(postId);
       } else {
-        await postApi.likePost(user.id, postId);
+        await postApi.likePost(postId);
       }
     },
     onMutate: async (currentIsLiked) => {
@@ -97,7 +97,7 @@ export function usePostInteraction({
       if (currentIsBookmarked) {
         await postApi.unbookmarkPost(user.id, postId);
       } else {
-        await postApi.bookmarkPost(user.id, postId);
+        await postApi.bookmarkPost(postId);
       }
     },
     onMutate: async (currentIsBookmarked) => {

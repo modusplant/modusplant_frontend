@@ -5,7 +5,6 @@ import { ApiResponse } from '@/lib/types/common';
 import { useAuthStore } from '@/lib/store/authStore';
 
 interface ProfileMutationVariables {
-  userId: string;
   formData: FormData;
 }
 
@@ -20,13 +19,13 @@ export function useProfileMutation() {
 
   return useMutation<ApiResponse<ProfileData>, Error, ProfileMutationVariables>(
     {
-      mutationFn: ({ userId, formData }) => {
-        return memberApi.updateProfile(userId, formData);
+      mutationFn: ({ formData }) => {
+        return memberApi.updateProfile(formData);
       },
-      onSuccess: (data, variables) => {
+      onSuccess: (data) => {
         // 1. 프로필 쿼리 캐시 무효화 (최신 데이터 다시 가져오기)
         queryClient.invalidateQueries({
-          queryKey: ['profile', variables.userId],
+          queryKey: ['profile'],
         });
 
         // 2. authStore의 user 정보 업데이트

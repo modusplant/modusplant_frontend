@@ -11,7 +11,7 @@ export const memberApi = {
    * 프로필 조회
    * GET /api/v1/members/{id}/profile
    */
-  async getProfile(userId: string): Promise<ApiResponse<ProfileData>> {
-    return serverApiInstance.get<ProfileData>(MEMBER_ENDPOINTS.PROFILE(userId));
+  async getProfile(): Promise<ApiResponse<ProfileData>> {
+    return serverApiInstance.get<ProfileData>(MEMBER_ENDPOINTS.PROFILE());
   },
 };
