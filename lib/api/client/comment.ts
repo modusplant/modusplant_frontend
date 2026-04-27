@@ -57,12 +57,11 @@ export const commentApi = {
    * @returns 성공 응답
    */
   async likeComment(
-    memberId: string,
     postUlid: string,
     path: string
   ): Promise<ApiResponse<void>> {
     return clientApiInstance.put<void>(
-      COMMENT_ENDPOINTS.LIKE_COMMENT(memberId, postUlid, path)
+      COMMENT_ENDPOINTS.LIKE_COMMENT(postUlid, path)
     );
   },
 
@@ -74,12 +73,11 @@ export const commentApi = {
    * @returns 성공 응답
    */
   async unlikeComment(
-    memberId: string,
     postUlid: string,
     path: string
   ): Promise<ApiResponse<void>> {
     return clientApiInstance.delete<void>(
-      COMMENT_ENDPOINTS.LIKE_COMMENT(memberId, postUlid, path)
+      COMMENT_ENDPOINTS.LIKE_COMMENT(postUlid, path)
     );
   },
 
