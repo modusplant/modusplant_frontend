@@ -106,6 +106,7 @@ export const NOTIFICATION_ENDPOINTS = {
 export const SEARCH_ENDPOINTS = {
   GET_SEARCH_RESULT: (params: {
     size: number;
+    lastPostId?: string;
     keyword: string;
     option: string;
     sort: string;
