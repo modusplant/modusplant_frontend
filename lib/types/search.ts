@@ -17,6 +17,7 @@ export type SearchSort = 'latest' | 'relevance';
  */
 export interface SearchRequest {
   size: number;
+  lastPostId?: string;
   option: SearchOption;
   keyword: string;
   sort: SearchSort;
@@ -25,9 +26,4 @@ export interface SearchRequest {
 /**
  * 검색 기록 조회 응답 데이터
  */
-export interface GetSearchHistoryResponseData {
-  status: number;
-  code: string;
-  message: string;
-  data: string[];
-}
+export type GetSearchHistoryResponseData = string[];
