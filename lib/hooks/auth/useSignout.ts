@@ -10,27 +10,34 @@ import { SignoutFormValues } from '@/components/mypage/account/SignoutForm';
 import { deleteAllCookies } from '@/lib/utils/cookies/client';
 import { deleteCookie } from '@/lib/utils/cookies/server';
 import { ACCESS_TOKEN_COOKIE_NAME } from '@/lib/constants/auth';
+import { useReauthForSignout } from './useReauthForSignout';
+import { useMemberAuthInfo } from '@/lib/hooks/mypage/useMemberAuthInfo';
 
 export const useSignout = () => {
   const queryClient = useQueryClient();
+
+  const userId = useAuthStore((state) => state.user?.id);
+  const { data } = useMemberAuthInfo(userId);
+
+  const { requestReauth } = useReauthForSignout(data?.authProvider);
 
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
 
   const handleSignout = async (formValues: SignoutFormValues) => {
-    console.log(formValues);
-    // TODO: 소셜 연동 해제를 위한 재로그인 로직 필요
-
-    const requestBody: SignoutRequestBody = {
-      authCode: '',
-      authProvider: '',
-      reason: formValues.reason,
-      opinion: formValues.opinion,
-    };
     setIsLoading(true);
     setError(null);
+
     try {
+      const code = await requestReauth();
+      const requestBody: SignoutRequestBody = {
+        authCode: code,
+        authProvider: data?.authProvider,
+        reason: formValues.reason,
+        opinion: formValues.opinion,
+      };
+
       await authApi.signout(requestBody); // 회원 탈퇴 요청
       queryClient.clear(); // 쿼리 캐시 초기화
       useAuthStore.getState().reset(); // 전역 유저 상태 초기화
