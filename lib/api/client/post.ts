@@ -77,49 +77,30 @@ export const postApi = {
 
   /**
    * 게시글 좋아요
-   * @param memberId 사용자 ID
    * @param postUlid 게시글 ULID
    */
-  async likePost(
-    memberId: string,
-    postUlid: string
-  ): Promise<ApiResponse<void>> {
-    return clientApiInstance.put<void>(
-      POST_ENDPOINTS.LIKE_POST(memberId, postUlid)
-    );
+  async likePost(postUlid: string): Promise<ApiResponse<void>> {
+    return clientApiInstance.put<void>(POST_ENDPOINTS.LIKE_POST(postUlid));
   },
 
   /**
    * 게시글 좋아요 취소
-   * @param memberId 사용자 ID
    * @param postUlid 게시글 ULID
    */
-  async unlikePost(
-    memberId: string,
-    postUlid: string
-  ): Promise<ApiResponse<void>> {
-    return clientApiInstance.delete<void>(
-      POST_ENDPOINTS.LIKE_POST(memberId, postUlid)
-    );
+  async unlikePost(postUlid: string): Promise<ApiResponse<void>> {
+    return clientApiInstance.delete<void>(POST_ENDPOINTS.LIKE_POST(postUlid));
   },
 
   /**
    * 게시글 북마크
-   * @param memberId 사용자 ID
    * @param postUlid 게시글 ULID
    */
-  async bookmarkPost(
-    memberId: string,
-    postUlid: string
-  ): Promise<ApiResponse<void>> {
-    return clientApiInstance.put<void>(
-      POST_ENDPOINTS.BOOKMARK_POST(memberId, postUlid)
-    );
+  async bookmarkPost(postUlid: string): Promise<ApiResponse<void>> {
+    return clientApiInstance.put<void>(POST_ENDPOINTS.BOOKMARK_POST(postUlid));
   },
 
   /**
    * 게시글 북마크 취소
-   * @param memberId 사용자 ID
    * @param postUlid 게시글 ULID
    */
   async unbookmarkPost(
@@ -127,7 +108,7 @@ export const postApi = {
     postUlid: string
   ): Promise<ApiResponse<void>> {
     return clientApiInstance.delete<void>(
-      POST_ENDPOINTS.BOOKMARK_POST(memberId, postUlid)
+      POST_ENDPOINTS.BOOKMARK_POST(postUlid)
     );
   },
 

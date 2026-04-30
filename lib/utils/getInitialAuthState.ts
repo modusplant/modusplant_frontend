@@ -24,9 +24,9 @@ export async function getInitialAuthState(): Promise<any | null> {
       return null;
     }
 
-    // 토큰에서 추출한 ID로 추가 사용자 정보(image, introduction) 조회
+    // 추가 사용자 정보(image, introduction) 조회
     try {
-      const { data: profileResponse } = await memberApi.getProfile(decoded.sub);
+      const { data: profileResponse } = await memberApi.getProfile();
 
       return {
         id: decoded.sub,
