@@ -18,6 +18,9 @@ export type SearchSort = 'latest' | 'relevance';
 export interface SearchRequest {
   size: number;
   lastPostId?: string;
+  lastPostImportance?: number;
+  lastPostSimilarity?: number;
+  lastPostPublishedAt?: string;
   option: SearchOption;
   keyword: string;
   sort: SearchSort;

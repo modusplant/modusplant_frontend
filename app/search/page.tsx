@@ -25,10 +25,10 @@ const getSearchParam = (value?: string | string[]) => {
   return Array.isArray(value) ? value[0] : value;
 };
 
-// 유효한 양의 정수가 아니면 기본 페이지 크기 10을 사용한다.
+// 유효한 양의 정수가 아니면 기본 페이지 크기 9를 사용한다.
 const getSearchSize = (value?: string) => {
   const parsedSize = Number(value);
-  return Number.isInteger(parsedSize) && parsedSize > 0 ? parsedSize : 10;
+  return Number.isInteger(parsedSize) && parsedSize > 0 ? parsedSize : 9;
 };
 
 // 허용된 검색 옵션만 사용하고, 잘못된 값은 제목 검색으로 보정한다.

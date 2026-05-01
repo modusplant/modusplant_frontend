@@ -3,6 +3,14 @@ import { searchApi } from '@/lib/api/client/search';
 import { GetPostsResponseData } from '@/lib/types/post';
 import { SearchRequest } from '@/lib/types/search';
 
+type SearchPageParam = Pick<
+  SearchRequest,
+  | 'lastPostId'
+  | 'lastPostImportance'
+  | 'lastPostSimilarity'
+  | 'lastPostPublishedAt'
+>;
+
 /**
  * 검색 결과 조회 훅
  * @param params 검색 요청 파라미터
@@ -33,16 +41,27 @@ export const useGetInfiniteSearchResult = (
   params: SearchRequest,
   enabled = true
 ) => {
-  const { lastPostId, ...queryParams } = params;
+  const {
+    lastPostId,
+    lastPostImportance,
+    lastPostSimilarity,
+    lastPostPublishedAt,
+    ...queryParams
+  } = params;
 
   return useInfiniteQuery<GetPostsResponseData>({
     queryKey: ['searchResult', queryParams],
     enabled: enabled && !!params.keyword,
-    initialPageParam: lastPostId,
+    initialPageParam: {
+      lastPostId,
+      lastPostImportance,
+      lastPostSimilarity,
+      lastPostPublishedAt,
+    },
     queryFn: async ({ pageParam }) => {
       const response = await searchApi.getSearchResult({
         ...queryParams,
-        lastPostId: pageParam as string | undefined,
+        ...(pageParam as SearchPageParam),
       });
 
       if (response.status !== 200 || !response.data) {
@@ -52,7 +71,14 @@ export const useGetInfiniteSearchResult = (
       return response.data;
     },
     getNextPageParam: (lastPage) => {
-      return lastPage?.hasNext ? lastPage.nextPostId : undefined;
+      return lastPage?.hasNext
+        ? {
+            lastPostId: lastPage.nextPostId ?? undefined,
+            lastPostImportance: 3,
+            lastPostSimilarity: 0.53464353,
+            lastPostPublishedAt: lastPage.nextPostPublishedAt,
+          }
+        : undefined;
     },
   });
 };

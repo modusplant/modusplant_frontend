@@ -23,7 +23,7 @@ interface SearchResultProps {
 const SearchResult = ({
   keyword,
   enabled = true,
-  size = 10,
+  size = 9,
   option = 'title',
   sort = 'latest',
   primaryCategoryId = 'all',

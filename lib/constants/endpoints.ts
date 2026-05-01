@@ -110,6 +110,9 @@ export const SEARCH_ENDPOINTS = {
   GET_SEARCH_RESULT: (params: {
     size: number;
     lastPostId?: string;
+    lastPostImportance?: number;
+    lastPostSimilarity?: number;
+    lastPostPublishedAt?: string;
     keyword: string;
     option: string;
     sort: string;
