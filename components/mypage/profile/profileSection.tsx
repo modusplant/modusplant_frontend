@@ -10,9 +10,6 @@ import { showModal } from '@/lib/store/modalStore';
 import Image from 'next/image';
 
 export default function ProfileSection() {
-  const { user } = useAuthStore();
-  const userId = user?.id || null;
-
   // 프로필 수정 Mutation
   const { mutate: updateProfile, isPending } = useProfileMutation();
 
@@ -29,12 +26,11 @@ export default function ProfileSection() {
 
   // 저장 핸들러
   const handleSave = () => {
-    if (!userId) return;
     if (!hasChanges) return;
 
     const data = createFormData();
     updateProfile(
-      { userId, formData: data },
+      { formData: data },
       {
         onSuccess: () => {
           showModal({

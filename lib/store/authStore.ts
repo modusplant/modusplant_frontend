@@ -12,6 +12,7 @@ interface AuthActions {
   updateUser: (user: Partial<User>) => void;
   incrementLoginAttempts: () => void;
   resetLoginAttempts: () => void;
+  reset: () => void;
 }
 
 type AuthStore = AuthState & AuthActions;
@@ -61,5 +62,9 @@ export const useAuthStore = create<AuthStore>()((set) => ({
     set({
       loginAttempts: 0,
     });
+  },
+
+  reset: () => {
+    set({ user: null, isAuthenticated: false, loginAttempts: 0 });
   },
 }));
