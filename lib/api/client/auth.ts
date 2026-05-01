@@ -6,8 +6,9 @@ import {
   SignupRequest,
   EmailVerificationResponseData,
   NicknameCheckResponseData,
+  SignoutRequestBody,
 } from '@/lib/types/auth';
-import { clientApiInstance } from '../instances/clientInstance';
+import { clientApiInstance } from '@/lib/api/instances/clientInstance';
 import { AUTH_ENDPOINTS } from '@/lib/constants/endpoints';
 
 /**
@@ -173,6 +174,12 @@ export const authApi = {
     return clientApiInstance.post<void>(AUTH_ENDPOINTS.CHANGE_EMAIL(userId), {
       currentEmail,
       newEmail,
+    });
+  },
+
+  async signout(requestBody: SignoutRequestBody): Promise<ApiResponse<void>> {
+    return clientApiInstance.post<void>(AUTH_ENDPOINTS.SIGNOUT, {
+      ...requestBody,
     });
   },
 };
