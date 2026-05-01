@@ -45,7 +45,6 @@ function KakaoCallbackInner() {
           error.message || '카카오 로그인에 실패했습니다.'
         );
         sessionStorage.setItem('authCode', error.code);
-        await OauthApi.cancelSocialConnect();
         router.replace('/login');
       }
     };
