@@ -8,18 +8,19 @@ import { authApi } from '@/lib/api/client/auth';
 import { SignoutRequestBody } from '@/lib/types/auth';
 import { SignoutFormValues } from '@/components/mypage/account/SignoutForm';
 import { deleteAllCookies } from '@/lib/utils/cookies/client';
-import { deleteCookie } from '@/lib/utils/cookies/server';
-import { ACCESS_TOKEN_COOKIE_NAME } from '@/lib/constants/auth';
-import { useReauthForSignout } from './useReauthForSignout';
+
 import { useMemberAuthInfo } from '@/lib/hooks/mypage/useMemberAuthInfo';
+import { showModal } from '@/lib/store/modalStore';
+import { openOAuthPopup } from '@/lib/utils/oauth/openOAuthPopup';
+import { AuthProviderParam } from '@/lib/constants/oauth';
+import { parseAuthProvider } from '@/lib/utils/oauth/parseAuthProvider';
 
 export const useSignout = () => {
   const queryClient = useQueryClient();
 
-  const userId = useAuthStore((state) => state.user?.id);
-  const { data } = useMemberAuthInfo(userId);
+  const { user, reset } = useAuthStore();
 
-  const { requestReauth } = useReauthForSignout(data?.authProvider);
+  const { data } = useMemberAuthInfo(user?.id);
 
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -28,23 +29,39 @@ export const useSignout = () => {
   const handleSignout = async (formValues: SignoutFormValues) => {
     setIsLoading(true);
     setError(null);
+    let authCode: string | undefined;
+    let authProvider: AuthProviderParam | undefined;
+
+    sessionStorage.setItem('signoutForm', JSON.stringify({ ...formValues }));
+
+    if (data) {
+      const { authProvider: provider } = data;
+      authProvider = parseAuthProvider(provider);
+    }
+
+    if (authProvider) {
+      const { code } = await openOAuthPopup({
+        provider: authProvider,
+        intent: { action: 'SIGNOUT' },
+      });
+      authCode = code;
+    }
 
     try {
-      const code = await requestReauth();
       const requestBody: SignoutRequestBody = {
-        authCode: code,
-        authProvider: data?.authProvider,
+        authCode,
+        authProvider,
         reason: formValues.reason,
         opinion: formValues.opinion,
       };
 
       await authApi.signout(requestBody); // 회원 탈퇴 요청
       queryClient.clear(); // 쿼리 캐시 초기화
-      useAuthStore.getState().reset(); // 전역 유저 상태 초기화
+      reset(); // 전역 유저 상태 초기화
       deleteAllCookies(); // client accessToken 삭제
-      await deleteCookie(ACCESS_TOKEN_COOKIE_NAME); // server accessToken 삭제
 
       router.replace('/');
+      showModal({ description: '회원 탈퇴되었습니다.', type: 'snackbar' });
     } catch (error) {
       if (error instanceof ApiError) {
         setError(error);

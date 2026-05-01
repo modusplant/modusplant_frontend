@@ -72,5 +72,18 @@ export default function AccountSection() {
     );
   }
 
-  return <SocialLoginInfo authProvider={authInfo.authProvider} />;
+  return (
+    <>
+      <SocialLoginInfo authProvider={authInfo.authProvider} />
+      <div className="flex justify-end">
+        <button
+          className="typo-regular14 text-neutral-40 text-[15px] underline underline-offset-4"
+          onClick={open}
+        >
+          회원 탈퇴
+        </button>
+      </div>
+      {isOpen && <SignoutModal onClose={close} />}
+    </>
+  );
 }

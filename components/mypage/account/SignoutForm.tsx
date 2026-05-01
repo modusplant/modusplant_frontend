@@ -7,7 +7,7 @@ import { useDropdownState } from '@/lib/hooks/category/useDropdownState';
 import type { SignoutRequestBody } from '@/lib/types/auth';
 import { cn } from '@/lib/utils/tailwindHelper';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowBigDown, ArrowDown, Triangle } from 'lucide-react';
+import { Triangle } from 'lucide-react';
 import { type HTMLAttributes } from 'react';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
