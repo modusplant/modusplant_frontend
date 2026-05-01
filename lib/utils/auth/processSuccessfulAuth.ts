@@ -44,8 +44,8 @@ export async function processSuccessfulAuth(
       throw new Error('유효하지 않은 토큰입니다.');
     }
 
-    // 4. 토큰에서 추출한 ID로 추가 사용자 정보(image, introduction) 조회
-    const { data: profileResponse } = await memberApi.getProfile(decoded.sub);
+    // 4. 추가 사용자 정보(image, introduction) 조회
+    const { data: profileResponse } = await memberApi.getProfile();
 
     // 5. 사용자 정보 구성
     const user: User = {

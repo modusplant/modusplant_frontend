@@ -1,8 +1,8 @@
 'use client';
 
-import { useCallback, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { X } from 'lucide-react';
 import SearchBar from './searchbar';
 import SearchHistory from './searchHistory';
@@ -20,6 +20,9 @@ interface SearchFormValues {
 
 const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
   const router = useRouter();
+  const pathname = usePathname();
+  const currentSearchParams = useSearchParams();
+  const [pendingSearchUrl, setPendingSearchUrl] = useState<string | null>(null);
   const { register, handleSubmit, reset } = useForm<SearchFormValues>({
     defaultValues: {
       keyword: '',
@@ -31,6 +34,8 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
   );
 
   const onSubmit = ({ keyword }: SearchFormValues) => {
+    if (pendingSearchUrl) return;
+
     const trimmedKeyword = keyword.trim();
     if (!trimmedKeyword) return;
 
@@ -41,35 +46,32 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
       sort: 'latest',
     });
 
-    reset();
-    onClose();
-    router.push(`/search?${searchParams.toString()}`);
+    const nextUrl = `/search?${searchParams.toString()}`;
+
+    setPendingSearchUrl(nextUrl);
+    router.push(nextUrl);
   };
 
-  const handleClose = useCallback(() => {
+  const handleClose = () => {
+    if (pendingSearchUrl) return;
+
     reset();
     onClose();
-  }, [onClose, reset]);
+  };
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!pendingSearchUrl) return;
 
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    const currentUrl = `${pathname}?${currentSearchParams.toString()}`;
+    if (currentUrl !== pendingSearchUrl) return;
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        handleClose();
-      }
-    };
+    reset();
+    onClose();
 
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isOpen, handleClose]);
+    window.setTimeout(() => {
+      setPendingSearchUrl(null);
+    }, 0);
+  }, [currentSearchParams, onClose, pathname, pendingSearchUrl, reset]);
 
   if (!isOpen) return null;
 
@@ -81,6 +83,7 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
             type="button"
             className="text-neutral-20 ml-auto flex h-6 w-6 items-center justify-center"
             onClick={handleClose}
+            disabled={!!pendingSearchUrl}
             aria-label="검색 오버레이 닫기"
           >
             <X className="text-neutral-80 h-8 w-8 shrink-0" />
@@ -90,6 +93,7 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
           <SearchBar
             placeholder="검색어를 입력해 주세요"
             autoFocus
+            disabled={!!pendingSearchUrl}
             {...register('keyword')}
           />
         </form>

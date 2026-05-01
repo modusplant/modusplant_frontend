@@ -39,7 +39,7 @@ const getSearchSort = (value?: string): SearchSort => {
     : 'latest';
 };
 
-export default async function SearchPage({ searchParams }: SearchPageProps) {
+const SearchPage = async ({ searchParams }: SearchPageProps) => {
   const params = await searchParams;
   const keyword = getSearchParam(params.keyword)?.trim() ?? '';
   const size = getSearchSize(getSearchParam(params.size));
@@ -60,4 +60,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       )}
     </main>
   );
-}
+};
+
+export default SearchPage;
