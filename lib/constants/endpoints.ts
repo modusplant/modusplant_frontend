@@ -104,6 +104,23 @@ export const NOTIFICATION_ENDPOINTS = {
 };
 
 /**
+ * 검색 관련 엔드포인트
+ */
+export const SEARCH_ENDPOINTS = {
+  GET_SEARCH_RESULT: (params: {
+    size: number;
+    lastPostId?: string;
+    keyword: string;
+    option: string;
+    sort: string;
+  }) => `${API_V1}/communication/posts/search${buildQueryString(params)}`,
+  GET_SEARCH_HISTORY: () =>
+    `${API_V1}/communication/posts/search-history?size=10`,
+  DELETE_SEARCH_HISTORY: (keyword?: string) =>
+    `${API_V1}/communication/posts/search-history/${keyword}`,
+};
+
+/**
  * 타입 안전한 쿼리 파라미터 빌더
  */
 export function buildQueryString(
