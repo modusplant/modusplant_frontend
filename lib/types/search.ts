@@ -21,6 +21,8 @@ export interface SearchRequest {
   option: SearchOption;
   keyword: string;
   sort: SearchSort;
+  primaryCategoryId?: string;
+  secondaryCategoryId?: string;
 }
 
 /**

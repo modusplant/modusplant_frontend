@@ -18,10 +18,10 @@ interface SearchOptionTabsProps {
   onChange: (option: SearchOption) => void;
 }
 
-export default function SearchOptionTabs({
+const SearchOptionTabs = ({
   selectedOption,
   onChange,
-}: SearchOptionTabsProps) {
+}: SearchOptionTabsProps) => {
   return (
     <div className="border-surface-stroke w-full border-b">
       <div role="tablist" className="flex items-center gap-[10px]">
@@ -47,4 +47,6 @@ export default function SearchOptionTabs({
       </div>
     </div>
   );
-}
+};
+
+export default SearchOptionTabs;

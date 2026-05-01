@@ -113,6 +113,8 @@ export const SEARCH_ENDPOINTS = {
     keyword: string;
     option: string;
     sort: string;
+    primaryCategoryId?: string;
+    secondaryCategoryId?: string;
   }) => `${API_V1}/communication/posts/search${buildQueryString(params)}`,
   GET_SEARCH_HISTORY: () =>
     `${API_V1}/communication/posts/search-history?size=10`,

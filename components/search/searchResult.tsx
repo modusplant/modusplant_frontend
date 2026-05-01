@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import PostCard from '@/components/_common/postCard';
 import { useGetInfiniteSearchResult } from '@/lib/hooks/search/useGetSearchResult';
 import { SearchOption, SearchSort } from '@/lib/types/search';
+import SearchCategoryFilter from './searchCategoryFilter';
 import SearchOptionTabs from './searchOptionTabs';
 import SearchBar from './searchbar';
 
@@ -15,18 +16,28 @@ interface SearchResultProps {
   size?: number;
   option?: SearchOption;
   sort?: SearchSort;
+  primaryCategoryId?: string;
+  secondaryCategoryIds?: string[];
 }
 
-export default function SearchResult({
+const SearchResult = ({
   keyword,
   enabled = true,
   size = 10,
   option = 'title',
   sort = 'latest',
-}: SearchResultProps) {
+  primaryCategoryId = 'all',
+  secondaryCategoryIds = ['all'],
+}: SearchResultProps) => {
   const router = useRouter();
   const observerTarget = useRef<HTMLDivElement>(null);
   const trimmedKeyword = keyword.trim();
+  const selectedPrimaryCategoryId =
+    primaryCategoryId !== 'all' ? primaryCategoryId : undefined;
+  const selectedSecondaryCategoryId =
+    secondaryCategoryIds
+      .filter((categoryId) => categoryId !== 'all')
+      .join(',') || undefined;
 
   const {
     data,
@@ -42,6 +53,8 @@ export default function SearchResult({
       option,
       keyword: trimmedKeyword,
       sort,
+      primaryCategoryId: selectedPrimaryCategoryId,
+      secondaryCategoryId: selectedSecondaryCategoryId,
     },
     enabled && !!trimmedKeyword
   );
@@ -73,34 +86,73 @@ export default function SearchResult({
     };
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const formData = new FormData(event.currentTarget);
-    const nextKeyword = String(formData.get('keyword') ?? '').trim();
-    if (!nextKeyword) return;
-
-    const searchParams = new URLSearchParams({
-      size: String(size),
-      option,
-      keyword: nextKeyword,
-      sort,
-    });
-
-    router.push(`/search?${searchParams.toString()}`);
-  };
-
-  const handleOptionChange = (nextOption: SearchOption) => {
-    if (nextOption === option) return;
+  // 현재 검색 조건과 변경된 조건을 합쳐 URL 쿼리스트링으로 반영한다.
+  const pushSearch = ({
+    nextKeyword = trimmedKeyword,
+    nextOption = option,
+    nextPrimaryCategoryId = primaryCategoryId,
+    nextSecondaryCategoryIds = secondaryCategoryIds,
+  }: {
+    nextKeyword?: string;
+    nextOption?: SearchOption;
+    nextPrimaryCategoryId?: string;
+    nextSecondaryCategoryIds?: string[];
+  }) => {
+    const normalizedKeyword = nextKeyword.trim();
+    if (!normalizedKeyword) return;
 
     const searchParams = new URLSearchParams({
       size: String(size),
       option: nextOption,
-      keyword: trimmedKeyword,
+      keyword: normalizedKeyword,
       sort,
     });
 
+    if (nextPrimaryCategoryId && nextPrimaryCategoryId !== 'all') {
+      searchParams.set('primaryCategoryId', nextPrimaryCategoryId);
+    }
+
+    const selectedSecondaryCategoryIds = nextSecondaryCategoryIds.filter(
+      (categoryId) => categoryId !== 'all'
+    );
+    if (selectedSecondaryCategoryIds.length > 0) {
+      searchParams.set(
+        'secondaryCategoryId',
+        selectedSecondaryCategoryIds.join(',')
+      );
+    }
+
     router.push(`/search?${searchParams.toString()}`);
+  };
+
+  // 검색어 입력 form 제출 시 기존 옵션과 카테고리 조건을 유지한 채 키워드만 갱신한다.
+  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const nextKeyword = String(formData.get('keyword') ?? '');
+    pushSearch({ nextKeyword });
+  };
+
+  // 검색 옵션 탭 변경 시 현재 키워드와 카테고리 조건을 유지한다.
+  const handleOptionChange = (nextOption: SearchOption) => {
+    if (nextOption === option) return;
+    pushSearch({ nextOption });
+  };
+
+  // 1차 카테고리가 바뀌면 기존 2차 카테고리 선택은 더 이상 유효하지 않아 초기화한다.
+  const handlePrimaryCategoryChange = (nextPrimaryCategoryId: string) => {
+    pushSearch({
+      nextPrimaryCategoryId,
+      nextSecondaryCategoryIds: ['all'],
+    });
+  };
+
+  // 2차 카테고리 변경은 현재 검색어, 옵션, 1차 카테고리를 유지한 채 URL에 반영한다.
+  const handleSecondaryCategoriesChange = (
+    nextSecondaryCategoryIds: string[]
+  ) => {
+    pushSearch({ nextSecondaryCategoryIds });
   };
 
   const renderContent = () => {
@@ -160,8 +212,8 @@ export default function SearchResult({
   };
 
   return (
-    <div className="flex w-full max-w-[1320px] flex-col gap-10">
-      <div className="flex flex-col gap-5 px-5 py-8">
+    <div className="flex w-full max-w-[1320px] flex-col gap-8">
+      <div className="flex flex-col gap-6">
         <form
           className="mx-auto w-full max-w-[780px]"
           onSubmit={handleSearchSubmit}
@@ -177,9 +229,17 @@ export default function SearchResult({
           selectedOption={option}
           onChange={handleOptionChange}
         />
+        <SearchCategoryFilter
+          primaryCategoryId={primaryCategoryId}
+          secondaryCategoryIds={secondaryCategoryIds}
+          onPrimaryCategoryChange={handlePrimaryCategoryChange}
+          onSecondaryCategoriesChange={handleSecondaryCategoriesChange}
+        />
       </div>
 
       {renderContent()}
     </div>
   );
-}
+};
+
+export default SearchResult;
