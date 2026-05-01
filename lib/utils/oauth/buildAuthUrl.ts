@@ -16,8 +16,9 @@ export function buildAuthUrl({
   provider: AuthProviderParam;
   intent: OAuthIntent;
 }) {
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
   const state = encodeState(intent);
-  const redirectUrl = `${window.location.origin}${REDIRECT_PATH[provider]}`;
+  const redirectUrl = `${origin}${REDIRECT_PATH[provider]}`;
   const configs: Record<
     AuthProviderParam,
     {
