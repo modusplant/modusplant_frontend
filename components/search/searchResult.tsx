@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import PostCard from '@/components/_common/postCard';
 import { useGetInfiniteSearchResult } from '@/lib/hooks/search/useGetSearchResult';
 import { SearchOption, SearchSort } from '@/lib/types/search';
+import SearchOptionTabs from './searchOptionTabs';
 import SearchBar from './searchbar';
 
 interface SearchResultProps {
@@ -89,6 +90,19 @@ export default function SearchResult({
     router.push(`/search?${searchParams.toString()}`);
   };
 
+  const handleOptionChange = (nextOption: SearchOption) => {
+    if (nextOption === option) return;
+
+    const searchParams = new URLSearchParams({
+      size: String(size),
+      option: nextOption,
+      keyword: trimmedKeyword,
+      sort,
+    });
+
+    router.push(`/search?${searchParams.toString()}`);
+  };
+
   const renderContent = () => {
     if (isLoading) {
       return (
@@ -147,7 +161,7 @@ export default function SearchResult({
 
   return (
     <div className="flex w-full max-w-[1320px] flex-col gap-10">
-      <div className="px-5 py-8">
+      <div className="flex flex-col gap-5 px-5 py-8">
         <form
           className="mx-auto w-full max-w-[780px]"
           onSubmit={handleSearchSubmit}
@@ -159,6 +173,10 @@ export default function SearchResult({
             placeholder="검색어를 입력해 주세요"
           />
         </form>
+        <SearchOptionTabs
+          selectedOption={option}
+          onChange={handleOptionChange}
+        />
       </div>
 
       {renderContent()}
