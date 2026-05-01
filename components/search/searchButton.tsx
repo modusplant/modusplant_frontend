@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import { Search } from 'lucide-react';
 import { cn } from '@/lib/utils/tailwindHelper';
 import SearchOverlay from './SearchOverlay';
@@ -44,10 +44,12 @@ const SearchButton = ({
           </span>
         </div>
       </button>
-      <SearchOverlay
-        isOpen={isOverlayOpen}
-        onClose={() => setIsOverlayOpen(false)}
-      />
+      <Suspense fallback={null}>
+        <SearchOverlay
+          isOpen={isOverlayOpen}
+          onClose={() => setIsOverlayOpen(false)}
+        />
+      </Suspense>
     </>
   );
 };
