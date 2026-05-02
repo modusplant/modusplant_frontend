@@ -26,7 +26,7 @@ export default function ModalProvider() {
     onConfirm,
     onCancel,
     align,
-    preserveLineBreak,
+    shouldUseLineBreak,
   } = useModalStore.getState();
 
   if (type === 'snackbar') {
@@ -45,7 +45,7 @@ export default function ModalProvider() {
       onCancel={onCancel}
       hideModal={hideModal}
       align={align}
-      preserveLineBreak={preserveLineBreak}
+      shouldUseLineBreak={shouldUseLineBreak}
     />
   );
 }

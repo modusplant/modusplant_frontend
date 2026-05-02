@@ -63,7 +63,7 @@ export function useSocialAuth() {
           '동일한 이메일이 사용된 계정이 있습니다.',
         ].join('\n'),
         align: 'center',
-        preserveLineBreak: true,
+        shouldUseLineBreak: true,
         description: `${PROVIDER_LABEL[signupData.provider]} 로그인 연동을 하시겠어요?`,
         type: 'two-button',
         buttonText: '연동하기',

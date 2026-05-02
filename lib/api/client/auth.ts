@@ -64,10 +64,7 @@ export const authApi = {
             : response.message,
       };
     } catch (error: any) {
-      return {
-        success: false,
-        message: error.message || '인증 메일 발송에 실패했습니다.',
-      };
+      throw error;
     }
   },
 

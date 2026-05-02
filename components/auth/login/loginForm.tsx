@@ -9,6 +9,9 @@ import LoginFormInputs from './loginFormInputs';
 import LoginFormError from './loginFormError';
 import LoginFormRememberMeHint from './loginFormRememberMeHint';
 import LoginFormActions from './loginFormActions';
+import { useEffect } from 'react';
+import { showModal } from '@/lib/store/modalStore';
+import { SOCIAL_CONFLICT_MESSAGES } from '@/lib/constants/oauth';
 
 interface LoginFormProps {
   className?: string;
@@ -17,6 +20,19 @@ interface LoginFormProps {
 export default function LoginForm({ className }: LoginFormProps) {
   const { loginAttempts } = useAuthStore();
   const { handleLogin, serverError, isLoading } = useLogin();
+
+  useEffect(() => {
+    const authError = sessionStorage.getItem('authError');
+    const authCode = sessionStorage.getItem('authCode');
+    if (!authError) return;
+
+    showModal({
+      type: 'snackbar',
+      description: SOCIAL_CONFLICT_MESSAGES[authCode ?? ''] ?? authError,
+    });
+    sessionStorage.removeItem('authError');
+    sessionStorage.removeItem('authCode');
+  }, []);
 
   const {
     register,
