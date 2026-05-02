@@ -7,12 +7,14 @@ interface SocialLinkSectionProps {
 
 const GOOGLE_LABEL = '구글로 가입된 계정입니다.';
 const KAKAO_LABEL = '카카오로 가입된 계정입니다.';
+const BASIC_LABEL = '연동된 소셜 계정이 없습니다.';
 
 const SOCIAL_PROVIDER_LABEL: Partial<Record<AuthProvider, string>> = {
   BASIC_GOOGLE: GOOGLE_LABEL,
   GOOGLE: GOOGLE_LABEL,
   BASIC_KAKAO: KAKAO_LABEL,
   KAKAO: KAKAO_LABEL,
+  BASIC: BASIC_LABEL,
 };
 
 export default function SocialLinkSection({
