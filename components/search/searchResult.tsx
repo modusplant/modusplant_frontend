@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import PostCard from '@/components/_common/postCard';
 import { useGetInfiniteSearchResult } from '@/lib/hooks/search/useGetSearchResult';
 import { SearchOption, SearchSort } from '@/lib/types/search';
+import { cn } from '@/lib/utils/tailwindHelper';
 import SearchCategoryFilter from './searchCategoryFilter';
 import SearchOptionTabs from './searchOptionTabs';
 import SearchBar from './searchbar';
@@ -19,6 +20,14 @@ interface SearchResultProps {
   primaryCategoryId?: string;
   secondaryCategoryIds?: string[];
 }
+
+const SEARCH_SORT_OPTIONS: Array<{
+  value: SearchSort;
+  label: string;
+}> = [
+  { value: 'latest', label: '최신순' },
+  { value: 'relevance', label: '정확도순' },
+];
 
 const SearchResult = ({
   keyword,
@@ -90,11 +99,13 @@ const SearchResult = ({
   const pushSearch = ({
     nextKeyword = trimmedKeyword,
     nextOption = option,
+    nextSort = sort,
     nextPrimaryCategoryId = primaryCategoryId,
     nextSecondaryCategoryIds = secondaryCategoryIds,
   }: {
     nextKeyword?: string;
     nextOption?: SearchOption;
+    nextSort?: SearchSort;
     nextPrimaryCategoryId?: string;
     nextSecondaryCategoryIds?: string[];
   }) => {
@@ -105,7 +116,7 @@ const SearchResult = ({
       size: String(size),
       option: nextOption,
       keyword: normalizedKeyword,
-      sort,
+      sort: nextSort,
     });
 
     if (nextPrimaryCategoryId && nextPrimaryCategoryId !== 'all') {
@@ -138,6 +149,12 @@ const SearchResult = ({
   const handleOptionChange = (nextOption: SearchOption) => {
     if (nextOption === option) return;
     pushSearch({ nextOption });
+  };
+
+  // 정렬 변경 시 현재 검색어, 옵션, 카테고리 조건을 유지한다.
+  const handleSortChange = (nextSort: SearchSort) => {
+    if (nextSort === sort) return;
+    pushSearch({ nextSort });
   };
 
   // 1차 카테고리가 바뀌면 기존 2차 카테고리 선택은 더 이상 유효하지 않아 초기화한다.
@@ -229,12 +246,38 @@ const SearchResult = ({
           selectedOption={option}
           onChange={handleOptionChange}
         />
-        <SearchCategoryFilter
-          primaryCategoryId={primaryCategoryId}
-          secondaryCategoryIds={secondaryCategoryIds}
-          onPrimaryCategoryChange={handlePrimaryCategoryChange}
-          onSecondaryCategoriesChange={handleSecondaryCategoriesChange}
-        />
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <SearchCategoryFilter
+            primaryCategoryId={primaryCategoryId}
+            secondaryCategoryIds={secondaryCategoryIds}
+            onPrimaryCategoryChange={handlePrimaryCategoryChange}
+            onSecondaryCategoriesChange={handleSecondaryCategoriesChange}
+          />
+
+          <div
+            className="flex shrink-0 items-center gap-[10px] self-end text-[16px] leading-[1.2] font-semibold tracking-[-0.01em]"
+            aria-label="검색 결과 정렬"
+          >
+            {SEARCH_SORT_OPTIONS.map((sortOption) => {
+              const isSelected = sort === sortOption.value;
+
+              return (
+                <button
+                  key={sortOption.value}
+                  type="button"
+                  className={cn(
+                    'text-neutral-80 cursor-pointer p-[14px] transition-colors focus-visible:outline-none',
+                    isSelected && 'text-neutral-20'
+                  )}
+                  aria-pressed={isSelected}
+                  onClick={() => handleSortChange(sortOption.value)}
+                >
+                  {sortOption.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       {renderContent()}

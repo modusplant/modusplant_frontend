@@ -99,7 +99,22 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
         </form>
 
         {/* 로그인 한 사용자에게만 검색 기록 표출 */}
-        {isAuthenticated && <SearchHistory data={searchHistory ?? []} />}
+        {isAuthenticated && (
+          <>
+            <div className="flex items-center justify-between">
+              <p className="text-neutral-5 text-[17px] leading-[1.2] font-semibold -tracking-[0.01em]">
+                최근 검색어
+              </p>
+              <button
+                type="button"
+                className="text-[16px] leading-1.5 font-semibold -tracking-[0.01em] text-neutral-50"
+              >
+                전체 삭제
+              </button>
+            </div>
+            <SearchHistory data={searchHistory ?? []} />
+          </>
+        )}
       </div>
     </div>
   );
