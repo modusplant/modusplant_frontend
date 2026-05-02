@@ -21,7 +21,7 @@ export interface SearchRequest {
   lastPostImportance?: number;
   lastPostSimilarity?: number;
   lastPostPublishedAt?: string;
-  option: SearchOption;
+  target: SearchOption;
   keyword: string;
   sort: SearchSort;
   primaryCategoryId?: string;

@@ -33,7 +33,7 @@ const SearchResult = ({
   keyword,
   enabled = true,
   size = 9,
-  option = 'title',
+  option: target = 'title',
   sort = 'latest',
   primaryCategoryId = 'all',
   secondaryCategoryIds = ['all'],
@@ -59,7 +59,7 @@ const SearchResult = ({
   } = useGetInfiniteSearchResult(
     {
       size,
-      option,
+      target,
       keyword: trimmedKeyword,
       sort,
       primaryCategoryId: selectedPrimaryCategoryId,
@@ -98,13 +98,13 @@ const SearchResult = ({
   // 현재 검색 조건과 변경된 조건을 합쳐 URL 쿼리스트링으로 반영한다.
   const pushSearch = ({
     nextKeyword = trimmedKeyword,
-    nextOption = option,
+    nextTarget = target,
     nextSort = sort,
     nextPrimaryCategoryId = primaryCategoryId,
     nextSecondaryCategoryIds = secondaryCategoryIds,
   }: {
     nextKeyword?: string;
-    nextOption?: SearchOption;
+    nextTarget?: SearchOption;
     nextSort?: SearchSort;
     nextPrimaryCategoryId?: string;
     nextSecondaryCategoryIds?: string[];
@@ -114,7 +114,7 @@ const SearchResult = ({
 
     const searchParams = new URLSearchParams({
       size: String(size),
-      option: nextOption,
+      target: nextTarget,
       keyword: normalizedKeyword,
       sort: nextSort,
     });
@@ -146,9 +146,9 @@ const SearchResult = ({
   };
 
   // 검색 옵션 탭 변경 시 현재 키워드와 카테고리 조건을 유지한다.
-  const handleOptionChange = (nextOption: SearchOption) => {
-    if (nextOption === option) return;
-    pushSearch({ nextOption });
+  const handleOptionChange = (nextTarget: SearchOption) => {
+    if (nextTarget === target) return;
+    pushSearch({ nextTarget });
   };
 
   // 정렬 변경 시 현재 검색어, 옵션, 카테고리 조건을 유지한다.
@@ -243,7 +243,7 @@ const SearchResult = ({
           />
         </form>
         <SearchOptionTabs
-          selectedOption={option}
+          selectedOption={target}
           onChange={handleOptionChange}
         />
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">

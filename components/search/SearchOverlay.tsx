@@ -41,7 +41,7 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
 
     const searchParams = new URLSearchParams({
       size: '9',
-      option: 'title',
+      target: 'title',
       keyword: trimmedKeyword,
       sort: 'latest',
     });
