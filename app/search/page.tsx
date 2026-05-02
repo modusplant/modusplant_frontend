@@ -4,7 +4,7 @@ import { SearchOption, SearchSort } from '@/lib/types/search';
 type SearchPageProps = {
   searchParams: Promise<{
     size?: string | string[];
-    option?: string | string[];
+    target?: string | string[];
     keyword?: string | string[];
     sort?: string | string[];
     primaryCategoryId?: string | string[];
@@ -65,7 +65,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
   const params = await searchParams;
   const keyword = getSearchParam(params.keyword)?.trim() ?? '';
   const size = getSearchSize(getSearchParam(params.size));
-  const option = getSearchOption(getSearchParam(params.option));
+  const target = getSearchOption(getSearchParam(params.target));
   const sort = getSearchSort(getSearchParam(params.sort));
   const primaryCategoryId = getPrimaryCategoryId(
     getSearchParam(params.primaryCategoryId)
@@ -80,7 +80,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
         <SearchResult
           keyword={keyword}
           size={size}
-          option={option}
+          target={target}
           sort={sort}
           primaryCategoryId={primaryCategoryId}
           secondaryCategoryIds={secondaryCategoryIds}

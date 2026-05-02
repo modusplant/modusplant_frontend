@@ -15,7 +15,7 @@ interface SearchResultProps {
   keyword: string;
   enabled?: boolean;
   size?: number;
-  option?: SearchOption;
+  target?: SearchOption;
   sort?: SearchSort;
   primaryCategoryId?: string;
   secondaryCategoryIds?: string[];
@@ -33,7 +33,7 @@ const SearchResult = ({
   keyword,
   enabled = true,
   size = 9,
-  option: target = 'title',
+  target = 'title',
   sort = 'latest',
   primaryCategoryId = 'all',
   secondaryCategoryIds = ['all'],
