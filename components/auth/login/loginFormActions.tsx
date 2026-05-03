@@ -6,6 +6,7 @@ import { Button } from '@/components/_common/button';
 import { buildAuthUrl } from '@/lib/utils/oauth/buildAuthUrl';
 
 import SocialIconButton from './socialIconButton';
+import SocialLoginSection from './socialLoginSection';
 interface LoginFormActionsProps {
   isLoading: boolean;
 }
@@ -85,9 +86,7 @@ export default function LoginFormActions({ isLoading }: LoginFormActionsProps) {
       </div>
 
       {/* 소셜 로그인 */}
-      <div className="mt-10 mb-3 flex items-center justify-center gap-4">
-        <SocialIconButton />
-      </div>
+      <SocialLoginSection />
     </div>
   );
 }

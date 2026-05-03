@@ -1,4 +1,6 @@
 import SocialIconButton from '@/components/auth/login/socialIconButton';
+import { OauthApi } from '@/lib/api/client/oauth';
+import { SOCIAL_AUTH_URLS, SocialProvider } from '@/lib/constants/oauth';
 import { AuthProvider } from '@/lib/types/member';
 
 interface SocialLinkSectionProps {
@@ -17,9 +19,31 @@ const SOCIAL_PROVIDER_LABEL: Partial<Record<AuthProvider, string>> = {
   BASIC: BASIC_LABEL,
 };
 
+const getConnectedProvider = (
+  authProvider: AuthProvider
+): SocialProvider | null => {
+  if (authProvider.includes('GOOGLE')) return 'google';
+  if (authProvider.includes('KAKAO')) return 'kakao';
+  return null;
+};
+
 export default function SocialLinkSection({
   authProvider,
 }: SocialLinkSectionProps) {
+  const connectedProvider = getConnectedProvider(authProvider);
+
+  const handleSocialConnectClick = async (provider: SocialProvider) => {
+    if (connectedProvider === provider) {
+      // 이미 연동된 소셜 계정의 경우 연동 해제 API 호출
+      // TODO: 연동 해제 확인 모달
+      console.log('연동 해제 API 호출:', provider);
+    } else {
+      // 미연동 상태 클릭할 경우 연동 API 호출(소셜 콜백 페이지로 이동)
+      // window.location.href = SOCIAL_AUTH_URLS[provider]('mypage_link');
+      console.log('연동 API 호출:', provider);
+    }
+  };
+
   return (
     <div className="border-surface-98 rounded-xl border bg-white p-10">
       <div className="flex flex-col gap-5">
@@ -27,7 +51,11 @@ export default function SocialLinkSection({
           소셜 연동 관리
         </label>
         <div className="flex gap-4">
-          <SocialIconButton />
+          <SocialIconButton
+            mode="mypage_link"
+            onProviderClick={handleSocialConnectClick}
+            connectedProvider={connectedProvider}
+          />
         </div>
 
         {SOCIAL_PROVIDER_LABEL[authProvider] && (

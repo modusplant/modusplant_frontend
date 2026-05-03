@@ -1,45 +1,62 @@
-import { GOOGLE_AUTH_URL, KAKAO_AUTH_URL } from '@/lib/constants/oauth';
+import { SocialProvider } from '@/lib/constants/oauth';
 import Image from 'next/image';
 
-const SOCIAL_PLATFORMS = [
-  {
-    id: 'google',
-    label: '구글 로그인',
+const SOCIAL_PLATFORMS: Record<
+  SocialProvider,
+  { label: string; icon: string; unconnectedIcon: string }
+> = {
+  google: {
+    label: '구글',
     icon: '/icon/google-enabled.svg',
-    url: GOOGLE_AUTH_URL,
+    unconnectedIcon: '/icon/google-disabled.svg',
   },
-  {
-    id: 'kakao',
-    label: '카카오 로그인',
+  kakao: {
+    label: '카카오',
     icon: '/icon/kakao-enabled.svg',
-    url: KAKAO_AUTH_URL,
+    unconnectedIcon: '/icon/kakao-disabled.svg',
   },
-] as const;
-
-const handleSocialLoginClick = (id: string) => {
-  const platform = SOCIAL_PLATFORMS.find((s) => s.id === id);
-  if (platform) {
-    window.location.href = platform.url;
-  }
 };
 
 interface SocialIconButtonProps {
+  mode: 'login' | 'mypage_link';
+  connectedProvider?: SocialProvider | null;
   size?: number;
+  onProviderClick: (provider: SocialProvider) => void;
 }
-export default function SocialIconButton({ size = 45 }: SocialIconButtonProps) {
+
+export default function SocialIconButton({
+  mode,
+  connectedProvider,
+  size = 45,
+  onProviderClick,
+}: SocialIconButtonProps) {
+  const providers = Object.keys(SOCIAL_PLATFORMS) as SocialProvider[];
+
   return (
     <>
-      {SOCIAL_PLATFORMS.map(({ id, label, icon }) => (
-        <button
-          key={id}
-          type="button"
-          onClick={() => handleSocialLoginClick(id)}
-          aria-label={label}
-          className="transition-opacity hover:opacity-80"
-        >
-          <Image src={icon} alt={label} width={size} height={size} />
-        </button>
-      ))}
+      {providers.map((provider) => {
+        const { label, icon, unconnectedIcon } = SOCIAL_PLATFORMS[provider];
+
+        const isConnected = connectedProvider === provider;
+        const disabled =
+          mode === 'mypage_link' && connectedProvider !== null && !isConnected;
+
+        const src =
+          mode === 'login' ? icon : isConnected ? icon : unconnectedIcon;
+
+        return (
+          <button
+            key={provider}
+            type="button"
+            disabled={disabled}
+            onClick={() => onProviderClick(provider)}
+            aria-label={`${label} ${disabled ? '(연동 불가)' : ''}`}
+            className="transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <Image src={src} alt={label} width={size} height={size} />
+          </button>
+        );
+      })}
     </>
   );
 }
