@@ -32,7 +32,7 @@ export default function SocialSignupForm() {
     watch,
     setValue,
     trigger,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
   } = useForm<SocialSignupFormValues>({
     resolver: zodResolver(socialSignupSchema),
     mode: 'onTouched',
@@ -47,13 +47,7 @@ export default function SocialSignupForm() {
 
   if (!signupData) return null;
 
-  const formData = watch();
-  const isFormValid =
-    !Object.keys(errors).length &&
-    !!formData.nickname &&
-    formData.agreeToTerms &&
-    formData.agreeToPrivacy &&
-    formData.agreeToCommunity;
+  const isFormValid = isValid;
 
   return (
     <form

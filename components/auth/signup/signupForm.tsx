@@ -28,7 +28,7 @@ export default function SignupForm() {
     watch,
     setValue,
     trigger,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
   } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -103,11 +103,7 @@ export default function SignupForm() {
   };
 
   // 폼 유효성 검사
-  const formData = watch();
-  const isFormValid =
-    formData.agreeToTerms &&
-    formData.agreeToPrivacy &&
-    !Object.keys(errors).length;
+  const isFormValid = isValid;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 md:space-y-10">
