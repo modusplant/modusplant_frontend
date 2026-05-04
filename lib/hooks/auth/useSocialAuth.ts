@@ -1,6 +1,6 @@
 import { OauthApi } from '@/lib/api/client/oauth';
 import { AUTH_ENDPOINTS } from '@/lib/constants/endpoints';
-import { SocialProvider } from '@/lib/constants/oauth';
+import { AuthProviderParam } from '@/lib/constants/oauth';
 import { SocialSignupFormValues } from '@/lib/constants/schema';
 import { TERMS_VERSIONS } from '@/lib/constants/terms';
 import { useAuthStore } from '@/lib/store/authStore';
@@ -10,7 +10,7 @@ import { processSuccessfulAuth } from '@/lib/utils/auth/processSuccessfulAuth';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef } from 'react';
 
-const PROVIDER_LABEL: Record<SocialProvider, string> = {
+const PROVIDER_LABEL: Record<AuthProviderParam, string> = {
   kakao: '카카오',
   google: '구글',
 };

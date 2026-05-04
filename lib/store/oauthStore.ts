@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { SocialProvider } from '../constants/oauth';
+import { AuthProviderParam } from '../constants/oauth';
 
 interface OAuthState {
   signupData: {
     email: string;
     nickname: string;
     type: 'NEED_SIGNUP' | 'NEED_LINK';
-    provider: SocialProvider;
+    provider: AuthProviderParam;
   } | null;
 }
 

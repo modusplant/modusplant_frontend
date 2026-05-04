@@ -1,7 +1,5 @@
 import SocialIconButton from '@/components/auth/login/socialIconButton';
-import { OauthApi } from '@/lib/api/client/oauth';
-import { SOCIAL_AUTH_URLS, SocialProvider } from '@/lib/constants/oauth';
-import { AuthProvider } from '@/lib/types/member';
+import { AuthProvider, AuthProviderParam } from '@/lib/constants/oauth';
 
 interface SocialLinkSectionProps {
   authProvider: AuthProvider;
@@ -19,9 +17,7 @@ const SOCIAL_PROVIDER_LABEL: Partial<Record<AuthProvider, string>> = {
   BASIC: BASIC_LABEL,
 };
 
-const getConnectedProvider = (
-  authProvider: AuthProvider
-): SocialProvider | null => {
+const getConnectedProvider = (authProvider: AuthProvider) => {
   if (authProvider.includes('GOOGLE')) return 'google';
   if (authProvider.includes('KAKAO')) return 'kakao';
   return null;
@@ -32,7 +28,7 @@ export default function SocialLinkSection({
 }: SocialLinkSectionProps) {
   const connectedProvider = getConnectedProvider(authProvider);
 
-  const handleSocialConnectClick = async (provider: SocialProvider) => {
+  const handleSocialConnectClick = async (provider: AuthProviderParam) => {
     if (connectedProvider === provider) {
       // 이미 연동된 소셜 계정의 경우 연동 해제 API 호출
       // TODO: 연동 해제 확인 모달

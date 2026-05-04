@@ -1,8 +1,8 @@
-import { SocialProvider } from '@/lib/constants/oauth';
+import { AuthProviderParam } from '@/lib/constants/oauth';
 import Image from 'next/image';
 
 const SOCIAL_PLATFORMS: Record<
-  SocialProvider,
+  AuthProviderParam,
   { label: string; icon: string; unconnectedIcon: string }
 > = {
   google: {
@@ -19,9 +19,9 @@ const SOCIAL_PLATFORMS: Record<
 
 interface SocialIconButtonProps {
   mode: 'login' | 'mypage_link';
-  connectedProvider?: SocialProvider | null;
+  connectedProvider?: AuthProviderParam | null;
   size?: number;
-  onProviderClick: (provider: SocialProvider) => void;
+  onProviderClick: (provider: AuthProviderParam) => void;
 }
 
 export default function SocialIconButton({
@@ -30,7 +30,7 @@ export default function SocialIconButton({
   size = 45,
   onProviderClick,
 }: SocialIconButtonProps) {
-  const providers = Object.keys(SOCIAL_PLATFORMS) as SocialProvider[];
+  const providers = Object.keys(SOCIAL_PLATFORMS) as AuthProviderParam[];
 
   return (
     <>

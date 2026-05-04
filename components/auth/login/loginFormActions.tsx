@@ -3,9 +3,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/_common/button';
-import { buildAuthUrl } from '@/lib/utils/oauth/buildAuthUrl';
-
-import SocialIconButton from './socialIconButton';
 import SocialLoginSection from './socialLoginSection';
 interface LoginFormActionsProps {
   isLoading: boolean;
@@ -17,28 +14,6 @@ interface LoginFormActionsProps {
  * - 하단 네비게이션 링크 (비밀번호 재설정, 회원가입)
  * - 소셜 로그인
  */
-
-const SOCIAL_PLATFORMS = [
-  {
-    id: 'google',
-    label: '구글 로그인',
-    icon: '/icon/google-enabled.svg',
-    url: buildAuthUrl({ provider: 'google', intent: { action: 'LOGIN' } }),
-  },
-  {
-    id: 'kakao',
-    label: '카카오 로그인',
-    icon: '/icon/kakao-enabled.svg',
-    url: buildAuthUrl({ provider: 'kakao', intent: { action: 'LOGIN' } }),
-  },
-] as const;
-
-const handleSocialLoginClick = (id: string) => {
-  const platform = SOCIAL_PLATFORMS.find((s) => s.id === id);
-  if (platform) {
-    window.location.href = platform.url;
-  }
-};
 
 export default function LoginFormActions({ isLoading }: LoginFormActionsProps) {
   return (

@@ -1,18 +1,16 @@
-import { SocialProvider } from '@/lib/constants/oauth';
+import { AuthProviderParam } from './oauth';
 
 /**
  * API 베이스 경로
  */
 const API_V1 = '/api/v1';
 
-export const provider: SocialProvider[] = ['google', 'kakao'];
-
 /**
  * 인증 관련 엔드포인트
  */
 export const AUTH_ENDPOINTS = {
   LOGIN: `/api/auth/login`,
-  SOCIAL_LOGIN: (provider: SocialProvider) =>
+  SOCIAL_LOGIN: (provider: AuthProviderParam) =>
     `${API_V1}/auth/social-login/${provider}`,
   SOCIAL_SIGNUP: `${API_V1}/auth/social-signup`,
   SOCIAL_LINK: `${API_V1}/auth/social-link`,
