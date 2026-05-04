@@ -110,14 +110,18 @@ export const SEARCH_ENDPOINTS = {
   GET_SEARCH_RESULT: (params: {
     size: number;
     lastPostId?: string;
+    lastPostImportance?: number;
+    lastPostSimilarity?: number;
+    lastPostPublishedAt?: string;
     keyword: string;
-    option: string;
+    target: string;
     sort: string;
-  }) => `${API_V1}/communication/posts/search${buildQueryString(params)}`,
-  GET_SEARCH_HISTORY: () =>
-    `${API_V1}/communication/posts/search-history?size=10`,
+    primaryCategoryId?: string;
+    secondaryCategoryId?: string;
+  }) => `${API_V1}/search/posts${buildQueryString(params)}`,
+  GET_SEARCH_HISTORY: () => `${API_V1}/search/posts/history?size=10`,
   DELETE_SEARCH_HISTORY: (keyword?: string) =>
-    `${API_V1}/communication/posts/search-history/${keyword}`,
+    `${API_V1}/search/posts/history/${keyword}`,
 };
 
 /**
