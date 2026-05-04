@@ -174,6 +174,11 @@ export const authApi = {
     });
   },
 
+  /**
+   * 회원 탈퇴
+   * @param requestBody
+   * @returns
+   */
   async signout(requestBody: SignoutRequestBody): Promise<ApiResponse<void>> {
     return clientApiInstance.post<void>(AUTH_ENDPOINTS.SIGNOUT, {
       ...requestBody,
