@@ -5,7 +5,7 @@ const ContentField = () => {
   const { register } = useFormContext<WriteFormData>();
 
   return (
-    <div className="flex flex-1 flex-col gap-2.5 self-stretch p-5">
+    <div className="flex flex-1 flex-col gap-2.5 self-stretch p-4.5">
       <textarea
         {...register('textContent')}
         placeholder="내용을 입력해주세요."

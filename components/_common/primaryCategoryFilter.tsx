@@ -59,7 +59,7 @@ export default function PrimaryCategoryFilter({
             'text-neutral-20 h-10 w-40 rounded-full px-4 py-3 text-sm font-medium':
               !isSelector,
             // selector 스타일 (게시글 작성)
-            'text-neutral-20 h-11 w-full rounded-lg px-3 py-2.5 text-[15px] leading-normal font-medium tracking-[-0.01em] md:w-60 md:px-4.5':
+            'text-neutral-20 h-11 w-full rounded-lg px-4.5 py-3 text-[15px] leading-normal font-medium tracking-[-0.01em] md:w-60 md:px-4.5':
               isSelector,
           }
         )}
@@ -68,7 +68,7 @@ export default function PrimaryCategoryFilter({
       >
         <span
           className={cn({
-            'text-neutral-70': isSelector && !selectedCategory,
+            'text-neutral-60': isSelector && !selectedCategory,
           })}
         >
           {displayText}
