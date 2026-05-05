@@ -64,10 +64,7 @@ export const authApi = {
             : response.message,
       };
     } catch (error: any) {
-      return {
-        success: false,
-        message: error.message || '인증 메일 발송에 실패했습니다.',
-      };
+      throw error;
     }
   },
 
@@ -177,6 +174,11 @@ export const authApi = {
     });
   },
 
+  /**
+   * 회원 탈퇴
+   * @param requestBody
+   * @returns
+   */
   async signout(requestBody: SignoutRequestBody): Promise<ApiResponse<void>> {
     return clientApiInstance.post<void>(AUTH_ENDPOINTS.SIGNOUT, {
       ...requestBody,

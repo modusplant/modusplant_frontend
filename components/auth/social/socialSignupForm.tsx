@@ -13,9 +13,18 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import { useSocialAuth } from '@/lib/hooks/auth/useSocialAuth';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function SocialSignupForm() {
   const { signupData, handleSignupSubmit } = useSocialAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!signupData) {
+      router.replace('/login');
+    }
+  }, [signupData, router]);
 
   const {
     register,

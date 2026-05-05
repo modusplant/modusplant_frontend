@@ -61,7 +61,9 @@ export default function HeaderAuthActions({
             {!!unreadNotificationsCount && unreadNotificationsCount > 0 && (
               <div className="absolute top-0 right-0 flex size-3.5 items-center justify-center rounded-full bg-[#f44335]">
                 <span className="typo-semibold14 text-[9px] text-white">
-                  {unreadNotificationsCount}
+                  {unreadNotificationsCount > 99
+                    ? `99+`
+                    : unreadNotificationsCount}
                 </span>
               </div>
             )}

@@ -104,6 +104,27 @@ export const NOTIFICATION_ENDPOINTS = {
 };
 
 /**
+ * 검색 관련 엔드포인트
+ */
+export const SEARCH_ENDPOINTS = {
+  GET_SEARCH_RESULT: (params: {
+    size: number;
+    lastPostId?: string;
+    lastPostImportance?: number;
+    lastPostSimilarity?: number;
+    lastPostPublishedAt?: string;
+    keyword: string;
+    target: string;
+    sort: string;
+    primaryCategoryId?: string;
+    secondaryCategoryId?: string;
+  }) => `${API_V1}/search/posts${buildQueryString(params)}`,
+  GET_SEARCH_HISTORY: () => `${API_V1}/search/posts/history?size=10`,
+  DELETE_SEARCH_HISTORY: (keyword?: string) =>
+    `${API_V1}/search/posts/history/${keyword}`,
+};
+
+/**
  * 타입 안전한 쿼리 파라미터 빌더
  */
 export function buildQueryString(

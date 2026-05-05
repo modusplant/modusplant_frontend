@@ -1,4 +1,5 @@
 import { OauthApi } from '@/lib/api/client/oauth';
+import { AUTH_ENDPOINTS } from '@/lib/constants/endpoints';
 import { SocialSignupFormValues } from '@/lib/constants/schema';
 import { TERMS_VERSIONS } from '@/lib/constants/terms';
 import { useAuthStore } from '@/lib/store/authStore';
@@ -6,7 +7,7 @@ import useModalStore from '@/lib/store/modalStore';
 import { useOAuthStore } from '@/lib/store/oauthStore';
 import { processSuccessfulAuth } from '@/lib/utils/auth/processSuccessfulAuth';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 const PROVIDER_LABEL = {
   kakao: '카카오',
@@ -19,12 +20,53 @@ export function useSocialAuth() {
   const login = useAuthStore((state) => state.login);
   const showModal = useModalStore((state) => state.showModal);
 
+  const isSocialAuthCompleted = useRef(false); // 소셜 인증 완료 여부 플래그
+
+  /**
+   * 사용자가 소셜 회원가입/연동(혹은 연동 취소)을 완료하지 않고
+   * 이탈 할 경우 소셜 플랫폼과 서비스의 연결을 해제하는 로직
+   *
+   * ex) 브라우저 뒤로가기, 새로고침, 탭/창 닫기 등
+   */
+
+  useEffect(() => {
+    isSocialAuthCompleted.current = false; // handleConnectCancel 이후 소셜 로그인 재시도 대비 초기화
+
+    // 브라우저 이벤트 발생 시 실행되는 함수
+    const cancelConnect = () => {
+      if (isSocialAuthCompleted.current || !useOAuthStore.getState().signupData)
+        return;
+
+      fetch(AUTH_ENDPOINTS.CANCEL_SOCIAL_CONNECT, {
+        method: 'DELETE',
+        keepalive: true, // 언로드 중에도 요청 보장
+      });
+      useOAuthStore.getState().clearSignupData();
+    };
+
+    // 탭 닫기, 새로고침, 주소창 직접 입력
+    const handleBeforeUnload = () => cancelConnect();
+
+    // 브라우저 뒤로가기/앞으로가기
+    const handlePopState = () => cancelConnect();
+
+    history.pushState(null, '', window.location.href);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
   const handleLinkConfirm = useCallback(async () => {
     try {
       const result = await OauthApi.socialLink();
       if (result.status === 200 && result.data?.accessToken) {
         const user = await processSuccessfulAuth(result.data.accessToken, true);
         login(user);
+        isSocialAuthCompleted.current = true;
         clearSignupData();
         router.replace('/');
       }
@@ -41,6 +83,7 @@ export function useSocialAuth() {
     try {
       const result = await OauthApi.cancelSocialConnect();
       if (result.status === 200) {
+        isSocialAuthCompleted.current = true;
         clearSignupData();
         router.replace('/login');
       }
@@ -63,7 +106,7 @@ export function useSocialAuth() {
           '동일한 이메일이 사용된 계정이 있습니다.',
         ].join('\n'),
         align: 'center',
-        preserveLineBreak: true,
+        shouldUseLineBreak: true,
         description: `${PROVIDER_LABEL[signupData.provider]} 로그인 연동을 하시겠어요?`,
         type: 'two-button',
         buttonText: '연동하기',
@@ -72,19 +115,6 @@ export function useSocialAuth() {
       });
     }
   }, [signupData, showModal, handleConnectCancel, handleLinkConfirm]);
-
-  /**
-   * 소셜 회원가입/연동 완료 없이 페이지 이탈 시,
-   * 서버의 소셜 연결(tempToken)과 클라이언트 signupData를 함께 정리하는 cleanup
-   */
-  useEffect(() => {
-    return () => {
-      if (useOAuthStore.getState().signupData) {
-        OauthApi.cancelSocialConnect();
-        clearSignupData();
-      }
-    };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSignupSubmit = async (data: SocialSignupFormValues) => {
     if (!signupData) return;
@@ -105,6 +135,7 @@ export function useSocialAuth() {
             true
           );
           login(user);
+          isSocialAuthCompleted.current = true;
           clearSignupData();
           router.replace('/');
         }
