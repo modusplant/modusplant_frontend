@@ -27,6 +27,9 @@ export const useEmailVerification = ({
       canResend: false,
     });
 
+  const [isRequestLoading, setIsRequestLoading] = useState(false);
+  const [isVerifyLoading, setIsVerifyLoading] = useState(false);
+
   // 카운트다운 타이머
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -105,6 +108,7 @@ export const useEmailVerification = ({
         };
       }
 
+      setIsVerifyLoading(true);
       try {
         const response = await authApi.verifyEmailCode(email, code);
 
@@ -129,6 +133,8 @@ export const useEmailVerification = ({
           success: false,
           message: error.message || '인증 확인에 실패했습니다.',
         };
+      } finally {
+        setIsVerifyLoading(false);
       }
     },
     [verificationState.isCodeSent, verificationState.timeRemaining]
@@ -160,6 +166,8 @@ export const useEmailVerification = ({
         if (!emailValid) return { success: false, message: '' };
       }
 
+      setIsRequestLoading(true);
+
       try {
         const result = await requestVerification(email);
         showModal({
@@ -184,6 +192,8 @@ export const useEmailVerification = ({
             description: error.message || '인증 메일 발송에 실패했습니다.',
           });
         }
+      } finally {
+        setIsRequestLoading(false);
       }
     },
     [trigger, requestVerification, router]
@@ -192,12 +202,17 @@ export const useEmailVerification = ({
   // 재요청 핸들러
   const handleResendVerification = useCallback(
     async (email: string) => {
-      const result = await resendVerification(email);
-      showModal({
-        type: 'snackbar',
-        description: result.message,
-      });
-      return result;
+      setIsRequestLoading(true);
+      try {
+        const result = await resendVerification(email);
+        showModal({
+          type: 'snackbar',
+          description: result.message,
+        });
+        return result;
+      } finally {
+        setIsRequestLoading(false);
+      }
     },
     [resendVerification]
   );
@@ -226,6 +241,8 @@ export const useEmailVerification = ({
 
   return {
     verificationState,
+    isRequestLoading,
+    isVerifyLoading,
     requestVerification,
     resendVerification,
     verifyCode,
