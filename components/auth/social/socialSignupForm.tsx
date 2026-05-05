@@ -32,7 +32,7 @@ export default function SocialSignupForm() {
     watch,
     setValue,
     trigger,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
   } = useForm<SocialSignupFormValues>({
     resolver: zodResolver(socialSignupSchema),
     mode: 'onTouched',
@@ -46,14 +46,6 @@ export default function SocialSignupForm() {
   });
 
   if (!signupData) return null;
-
-  const formData = watch();
-  const isFormValid =
-    !Object.keys(errors).length &&
-    !!formData.nickname &&
-    formData.agreeToTerms &&
-    formData.agreeToPrivacy &&
-    formData.agreeToCommunity;
 
   return (
     <form
@@ -98,9 +90,9 @@ export default function SocialSignupForm() {
 
       <Button
         type="submit"
-        disabled={!isFormValid || isSubmitting}
+        disabled={!isValid || isSubmitting}
         className="w-full rounded-lg py-3 text-[16px] font-semibold md:py-4"
-        variant={!isFormValid || isSubmitting ? 'secondary' : 'point'}
+        variant={!isValid || isSubmitting ? 'secondary' : 'point'}
       >
         {isSubmitting ? (
           <Image
