@@ -102,9 +102,6 @@ export default function SignupForm() {
     }
   };
 
-  // 폼 유효성 검사
-  const isFormValid = isValid;
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 md:space-y-10">
       <div className="flex flex-col gap-7.5">
@@ -139,9 +136,9 @@ export default function SignupForm() {
       {/* 회원가입 버튼 */}
       <Button
         type="submit"
-        disabled={!isFormValid || isSubmitting}
+        disabled={!isValid || isSubmitting}
         className="w-full rounded-lg py-3 text-[16px] font-semibold md:py-4"
-        variant={isFormValid || !isSubmitting ? 'point' : 'secondary'}
+        variant={isValid || !isSubmitting ? 'point' : 'secondary'}
       >
         {isSubmitting ? (
           <Image

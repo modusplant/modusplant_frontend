@@ -47,8 +47,6 @@ export default function SocialSignupForm() {
 
   if (!signupData) return null;
 
-  const isFormValid = isValid;
-
   return (
     <form
       className="flex flex-col gap-10"
@@ -92,9 +90,9 @@ export default function SocialSignupForm() {
 
       <Button
         type="submit"
-        disabled={!isFormValid || isSubmitting}
+        disabled={!isValid || isSubmitting}
         className="w-full rounded-lg py-3 text-[16px] font-semibold md:py-4"
-        variant={!isFormValid || isSubmitting ? 'secondary' : 'point'}
+        variant={!isValid || isSubmitting ? 'secondary' : 'point'}
       >
         {isSubmitting ? (
           <Image
