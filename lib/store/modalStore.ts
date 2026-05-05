@@ -13,7 +13,7 @@ export interface ModalStore {
   ) => void;
   hideModal: () => void;
   align?: 'center';
-  preserveLineBreak?: boolean;
+  shouldUseLineBreak?: boolean;
 }
 
 const useModalStore = create<ModalStore>((set) => ({
@@ -25,7 +25,7 @@ const useModalStore = create<ModalStore>((set) => ({
   onConfirm: undefined,
   onCancel: undefined,
   align: undefined,
-  preserveLineBreak: false,
+  shouldUseLineBreak: false,
 
   showModal: (
     modalData: Omit<ModalStore, 'isVisible' | 'showModal' | 'hideModal'>
