@@ -81,12 +81,7 @@ export default function SocialSignupForm() {
       </div>
 
       {/* 이용 약관 영역 */}
-      <TermsSection
-        register={register}
-        errors={errors}
-        watch={watch}
-        setValue={setValue}
-      />
+      <TermsSection errors={errors} watch={watch} setValue={setValue} />
 
       <Button
         type="submit"

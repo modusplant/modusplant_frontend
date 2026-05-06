@@ -126,12 +126,7 @@ export default function SignupForm() {
       </div>
 
       {/* 약관 동의 섹션 */}
-      <TermsSection
-        register={register}
-        errors={errors}
-        watch={watch}
-        setValue={setValue}
-      />
+      <TermsSection errors={errors} watch={watch} setValue={setValue} />
 
       {/* 회원가입 버튼 */}
       <Button
