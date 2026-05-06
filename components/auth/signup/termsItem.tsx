@@ -1,13 +1,12 @@
 'use client';
 
 import { Checkbox } from '@/components/_common/checkbox';
-import { UseFormRegisterReturn } from 'react-hook-form';
 
 interface TermsItemProps {
   id: string;
   label: string;
   checked: boolean;
-  register: UseFormRegisterReturn;
+  onChange: (checked: boolean) => void;
   isExpanded: boolean;
   onToggle: () => void;
   content: {
@@ -20,7 +19,7 @@ export default function TermsItem({
   id,
   label,
   checked,
-  register,
+  onChange,
   isExpanded,
   onToggle,
   content,
@@ -29,7 +28,11 @@ export default function TermsItem({
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Checkbox {...register} id={id} checked={checked} />
+          <Checkbox
+            id={id}
+            checked={checked}
+            onChange={(e) => onChange(e.target.checked)}
+          />
           <label
             htmlFor={id}
             className="text-neutral-60 cursor-pointer text-sm"
