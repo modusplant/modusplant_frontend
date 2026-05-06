@@ -31,14 +31,9 @@ export default function TermsItem({
           <Checkbox
             id={id}
             checked={checked}
+            label={label}
             onChange={(e) => onChange(e.target.checked)}
           />
-          <label
-            htmlFor={id}
-            className="text-neutral-60 cursor-pointer text-sm"
-          >
-            {label}
-          </label>
         </div>
         <button
           type="button"
