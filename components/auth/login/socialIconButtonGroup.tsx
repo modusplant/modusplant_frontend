@@ -17,19 +17,19 @@ const SOCIAL_PLATFORMS: Record<
   },
 };
 
-interface SocialIconButtonProps {
+interface SocialIconButtonGroupProps {
   mode: 'login' | 'mypage_link';
   connectedProvider?: AuthProviderParam | null;
   size?: number;
   onProviderClick: (provider: AuthProviderParam) => void;
 }
 
-export default function SocialIconButton({
+export default function SocialIconButtonGroup({
   mode,
   connectedProvider,
   size = 45,
   onProviderClick,
-}: SocialIconButtonProps) {
+}: SocialIconButtonGroupProps) {
   const providers = Object.keys(SOCIAL_PLATFORMS) as AuthProviderParam[];
 
   return (

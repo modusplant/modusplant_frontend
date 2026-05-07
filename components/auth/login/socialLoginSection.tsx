@@ -1,5 +1,5 @@
 import { AuthProviderParam } from '@/lib/constants/oauth';
-import SocialIconButton from './socialIconButton';
+import SocialIconButtonGroup from './socialIconButtonGroup';
 import { buildAuthUrl } from '@/lib/utils/oauth/buildAuthUrl';
 
 export default function SocialLoginSection() {
@@ -10,7 +10,10 @@ export default function SocialLoginSection() {
 
   return (
     <div className="mt-10 mb-3 flex items-center justify-center gap-4">
-      <SocialIconButton mode="login" onProviderClick={handleSocialLoginClick} />
+      <SocialIconButtonGroup
+        mode="login"
+        onProviderClick={handleSocialLoginClick}
+      />
     </div>
   );
 }

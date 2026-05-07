@@ -1,4 +1,4 @@
-import SocialIconButton from '@/components/auth/login/socialIconButton';
+import SocialIconButtonGroup from '@/components/auth/login/socialIconButtonGroup';
 import { AuthProvider, AuthProviderParam } from '@/lib/constants/oauth';
 
 interface SocialLinkSectionProps {
@@ -47,7 +47,7 @@ export default function SocialLinkSection({
           소셜 연동 관리
         </label>
         <div className="flex gap-4">
-          <SocialIconButton
+          <SocialIconButtonGroup
             mode="mypage_link"
             onProviderClick={handleSocialConnectClick}
             connectedProvider={connectedProvider}
