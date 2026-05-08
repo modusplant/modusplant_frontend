@@ -1,5 +1,6 @@
 import SocialIconButtonGroup from '@/components/auth/login/socialIconButtonGroup';
 import { AuthProvider, AuthProviderParam } from '@/lib/constants/oauth';
+import { parseAuthProvider } from '@/lib/utils/oauth/parseAuthProvider';
 
 interface SocialLinkSectionProps {
   authProvider: AuthProvider;
@@ -17,16 +18,10 @@ const SOCIAL_PROVIDER_LABEL: Partial<Record<AuthProvider, string>> = {
   BASIC: BASIC_LABEL,
 };
 
-const getConnectedProvider = (authProvider: AuthProvider) => {
-  if (authProvider.includes('GOOGLE')) return 'google';
-  if (authProvider.includes('KAKAO')) return 'kakao';
-  return null;
-};
-
 export default function SocialLinkSection({
   authProvider,
 }: SocialLinkSectionProps) {
-  const connectedProvider = getConnectedProvider(authProvider);
+  const connectedProvider = parseAuthProvider(authProvider);
 
   const handleSocialConnectClick = async (provider: AuthProviderParam) => {
     if (connectedProvider === provider) {
