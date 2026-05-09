@@ -7,6 +7,11 @@ export const VALID_PROVIDERS = [
   'BASIC_GOOGLE',
 ] as const;
 
+export const PROVIDER_LABEL: Record<AuthProviderParam, string> = {
+  kakao: '카카오',
+  google: '구글',
+};
+
 /**
  * 백엔드 API 명세에 따른 소셜 플랫폼 타입
  */
