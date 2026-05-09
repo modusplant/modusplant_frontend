@@ -41,4 +41,8 @@ export const SOCIAL_CONFLICT_MESSAGES: Record<string, string> = {
   already_registered_with_google: '당신은 구글로 가입했습니다.',
   already_registered_with_kakao: '당신은 카카오로 가입했습니다.',
 };
-export type OAuthIntent = { action: 'LOGIN' } | { action: 'SIGNOUT' };
+export type OAuthIntent =
+  | { action: 'LOGIN' }
+  | { action: 'SIGNOUT' }
+  | { action: 'LINK' }
+  | { action: 'UNLINK' };
