@@ -46,7 +46,15 @@ export default function DialogModal({
           >
             {title}
           </h2>
-          <p className="text-neutral-30 text-[16px]">{description}</p>
+          <p
+            className={cn(
+              'text-neutral-30 text-[16px]',
+              align === 'center' && 'text-center',
+              shouldUseLineBreak && 'whitespace-pre-line'
+            )}
+          >
+            {description}
+          </p>
         </div>
         <div className="flex h-10 justify-center gap-2.5 font-medium">
           {type === 'two-button' && (
