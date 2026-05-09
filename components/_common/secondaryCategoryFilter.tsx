@@ -100,7 +100,7 @@ export default function SecondaryCategoryFilter({
         onCategoriesChange([]);
       }
     }
-  }, [primaryCategoryId, disableAutoReset, onCategoriesChange, variant]);
+  }, [primaryCategoryId]);
 
   // 선택된 카테고리 표시 라벨
   const getSelectedLabel = () => {
@@ -143,7 +143,7 @@ export default function SecondaryCategoryFilter({
           "hover:border-primary-50 focus:border-primary-50 focus:ring-primary-10 focus:ring-2 focus:outline-none",
           "cursor-pointer",
           isOpen && "border-primary-50 ring-primary-10 ring-2",
-          isDisabled && "hover:border-surface-stroke cursor-default",
+          isDisabled && "pointer-events-none",
           {
             // filter 스타일
             "text-neutral-20 h-10 w-40 rounded-full px-4 py-3 text-sm font-medium":
