@@ -8,6 +8,7 @@ import SearchBar from './searchbar';
 import SearchHistory from './searchHistory';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useGetSearchHistory } from '@/lib/hooks/search/useGetSearchHistory';
+import { useDeleteSearchHistory } from '@/lib/hooks/search/useDeleteSearchHistory';
 
 interface SearchOverlayProps {
   isOpen: boolean;
@@ -32,6 +33,10 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
   const { data: searchHistory } = useGetSearchHistory(
     isOpen && isAuthenticated && !!user
   );
+  const {
+    mutate: deleteSearchHistory,
+    isPending: isDeletingSearchHistory,
+  } = useDeleteSearchHistory();
 
   const onSubmit = ({ keyword }: SearchFormValues) => {
     if (pendingSearchUrl) return;
@@ -108,6 +113,8 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
               <button
                 type="button"
                 className="text-[16px] leading-1.5 font-semibold -tracking-[0.01em] text-neutral-50"
+                onClick={() => deleteSearchHistory()}
+                disabled={!!pendingSearchUrl || isDeletingSearchHistory}
               >
                 전체 삭제
               </button>
