@@ -33,12 +33,10 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
   const { data: searchHistory } = useGetSearchHistory(
     isOpen && isAuthenticated && !!user
   );
-  const {
-    mutate: deleteSearchHistory,
-    isPending: isDeletingSearchHistory,
-  } = useDeleteSearchHistory();
+  const { mutate: deleteSearchHistory, isPending: isDeletingSearchHistory } =
+    useDeleteSearchHistory();
 
-  const onSubmit = ({ keyword }: SearchFormValues) => {
+  const handleSearch = (keyword: string) => {
     if (pendingSearchUrl) return;
 
     const trimmedKeyword = keyword.trim();
@@ -55,6 +53,10 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
 
     setPendingSearchUrl(nextUrl);
     router.push(nextUrl);
+  };
+
+  const onSubmit = ({ keyword }: SearchFormValues) => {
+    handleSearch(keyword);
   };
 
   const handleClose = () => {
@@ -119,7 +121,10 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
                 전체 삭제
               </button>
             </div>
-            <SearchHistory data={searchHistory ?? []} />
+            <SearchHistory
+              data={searchHistory ?? []}
+              onKeywordClick={handleSearch}
+            />
           </>
         )}
       </div>
