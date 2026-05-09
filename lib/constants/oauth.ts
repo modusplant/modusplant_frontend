@@ -12,6 +12,20 @@ export const PROVIDER_LABEL: Record<AuthProviderParam, string> = {
   google: '구글',
 };
 
+const GOOGLE_LABEL = '구글로 가입된 계정입니다.';
+const LINKED_GOOGLE_LABEL = '구글과 연동된 계정입니다.';
+const KAKAO_LABEL = '카카오로 가입된 계정입니다.';
+const LINKED_KAKAO_LABEL = '카카오와 연동된 계정입니다.';
+const BASIC_LABEL = '연동된 소셜 계정이 없습니다.';
+
+export const SOCIAL_PROVIDER_MESSAGES: Partial<Record<AuthProvider, string>> = {
+  BASIC_GOOGLE: LINKED_GOOGLE_LABEL,
+  GOOGLE: GOOGLE_LABEL,
+  BASIC_KAKAO: LINKED_KAKAO_LABEL,
+  KAKAO: KAKAO_LABEL,
+  BASIC: BASIC_LABEL,
+};
+
 /**
  * 백엔드 API 명세에 따른 소셜 플랫폼 타입
  */

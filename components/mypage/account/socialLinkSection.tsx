@@ -1,22 +1,14 @@
 import SocialIconButtonGroup from '@/components/auth/login/socialIconButtonGroup';
-import { AuthProvider, AuthProviderParam } from '@/lib/constants/oauth';
+import {
+  AuthProvider,
+  AuthProviderParam,
+  SOCIAL_PROVIDER_MESSAGES,
+} from '@/lib/constants/oauth';
 import { parseAuthProvider } from '@/lib/utils/oauth/parseAuthProvider';
 
 interface SocialLinkSectionProps {
   authProvider: AuthProvider;
 }
-
-const GOOGLE_LABEL = '구글로 가입된 계정입니다.';
-const KAKAO_LABEL = '카카오로 가입된 계정입니다.';
-const BASIC_LABEL = '연동된 소셜 계정이 없습니다.';
-
-const SOCIAL_PROVIDER_LABEL: Partial<Record<AuthProvider, string>> = {
-  BASIC_GOOGLE: GOOGLE_LABEL,
-  GOOGLE: GOOGLE_LABEL,
-  BASIC_KAKAO: KAKAO_LABEL,
-  KAKAO: KAKAO_LABEL,
-  BASIC: BASIC_LABEL,
-};
 
 export default function SocialLinkSection({
   authProvider,
@@ -49,9 +41,9 @@ export default function SocialLinkSection({
           />
         </div>
 
-        {SOCIAL_PROVIDER_LABEL[authProvider] && (
+        {SOCIAL_PROVIDER_MESSAGES[authProvider] && (
           <div className="text-neutral-60 text-[13px]">
-            {SOCIAL_PROVIDER_LABEL[authProvider]}
+            {SOCIAL_PROVIDER_MESSAGES[authProvider]}
           </div>
         )}
       </div>
