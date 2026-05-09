@@ -58,7 +58,10 @@ export default function AccountSection() {
         onChangeEmail={() => setEmailModalVisible(true)}
         disabled={isSocialMember}
       />
-      <SocialLinkSection authProvider={authInfo.authProvider} />
+      <SocialLinkSection
+        authProvider={authInfo.authProvider}
+        onSignout={open}
+      />
       <PasswordSection disabled={isSocialMember} />
       <div className="flex justify-end">
         <button
