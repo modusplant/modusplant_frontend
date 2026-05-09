@@ -1,6 +1,7 @@
 import { ApiResponse } from '@/lib/types/common';
 import { clientApiInstance } from '../instances/clientInstance';
 import { AUTH_ENDPOINTS } from '@/lib/constants/endpoints';
+import { AuthProviderParam } from '@/lib/constants/oauth';
 /**
  * 소셜 인증 API
  */
@@ -76,6 +77,34 @@ export const OauthApi = {
     const response = await clientApiInstance.delete<void>(
       AUTH_ENDPOINTS.CANCEL_SOCIAL_CONNECT,
       { skipAuth: true }
+    );
+    return response;
+  },
+
+  /**
+   * 마이페이지용 소셜 연동(일반회원) API
+   */
+  async mypageSocialLink(
+    code: string,
+    provider: AuthProviderParam
+  ): Promise<ApiResponse> {
+    const response = await clientApiInstance.post<ApiResponse>(
+      AUTH_ENDPOINTS.MYPAGE_SOCIAL_LINK(provider),
+      { code }
+    );
+    return response;
+  },
+
+  /**
+   * 마이페이지용 소셜 연동 해제(소셜연동회원) API
+   */
+  async mypageSocialUnlink(
+    code: string,
+    provider: AuthProviderParam
+  ): Promise<ApiResponse> {
+    const response = await clientApiInstance.post<ApiResponse>(
+      AUTH_ENDPOINTS.MYPAGE_SOCIAL_UNLINK(provider),
+      { code }
     );
     return response;
   },
