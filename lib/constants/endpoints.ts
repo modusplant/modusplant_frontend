@@ -120,6 +120,7 @@ export const SEARCH_ENDPOINTS = {
     secondaryCategoryId?: string;
   }) => `${API_V1}/search/posts${buildQueryString(params)}`,
   GET_SEARCH_HISTORY: () => `${API_V1}/search/posts/history?size=10`,
+  DELETE_ALL_SEARCH_HISTORY: () => `${API_V1}/search/posts/history`,
   DELETE_SEARCH_HISTORY: (keyword?: string) =>
     `${API_V1}/search/posts/history/${keyword}`,
 };
