@@ -73,14 +73,32 @@ export const OauthCallback = ({
         }
 
         case 'LINK': {
-          await OauthApi.mypageSocialLink(code, provider);
-          router.replace('/mypage/account');
+          try {
+            await OauthApi.mypageSocialLink(code, provider);
+            router.replace('/mypage/account');
+          } catch (error: any) {
+            sessionStorage.setItem(
+              'linkError',
+              error.message || '소셜 연동에 실패했습니다.'
+            );
+            router.replace('/mypage/account');
+          }
+
           break;
         }
 
         case 'UNLINK': {
-          await OauthApi.mypageSocialUnlink(code, provider);
-          router.replace('/mypage/account');
+          try {
+            await OauthApi.mypageSocialUnlink(code, provider);
+            router.replace('/mypage/account');
+          } catch (error: any) {
+            sessionStorage.setItem(
+              'linkError',
+              error.message || '소셜 연동 해제에 실패했습니다.'
+            );
+            router.replace('/mypage/account');
+          }
+
           break;
         }
       }

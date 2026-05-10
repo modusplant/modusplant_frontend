@@ -9,6 +9,7 @@ import ChangeEmailModal from './changeEmailModal';
 import { useState } from 'react';
 import SignoutModal from './SignoutModal';
 import { useDropdownState } from '@/lib/hooks/category/useDropdownState';
+import { useLinkError } from '@/lib/hooks/mypage/useLinkError';
 
 /**
  * 계정 설정 섹션
@@ -26,6 +27,8 @@ export default function AccountSection() {
   const { data: authInfo, isLoading, error } = useMemberAuthInfo(user?.id);
 
   const isSocialMember = authInfo?.authProvider !== 'BASIC';
+
+  useLinkError();
 
   if (isLoading) {
     return (
