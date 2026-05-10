@@ -36,7 +36,7 @@ export const useSignout = () => {
 
     if (data) {
       const { authProvider: provider } = data;
-      authProvider = parseAuthProvider(provider);
+      authProvider = parseAuthProvider(provider) ?? undefined;
     }
 
     if (authProvider) {
