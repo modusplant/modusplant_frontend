@@ -11,9 +11,8 @@ import { deleteAllCookies } from '@/lib/utils/cookies/client';
 
 import { useMemberAuthInfo } from '@/lib/hooks/mypage/useMemberAuthInfo';
 import { showModal } from '@/lib/store/modalStore';
-import { openOAuthPopup } from '@/lib/utils/oauth/openOAuthPopup';
-import { AuthProviderParam } from '@/lib/constants/oauth';
 import { parseAuthProvider } from '@/lib/utils/oauth/parseAuthProvider';
+import { buildAuthUrl } from '@/lib/utils/oauth/buildAuthUrl';
 
 export const useSignout = () => {
   const queryClient = useQueryClient();
@@ -27,26 +26,37 @@ export const useSignout = () => {
   const [error, setError] = useState<ApiError | null>(null);
 
   const handleSignout = async (formValues: SignoutFormValues) => {
-    setIsLoading(true);
-    setError(null);
-    let authCode: string | undefined;
-    let authProvider: AuthProviderParam | undefined;
-
     sessionStorage.setItem('signoutForm', JSON.stringify({ ...formValues }));
 
-    if (data) {
-      const { authProvider: provider } = data;
-      authProvider = parseAuthProvider(provider) ?? undefined;
-    }
+    const authProvider = data
+      ? parseAuthProvider(data.authProvider)
+      : undefined;
 
     if (authProvider) {
-      const { code } = await openOAuthPopup({
+      const url = buildAuthUrl({
         provider: authProvider,
-        intent: { action: 'SIGNOUT' },
+        intent: {
+          action: 'SIGNOUT',
+          returnTo: '/mypage/account?signout=pending',
+        },
       });
-      authCode = code;
+      window.location.href = url;
+      return;
     }
+    await executeSignout({ formValues });
+  };
 
+  const executeSignout = async ({
+    formValues,
+    authCode,
+    authProvider,
+  }: {
+    formValues: SignoutFormValues;
+    authCode?: string;
+    authProvider?: string;
+  }) => {
+    setIsLoading(true);
+    setError(null);
     try {
       const requestBody: SignoutRequestBody = {
         authCode,
@@ -60,6 +70,9 @@ export const useSignout = () => {
       reset(); // 전역 유저 상태 초기화
       deleteAllCookies(); // client accessToken 삭제
 
+      // sessionStorage 정리
+      sessionStorage.removeItem('signoutForm');
+
       router.replace('/');
       showModal({ description: '회원 탈퇴되었습니다.', type: 'snackbar' });
     } catch (error) {
@@ -71,6 +84,8 @@ export const useSignout = () => {
         );
       }
     } finally {
+      sessionStorage.removeItem('signoutCode');
+      sessionStorage.removeItem('signoutProvider');
       setIsLoading(false);
     }
   };
@@ -79,5 +94,6 @@ export const useSignout = () => {
     isLoading,
     error,
     handleSignout,
+    executeSignout,
   };
 };

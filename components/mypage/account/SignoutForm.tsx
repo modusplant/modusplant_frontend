@@ -57,9 +57,16 @@ const SIGNOUT_REASON_OPTIONS: SignoutReasonOptionsType = [
   },
 ];
 
-type SignoutFormProps = HTMLAttributes<HTMLDivElement>;
+interface SignoutFormProps extends HTMLAttributes<HTMLDivElement> {
+  savedFormValues?: SignoutFormValues;
+  handleSignout: (formValues: SignoutFormValues) => void;
+}
 
-export const SignoutForm = ({ className }: SignoutFormProps) => {
+export const SignoutForm = ({
+  savedFormValues,
+  handleSignout,
+  className,
+}: SignoutFormProps) => {
   const {
     handleSubmit,
     register,
@@ -70,13 +77,15 @@ export const SignoutForm = ({ className }: SignoutFormProps) => {
     resolver: zodResolver(signoutSchema),
     mode: 'onChange',
     defaultValues: {
-      agreeCheck: false,
+      reason: savedFormValues?.reason,
+      opinion: savedFormValues?.opinion,
+      agreeCheck: savedFormValues?.agreeCheck,
     },
   });
 
   const { close, isOpen, toggle } = useDropdownState();
 
-  const { handleSignout, isLoading } = useSignout();
+  const { isLoading } = useSignout();
 
   const handleSelectOption = (value: SignoutRequestBody['reason']) => {
     setValue('reason', value);

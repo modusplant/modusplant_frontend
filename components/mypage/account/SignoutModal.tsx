@@ -4,6 +4,8 @@ import { cn } from '@/lib/utils/tailwindHelper';
 
 interface DialogModalProps extends HTMLAttributes<HTMLDivElement> {
   onClose: () => void;
+  handleSignout: (formValues: SignoutFormValues) => void;
+  savedFormValues?: SignoutFormValues;
 }
 
 export default function SignoutModal({
@@ -39,7 +41,11 @@ export default function SignoutModal({
         className="rounded-2xl bg-neutral-100 py-4 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
-        <SignoutForm className="p-10" />
+        <SignoutForm
+          className="p-10"
+          savedFormValues={savedFormValues}
+          handleSignout={handleSignout}
+        />
       </div>
     </div>
   );
