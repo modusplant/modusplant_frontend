@@ -1,5 +1,6 @@
 import Button from '@/components/_common/button';
 import { cn } from '@/lib/utils/tailwindHelper';
+import { useEffect } from 'react';
 
 interface DialogModalProps {
   title: string;
@@ -24,13 +25,29 @@ export default function DialogModal({
   align,
   shouldUseLineBreak,
 }: DialogModalProps) {
+  // 오버레이 영역 스크롤 방지
+  useEffect(() => {
+    const prev = {
+      overflow: document.body.style.overflow,
+      userSelect: document.body.style.userSelect,
+    };
+
+    document.body.style.overflow = 'hidden';
+    document.body.style.userSelect = 'none';
+
+    return () => {
+      document.body.style.overflow = prev.overflow;
+      document.body.style.userSelect = prev.userSelect;
+    };
+  }, []);
   return (
     <div
-      className="fixed inset-0 z-99 flex items-center justify-center bg-black/20"
+      className="fixed inset-0 z-99 flex items-center justify-center bg-black/20 select-none"
       onClick={() => {
         onCancel?.();
         hideModal();
       }}
+      onDragStart={(e) => e.preventDefault()}
     >
       <div
         className="w-85 rounded-2xl bg-neutral-100 py-4 shadow-lg"

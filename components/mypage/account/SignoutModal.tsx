@@ -1,12 +1,32 @@
-import { HTMLAttributes } from 'react';
-import { SignoutForm } from './SignoutForm';
+import { HTMLAttributes, useEffect } from 'react';
+import { SignoutForm, SignoutFormValues } from './SignoutForm';
 import { cn } from '@/lib/utils/tailwindHelper';
 
 interface DialogModalProps extends HTMLAttributes<HTMLDivElement> {
   onClose: () => void;
 }
 
-export default function SignoutModal({ onClose, className }: DialogModalProps) {
+export default function SignoutModal({
+  handleSignout,
+  savedFormValues,
+  onClose,
+  className,
+}: DialogModalProps) {
+  // 오버레이 영역 스크롤 방지
+  useEffect(() => {
+    const prev = {
+      overflow: document.body.style.overflow,
+      userSelect: document.body.style.userSelect,
+    };
+
+    document.body.style.overflow = 'hidden';
+    document.body.style.userSelect = 'none';
+
+    return () => {
+      document.body.style.overflow = prev.overflow;
+      document.body.style.userSelect = prev.userSelect;
+    };
+  }, []);
   return (
     <div
       className={cn(
