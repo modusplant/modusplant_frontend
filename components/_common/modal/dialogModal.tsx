@@ -10,7 +10,7 @@ interface DialogModalProps {
   onCancel?: () => void;
   hideModal: () => void;
   align?: 'center';
-  preserveLineBreak?: boolean;
+  shouldUseLineBreak?: boolean;
 }
 
 export default function DialogModal({
@@ -22,12 +22,15 @@ export default function DialogModal({
   onCancel,
   hideModal,
   align,
-  preserveLineBreak,
+  shouldUseLineBreak,
 }: DialogModalProps) {
   return (
     <div
       className="fixed inset-0 z-99 flex items-center justify-center bg-black/20"
-      onClick={hideModal}
+      onClick={() => {
+        onCancel?.();
+        hideModal();
+      }}
     >
       <div
         className="w-85 rounded-2xl bg-neutral-100 py-4 shadow-lg"
@@ -38,7 +41,7 @@ export default function DialogModal({
             className={cn(
               'text-neutral-10 text-xl text-[17px] font-semibold',
               align === 'center' && 'text-center',
-              preserveLineBreak && 'whitespace-pre-line'
+              shouldUseLineBreak && 'whitespace-pre-line'
             )}
           >
             {title}

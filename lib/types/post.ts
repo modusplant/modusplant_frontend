@@ -25,6 +25,7 @@ export interface GetPostsRequest {
 export interface GetPostsResponseData {
   posts: PostData[];
   nextPostId: string | null;
+  nextPostPublishedAt?: string;
   hasNext: boolean;
   size: number;
 }

@@ -49,6 +49,9 @@ dependency-graph*.svg
 .vscode
 /docs
 
+# codex
+.agents/
+
 .eslintcache
 *storybook.log
 storybook-static

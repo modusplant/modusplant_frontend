@@ -1,4 +1,4 @@
-import { AuthProvider } from '@/lib/types/member';
+import { AuthProvider } from '@/lib/constants/oauth';
 
 /**
  * 소셜 로그인 정보 섹션
@@ -11,9 +11,11 @@ export default function SocialLoginInfo({
 }) {
   const providerName = {
     BASIC: '기본',
-    Google: '구글',
-    Kakao: '카카오',
-    Naver: '네이버',
+    GOOGLE: '구글',
+    BASIC_GOOGLE: '구글',
+    KAKAO: '카카오',
+    BASIC_KAKAO: '카카오',
+    NAVER: '네이버',
   }[authProvider];
 
   return (

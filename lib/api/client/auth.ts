@@ -6,8 +6,9 @@ import {
   SignupRequest,
   EmailVerificationResponseData,
   NicknameCheckResponseData,
+  SignoutRequestBody,
 } from '@/lib/types/auth';
-import { clientApiInstance } from '../instances/clientInstance';
+import { clientApiInstance } from '@/lib/api/instances/clientInstance';
 import { AUTH_ENDPOINTS } from '@/lib/constants/endpoints';
 
 /**
@@ -63,10 +64,7 @@ export const authApi = {
             : response.message,
       };
     } catch (error: any) {
-      return {
-        success: false,
-        message: error.message || '인증 메일 발송에 실패했습니다.',
-      };
+      throw error;
     }
   },
 
@@ -173,6 +171,17 @@ export const authApi = {
     return clientApiInstance.post<void>(AUTH_ENDPOINTS.CHANGE_EMAIL(userId), {
       currentEmail,
       newEmail,
+    });
+  },
+
+  /**
+   * 회원 탈퇴
+   * @param requestBody
+   * @returns
+   */
+  async signout(requestBody: SignoutRequestBody): Promise<ApiResponse<void>> {
+    return clientApiInstance.post<void>(AUTH_ENDPOINTS.SIGNOUT, {
+      ...requestBody,
     });
   },
 };

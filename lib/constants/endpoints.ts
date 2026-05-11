@@ -8,10 +8,11 @@ const API_V1 = '/api/v1';
  */
 export const AUTH_ENDPOINTS = {
   LOGIN: `/api/auth/login`,
-  KAKAO_LOGIN: `/api/v1/auth/social-login/kakao`,
-  GOOGLE_LOGIN: `/api/v1/auth/social-login/google`,
-  SOCIAL_SIGNUP: `/api/v1/auth/social-signup`,
-  SOCIAL_LINK: `/api/v1/auth/social-link`,
+  KAKAO_LOGIN: `${API_V1}/auth/social-login/kakao`,
+  GOOGLE_LOGIN: `${API_V1}/auth/social-login/google`,
+  SOCIAL_SIGNUP: `${API_V1}/auth/social-signup`,
+  SOCIAL_LINK: `${API_V1}/auth/social-link`,
+  CANCEL_SOCIAL_CONNECT: `${API_V1}/auth/social-connect`,
   SIGNUP: `/api/members/register`,
   TOKEN_REFRESH: `/api/auth/token/refresh`,
   CHECK_NICKNAME: (nickname: string) =>
@@ -25,13 +26,15 @@ export const AUTH_ENDPOINTS = {
   VERIFY_EMAIL_CODE: `/api/members/verify-email`,
   VERIFY_EMAIL_CODE_SEND: `/api/members/verify-email/send`,
   CHANGE_EMAIL: (userId: string) => `${API_V1}/members/${userId}/modify/email`,
+  // 회원탈퇴
+  SIGNOUT: `${API_V1}/members`,
 } as const;
 
 /**
  * 회원 관련 엔드포인트
  */
 export const MEMBER_ENDPOINTS = {
-  PROFILE: (userId: string) => `${API_V1}/members/${userId}/profile`,
+  PROFILE: () => `${API_V1}/members/profile`,
   AUTH_INFO: (userId: string) => `${API_V1}/members/${userId}/auth-info`,
 
   // 마이페이지
@@ -85,8 +88,8 @@ export const COMMENT_ENDPOINTS = {
   UPDATE_COMMENTS: () => `${API_V1}/communication/comments/update`,
   DELETE_COMMENT: (postUlid: string, path: string) =>
     `${API_V1}/communication/comments/post/${postUlid}/path/${path}`,
-  LIKE_COMMENT: (memberId: string, postUlid: string, path: string) =>
-    `${API_V1}/members/${memberId}/like/communication/post/${postUlid}/path/${path}`,
+  LIKE_COMMENT: (postUlid: string, path: string) =>
+    `${API_V1}/members/like/communication/post/${postUlid}/path/${path}`,
   MY_COMMENTS: (uuid: string) =>
     `${API_V1}/communication/comments/member/auth/${uuid}`,
 } as const;
@@ -99,6 +102,27 @@ export const NOTIFICATION_ENDPOINTS = {
   READ_ONE_NOTIFICATION: (id: string) => `${API_V1}/notifications/${id}/read`,
   READ_ALL_NOTIFICATIONS: () => `${API_V1}/notifications/read-all`,
   GET_UNREAD_NOTIFICATIONS_COUNT: () => `${API_V1}/notifications/unread-count`,
+};
+
+/**
+ * 검색 관련 엔드포인트
+ */
+export const SEARCH_ENDPOINTS = {
+  GET_SEARCH_RESULT: (params: {
+    size: number;
+    lastPostId?: string;
+    lastPostImportance?: number;
+    lastPostSimilarity?: number;
+    lastPostPublishedAt?: string;
+    keyword: string;
+    target: string;
+    sort: string;
+    primaryCategoryId?: string;
+    secondaryCategoryId?: string;
+  }) => `${API_V1}/search/posts${buildQueryString(params)}`,
+  GET_SEARCH_HISTORY: () => `${API_V1}/search/posts/history?size=10`,
+  DELETE_SEARCH_HISTORY: (keyword?: string) =>
+    `${API_V1}/search/posts/history/${keyword}`,
 };
 
 /**
