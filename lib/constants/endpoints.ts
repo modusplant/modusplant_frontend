@@ -56,10 +56,10 @@ export const POST_ENDPOINTS = {
   POST_DETAIL_EDIT: (postId: string) =>
     `${API_V1}/communication/posts/${postId}/data`,
 
-  LIKE_POST: (memberId: string, postUlid: string) =>
-    `${API_V1}/members/${memberId}/like/communication/post/${postUlid}`,
-  BOOKMARK_POST: (memberId: string, postUlid: string) =>
-    `${API_V1}/members/${memberId}/bookmark/communication/post/${postUlid}`,
+  LIKE_POST: (postUlid: string) =>
+    `${API_V1}/members/like/communication/post/${postUlid}`,
+  BOOKMARK_POST: (postUlid: string) =>
+    `${API_V1}/members/bookmark/communication/post/${postUlid}`,
   REPORT_POST: (postUlid: string) => `/api/v1/report/abuse/post/${postUlid}`,
 
   // 쿼리 파라미터를 포함한 엔드포인트 빌더
