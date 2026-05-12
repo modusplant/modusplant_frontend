@@ -153,22 +153,24 @@ export default function PostActions({
         </button>
       </div>
 
-      <Dropdown
-        isOpen={isDropdownOpen}
-        onClose={() => setIsDropdownOpen(false)}
-        trigger={
-          <button
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full"
-            aria-label="게시글 옵션"
-          >
-            <EllipsisVertical className="text-neutral-60 h-5 w-5" />
-          </button>
-        }
-        items={dropdownItems}
-        position="right"
-        width="w-24"
-      />
+      {user && (
+        <Dropdown
+          isOpen={isDropdownOpen}
+          onClose={() => setIsDropdownOpen(false)}
+          trigger={
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full"
+              aria-label="게시글 옵션"
+            >
+              <EllipsisVertical className="text-neutral-60 h-5 w-5" />
+            </button>
+          }
+          items={dropdownItems}
+          position="right"
+          width="w-24"
+        />
+      )}
     </div>
   );
 }
