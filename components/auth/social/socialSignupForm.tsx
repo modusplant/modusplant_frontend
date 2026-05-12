@@ -17,14 +17,16 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 export default function SocialSignupForm() {
-  const { signupData, handleSignupSubmit } = useSocialAuth();
+  const { signupData, handleSignupSubmit, isSocialAuthCompleted } =
+    useSocialAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!signupData) {
+    if (!signupData && !isSocialAuthCompleted.current) {
       router.replace('/login');
     }
-  }, [signupData, router]);
+  }, [signupData, router]); // eslint-disable-line react-hooks/exhaustive-deps
+  // isSocialAuthCompleted는 useRef로 항상 동일한 참조라 deps에 포함하지 않음
 
   const {
     register,

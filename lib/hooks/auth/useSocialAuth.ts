@@ -148,5 +148,6 @@ export function useSocialAuth() {
   return {
     signupData,
     handleSignupSubmit,
+    isSocialAuthCompleted,
   };
 }
