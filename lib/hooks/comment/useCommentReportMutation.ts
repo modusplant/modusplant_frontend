@@ -11,15 +11,12 @@ interface PostCommentReportParams {
 /**
  * 댓글 신고 Mutation 훅
  */
-export const useCommentReportMutation = (callbacks?: {
-  onSuccess?: () => void;
-}) => {
+export const useCommentReportMutation = () => {
   return useMutation<ApiResponse<void>, Error, PostCommentReportParams>({
     mutationFn: async ({ postUlid, path }) => {
       return memberApi.postCommentReport(postUlid, path);
     },
     onSuccess: () => {
-      callbacks?.onSuccess?.();
       showModal({
         type: 'snackbar',
         description: '댓글 신고가 접수되었습니다.',

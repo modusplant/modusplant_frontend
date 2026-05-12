@@ -20,17 +20,9 @@ export const useReportPostMutation = () => {
       });
     },
     onError: (error) => {
-      if (error.status === 409) {
-        showModal({
-          type: 'snackbar',
-          description: '이미 신고된 게시글 입니다.',
-        });
-        return;
-      }
-
       showModal({
         type: 'snackbar',
-        description: '게시글 신고에 실패했습니다.',
+        description: error.message || '게시글 신고에 실패했습니다.',
       });
     },
   });
