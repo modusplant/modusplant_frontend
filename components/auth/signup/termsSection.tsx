@@ -8,7 +8,6 @@ import TermsItem from './termsItem';
 import { FieldValues, Path, PathValue } from 'react-hook-form';
 
 export default function TermsSection<T extends FieldValues & WithTermsFields>({
-  register,
   errors,
   watch,
   setValue,
@@ -41,6 +40,16 @@ export default function TermsSection<T extends FieldValues & WithTermsFields>({
     });
   };
 
+  const handleIndividualChange = (
+    field: 'agreeToTerms' | 'agreeToPrivacy' | 'agreeToCommunity',
+    checked: boolean
+  ) => {
+    setValue(field as Path<T>, checked as PathValue<T, Path<T>>, {
+      shouldValidate: true,
+      shouldTouch: true,
+    });
+  };
+
   return (
     <div className="space-y-3">
       {/* 전체 동의 */}
@@ -68,7 +77,9 @@ export default function TermsSection<T extends FieldValues & WithTermsFields>({
           id="agreeToTerms"
           label={TERMS_LABELS.terms}
           checked={agreementValues.agreeToTerms}
-          register={register('agreeToTerms' as Path<T>)}
+          onChange={(checked) =>
+            handleIndividualChange('agreeToTerms', checked)
+          }
           isExpanded={contentState.showTermsContent}
           onToggle={() => toggleContent('showTermsContent')}
           content={TERMS_MAP.terms}
@@ -79,7 +90,9 @@ export default function TermsSection<T extends FieldValues & WithTermsFields>({
           id="agreeToPrivacy"
           label={TERMS_LABELS.privacy}
           checked={agreementValues.agreeToPrivacy}
-          register={register('agreeToPrivacy' as Path<T>)}
+          onChange={(checked) =>
+            handleIndividualChange('agreeToPrivacy', checked)
+          }
           isExpanded={contentState.showPrivacyContent}
           onToggle={() => toggleContent('showPrivacyContent')}
           content={TERMS_MAP.privacy}
@@ -90,7 +103,9 @@ export default function TermsSection<T extends FieldValues & WithTermsFields>({
           id="agreeToCommunity"
           label={TERMS_LABELS.community}
           checked={agreementValues.agreeToCommunity}
-          register={register('agreeToCommunity' as Path<T>)}
+          onChange={(checked) =>
+            handleIndividualChange('agreeToCommunity', checked)
+          }
           isExpanded={contentState.showCommunityContent}
           onToggle={() => toggleContent('showCommunityContent')}
           content={TERMS_MAP.community}

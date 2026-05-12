@@ -28,7 +28,7 @@ export default function SignupForm() {
     watch,
     setValue,
     trigger,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
   } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -102,13 +102,6 @@ export default function SignupForm() {
     }
   };
 
-  // 폼 유효성 검사
-  const formData = watch();
-  const isFormValid =
-    formData.agreeToTerms &&
-    formData.agreeToPrivacy &&
-    !Object.keys(errors).length;
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 md:space-y-10">
       <div className="flex flex-col gap-7.5">
@@ -133,19 +126,14 @@ export default function SignupForm() {
       </div>
 
       {/* 약관 동의 섹션 */}
-      <TermsSection
-        register={register}
-        errors={errors}
-        watch={watch}
-        setValue={setValue}
-      />
+      <TermsSection errors={errors} watch={watch} setValue={setValue} />
 
       {/* 회원가입 버튼 */}
       <Button
         type="submit"
-        disabled={!isFormValid || isSubmitting}
+        disabled={!isValid || isSubmitting}
         className="w-full rounded-lg py-3 text-[16px] font-semibold md:py-4"
-        variant={isFormValid || !isSubmitting ? 'point' : 'secondary'}
+        variant={isValid || !isSubmitting ? 'point' : 'secondary'}
       >
         {isSubmitting ? (
           <Image

@@ -106,7 +106,8 @@ export default function CommentItem({
           <div className="w-full">
             <CommentHeader
               nickname={nickname}
-              profileImagePath={profileImagePath}
+              postUlid={postId}
+              path={path}
               isMyComment={isMyComment}
               onDelete={handleDelete}
               onUpdate={handleUpdateModeActive}

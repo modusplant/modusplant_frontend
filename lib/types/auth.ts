@@ -210,7 +210,6 @@ export type WithTermsFields = {
   agreeToCommunity: boolean;
 };
 export interface TermsSectionProps<T extends FieldValues & WithTermsFields> {
-  register: UseFormRegister<T>;
   errors: FieldErrors<T>;
   watch: UseFormWatch<T>;
   setValue: UseFormSetValue<T>;
