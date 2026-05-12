@@ -4,6 +4,7 @@ import { useEmailVerification } from '@/lib/hooks/auth/useEmailVerification';
 import { Input } from '@/components/_common/input';
 import Button from '@/components/_common/button';
 import { EmailSectionProps } from '@/lib/types/auth';
+import Image from 'next/image';
 
 export default function EmailSection({
   register,
@@ -23,6 +24,8 @@ export default function EmailSection({
     handleRequestVerification,
     handleResendVerification,
     handleVerifyCode,
+    isVerifyLoading,
+    isRequestLoading,
   } = useEmailVerification({ trigger, watch });
 
   const emailDisabled =
@@ -56,11 +59,23 @@ export default function EmailSection({
               ? handleResendVerification(watchedEmail)
               : handleRequestVerification(watchedEmail)
           }
-          disabled={emailDisabled}
+          disabled={emailDisabled || isRequestLoading}
           className="w-full min-w-23 cursor-pointer rounded-lg px-5 py-3 text-sm font-medium sm:w-auto"
           variant={!emailDisabled ? 'point' : 'secondary'}
         >
-          {canResend ? '재요청' : '인증요청'}
+          {isRequestLoading ? (
+            <Image
+              src={'/icon/loading.gif'}
+              alt="Loading"
+              width={20}
+              height={20}
+              unoptimized
+            />
+          ) : canResend ? (
+            '재요청'
+          ) : (
+            '인증요청'
+          )}
         </Button>
       </div>
 
@@ -86,11 +101,21 @@ export default function EmailSection({
             <Button
               type="button"
               onClick={() => handleVerifyCode(watchedEmail)}
-              disabled={!watch('verificationCode')}
+              disabled={!watch('verificationCode') || isVerifyLoading}
               className="w-full min-w-23 rounded-lg px-5 py-3 text-sm font-medium sm:w-auto"
               variant={watch('verificationCode') ? 'point' : 'secondary'}
             >
-              확인
+              {isVerifyLoading ? (
+                <Image
+                  src={'/icon/loading.gif'}
+                  alt="Loading"
+                  width={20}
+                  height={20}
+                  unoptimized
+                />
+              ) : (
+                '확인'
+              )}
             </Button>
           </div>
 

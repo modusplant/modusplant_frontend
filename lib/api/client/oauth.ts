@@ -37,7 +37,7 @@ export const OauthApi = {
    */
   async kakaoLogin(code: string): Promise<ApiResponse<SocialLoginResponse>> {
     const response = await clientApiInstance.post<SocialLoginResponse>(
-      AUTH_ENDPOINTS.KAKAO_LOGIN,
+      AUTH_ENDPOINTS.SOCIAL_LOGIN('kakao'),
       { code },
       { skipAuth: true }
     );
@@ -49,7 +49,7 @@ export const OauthApi = {
    */
   async googleLogin(code: string): Promise<ApiResponse<SocialLoginResponse>> {
     const response = await clientApiInstance.post<SocialLoginResponse>(
-      AUTH_ENDPOINTS.GOOGLE_LOGIN,
+      AUTH_ENDPOINTS.SOCIAL_LOGIN('google'),
       { code },
       { skipAuth: true }
     );
