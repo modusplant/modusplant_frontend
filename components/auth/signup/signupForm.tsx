@@ -47,7 +47,7 @@ export default function SignupForm() {
   const onSubmit = async (data: SignupFormValues) => {
     try {
       // 1. 회원가입 API 호출
-      const signupData = {
+      const signupPayload = {
         email: data.email,
         password: data.password,
         nickname: data.nickname,
@@ -56,7 +56,7 @@ export default function SignupForm() {
         agreedCommunityPolicyVersion: TERMS_VERSIONS.communityPolicy,
       };
 
-      const signupResult = await authApi.signup(signupData);
+      const signupResult = await authApi.signup(signupPayload);
 
       if (signupResult.status === 200) {
         // 2. 회원가입 성공 후 자동 로그인
