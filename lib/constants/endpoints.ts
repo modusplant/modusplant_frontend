@@ -30,6 +30,11 @@ export const AUTH_ENDPOINTS = {
   CHANGE_EMAIL: (userId: string) => `${API_V1}/members/${userId}/modify/email`,
   // 회원탈퇴
   SIGNOUT: `${API_V1}/members`,
+  // 마이페이지 소셜 연동
+  MYPAGE_SOCIAL_LINK: (provider: AuthProviderParam) =>
+    `${API_V1}/members/social/${provider}`,
+  MYPAGE_SOCIAL_UNLINK: (provider: AuthProviderParam) =>
+    `${API_V1}/members/social/${provider}/unlink`,
 } as const;
 
 /**
