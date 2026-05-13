@@ -67,6 +67,7 @@ export const POST_ENDPOINTS = {
     `${API_V1}/members/like/communication/post/${postUlid}`,
   BOOKMARK_POST: (postUlid: string) =>
     `${API_V1}/members/bookmark/communication/post/${postUlid}`,
+  REPORT_POST: (postUlid: string) => `/api/v1/report/abuse/post/${postUlid}`,
 
   // 쿼리 파라미터를 포함한 엔드포인트 빌더
   withQueryParams: (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { type ComponentProps, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Heart, Bookmark, EllipsisVertical } from 'lucide-react';
 import { postApi } from '@/lib/api/client/post';
@@ -8,6 +8,9 @@ import { useAuthStore } from '@/lib/store/authStore';
 import { showModal } from '@/lib/store/modalStore';
 import { usePostInteraction } from '@/lib/hooks/community/usePostInteraction';
 import Dropdown from '@/components/_common/dropdown';
+import { useReportPostMutation } from '@/lib/hooks/community/useReportPostMutation';
+
+type DropdownItems = NonNullable<ComponentProps<typeof Dropdown>['items']>;
 
 interface PostActionsProps {
   postId: string;
@@ -51,6 +54,19 @@ export default function PostActions({
     router.push(`/community/write/edit/${postId}`);
   };
 
+  const handleReport = () => {
+    showModal({
+      title: '부적절한 게시글로 신고하시겠어요?',
+      description: '신고 내용은 운영 정책에 따라 검토됩니다.',
+      type: 'two-button',
+      buttonText: '신고',
+      onConfirm: () => reportPost(postId),
+    });
+  };
+
+  const { mutate: reportPost, isPending: isReporting } =
+    useReportPostMutation();
+
   const handleDelete = async () => {
     showModal({
       title: '게시글을 삭제하시겠습니까?',
@@ -81,6 +97,26 @@ export default function PostActions({
       setIsDeleting(false);
     }
   };
+
+  const dropdownItems: DropdownItems = isAuthor
+    ? [
+        {
+          label: '수정',
+          onClick: handleEdit,
+        },
+        {
+          label: '삭제',
+          onClick: handleDelete,
+          disabled: isDeleting,
+        },
+      ]
+    : [
+        {
+          label: '신고',
+          onClick: handleReport,
+          disabled: isReporting,
+        },
+      ];
 
   return (
     <div className="flex w-full items-center justify-between">
@@ -117,8 +153,7 @@ export default function PostActions({
         </button>
       </div>
 
-      {/* 수정/삭제 버튼 (작성자만) */}
-      {isAuthor && (
+      {user && (
         <Dropdown
           isOpen={isDropdownOpen}
           onClose={() => setIsDropdownOpen(false)}
@@ -131,17 +166,7 @@ export default function PostActions({
               <EllipsisVertical className="text-neutral-60 h-5 w-5" />
             </button>
           }
-          items={[
-            {
-              label: '수정',
-              onClick: handleEdit,
-            },
-            {
-              label: '삭제',
-              onClick: handleDelete,
-              disabled: isDeleting,
-            },
-          ]}
+          items={dropdownItems}
           position="right"
           width="w-24"
         />
