@@ -18,7 +18,7 @@ interface OAuthActions {
 
 type OAuthStore = OAuthState & OAuthActions;
 
-export const useOAuthStore = create<OAuthStore>()(
+export const useSocialSignupStateStore = create<OAuthStore>()(
   persist(
     (set) => ({
       signupData: null,

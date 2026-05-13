@@ -5,14 +5,14 @@ import { SocialSignupFormValues } from '@/lib/constants/schema';
 import { TERMS_VERSIONS } from '@/lib/constants/terms';
 import { useAuthStore } from '@/lib/store/authStore';
 import useModalStore from '@/lib/store/modalStore';
-import { useOAuthStore } from '@/lib/store/oauthStore';
+import { useSocialSignupStateStore } from '@/lib/store/socialSignupStateStore';
 import { processSuccessfulAuth } from '@/lib/utils/auth/processSuccessfulAuth';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef } from 'react';
 
 export function useSocialAuth() {
   const router = useRouter();
-  const { signupData, clearSignupData } = useOAuthStore();
+  const { signupData, clearSignupData } = useSocialSignupStateStore();
   const login = useAuthStore((state) => state.login);
   const showModal = useModalStore((state) => state.showModal);
 
@@ -30,14 +30,17 @@ export function useSocialAuth() {
 
     // 브라우저 이벤트 발생 시 실행되는 함수
     const cancelConnect = () => {
-      if (isSocialAuthCompleted.current || !useOAuthStore.getState().signupData)
+      if (
+        isSocialAuthCompleted.current ||
+        !useSocialSignupStateStore.getState().signupData
+      )
         return;
 
       fetch(AUTH_ENDPOINTS.CANCEL_SOCIAL_CONNECT, {
         method: 'DELETE',
         keepalive: true, // 언로드 중에도 요청 보장
       });
-      useOAuthStore.getState().clearSignupData();
+      useSocialSignupStateStore.getState().clearSignupData();
     };
 
     // 탭 닫기, 새로고침, 주소창 직접 입력
