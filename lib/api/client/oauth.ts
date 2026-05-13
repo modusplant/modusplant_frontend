@@ -87,8 +87,8 @@ export const OauthApi = {
   async mypageSocialLink(
     code: string,
     provider: AuthProviderParam
-  ): Promise<ApiResponse> {
-    const response = await clientApiInstance.post<ApiResponse>(
+  ): Promise<ApiResponse<void>> {
+    const response = await clientApiInstance.post<void>(
       AUTH_ENDPOINTS.MYPAGE_SOCIAL_LINK(provider),
       { code }
     );
@@ -101,8 +101,8 @@ export const OauthApi = {
   async mypageSocialUnlink(
     code: string,
     provider: AuthProviderParam
-  ): Promise<ApiResponse> {
-    const response = await clientApiInstance.post<ApiResponse>(
+  ): Promise<ApiResponse<void>> {
+    const response = await clientApiInstance.post<void>(
       AUTH_ENDPOINTS.MYPAGE_SOCIAL_UNLINK(provider),
       { code }
     );
