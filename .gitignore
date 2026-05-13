@@ -50,7 +50,7 @@ dependency-graph*.svg
 /docs
 
 # codex
-.agents/
+AGENTS.md
 
 .eslintcache
 *storybook.log
