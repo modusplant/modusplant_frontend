@@ -196,6 +196,7 @@ export interface NicknameSectionProps<
   trigger: UseFormTrigger<T>;
   watch: UseFormWatch<T>;
   errors: { nickname?: FieldError };
+  onVerified: (isValid: boolean) => void;
   className?: string;
 }
 

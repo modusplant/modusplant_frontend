@@ -17,10 +17,13 @@ import EmailSection from './emailSection';
 import PasswordSection from './passwordSection';
 import NicknameSection from './nicknameSection';
 import TermsSection from './termsSection';
+import { useState } from 'react';
 
 export default function SignupForm() {
   const router = useRouter();
   const login = useAuthStore((state) => state.login);
+
+  const [isNicknameVerified, setIsNicknameVerified] = useState(false);
 
   const {
     register,
@@ -122,6 +125,7 @@ export default function SignupForm() {
           errors={errors}
           watch={watch}
           trigger={trigger}
+          onVerified={setIsNicknameVerified}
         />
       </div>
 
@@ -131,9 +135,13 @@ export default function SignupForm() {
       {/* 회원가입 버튼 */}
       <Button
         type="submit"
-        disabled={!isValid || isSubmitting}
+        disabled={!isValid || !isNicknameVerified || isSubmitting}
         className="w-full rounded-lg py-3 text-[16px] font-semibold md:py-4"
-        variant={isValid || !isSubmitting ? 'point' : 'secondary'}
+        variant={
+          !isValid || !isNicknameVerified || isSubmitting
+            ? 'secondary'
+            : 'point'
+        }
       >
         {isSubmitting ? (
           <Image

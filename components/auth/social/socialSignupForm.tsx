@@ -14,12 +14,14 @@ import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import { useSocialAuth } from '@/lib/hooks/auth/useSocialAuth';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function SocialSignupForm() {
   const { signupData, handleSignupSubmit, isSocialAuthCompleted } =
     useSocialAuth();
   const router = useRouter();
+
+  const [isNicknameVerified, setIsNicknameVerified] = useState(false);
 
   useEffect(() => {
     if (!signupData && !isSocialAuthCompleted.current) {
@@ -64,6 +66,7 @@ export default function SocialSignupForm() {
           errors={errors}
           watch={watch}
           trigger={trigger}
+          onVerified={setIsNicknameVerified}
         />
 
         {/* 프로필 소개글 */}
@@ -87,9 +90,13 @@ export default function SocialSignupForm() {
 
       <Button
         type="submit"
-        disabled={!isValid || isSubmitting}
+        disabled={!isValid || !isNicknameVerified || isSubmitting}
         className="w-full rounded-lg py-3 text-[16px] font-semibold md:py-4"
-        variant={!isValid || isSubmitting ? 'secondary' : 'point'}
+        variant={
+          !isValid || !isNicknameVerified || isSubmitting
+            ? 'secondary'
+            : 'point'
+        }
       >
         {isSubmitting ? (
           <Image
