@@ -7,7 +7,6 @@ import Button from '@/components/_common/button';
 import { NicknameSectionProps, WithNicknameField } from '@/lib/types/auth';
 import Image from 'next/image';
 import { FieldValues, Path } from 'react-hook-form';
-import { on } from 'events';
 
 export default function NicknameSection<
   T extends FieldValues & WithNicknameField,
@@ -17,7 +16,7 @@ export default function NicknameSection<
   watch,
   errors,
   className,
-  onVerified,
+  onNicknameVerified,
 }: NicknameSectionProps<T>) {
   const watchedNickname = watch('nickname' as Path<T>);
 
@@ -39,9 +38,9 @@ export default function NicknameSection<
 
     const res = await checkNickname(watchedNickname);
     if (!res.available) {
-      onVerified(false);
+      onNicknameVerified(false);
     } else {
-      onVerified(true);
+      onNicknameVerified(true);
     }
   };
 
@@ -49,7 +48,7 @@ export default function NicknameSection<
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     register('nickname' as Path<T>).onChange(e);
     resetVerification(); // 닉네임 변경 시 검증 상태 초기화
-    onVerified(false); // 닉네임 바꾸면 다시 미검증 상태
+    onNicknameVerified(false); // 닉네임 바꾸면 다시 미검증 상태
   };
 
   return (

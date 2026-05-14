@@ -66,7 +66,7 @@ export default function SocialSignupForm() {
           errors={errors}
           watch={watch}
           trigger={trigger}
-          onVerified={setIsNicknameVerified}
+          onNicknameVerified={setIsNicknameVerified}
         />
 
         {/* 프로필 소개글 */}
