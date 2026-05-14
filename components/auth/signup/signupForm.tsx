@@ -127,7 +127,7 @@ export default function SignupForm() {
           errors={errors}
           watch={watch}
           trigger={trigger}
-          onVerified={setIsNicknameVerified}
+          onNicknameVerified={setIsNicknameVerified}
         />
       </div>
 
