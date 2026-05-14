@@ -170,6 +170,7 @@ export interface EmailSectionProps {
     email?: { message?: string };
     verificationCode?: { message?: string };
   };
+  onEmailVerified: (isValid: boolean) => void;
   className?: string;
 }
 

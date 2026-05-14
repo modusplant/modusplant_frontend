@@ -23,6 +23,7 @@ export default function SignupForm() {
   const router = useRouter();
   const login = useAuthStore((state) => state.login);
 
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [isNicknameVerified, setIsNicknameVerified] = useState(false);
 
   const {
@@ -114,6 +115,7 @@ export default function SignupForm() {
           errors={errors}
           watch={watch}
           trigger={trigger}
+          onEmailVerified={setIsEmailVerified}
         />
 
         {/* 비밀번호 섹션 */}
@@ -135,10 +137,12 @@ export default function SignupForm() {
       {/* 회원가입 버튼 */}
       <Button
         type="submit"
-        disabled={!isValid || !isNicknameVerified || isSubmitting}
+        disabled={
+          !isValid || !isEmailVerified || !isNicknameVerified || isSubmitting
+        }
         className="w-full rounded-lg py-3 text-[16px] font-semibold md:py-4"
         variant={
-          !isValid || !isNicknameVerified || isSubmitting
+          !isValid || !isEmailVerified || !isNicknameVerified || isSubmitting
             ? 'secondary'
             : 'point'
         }
