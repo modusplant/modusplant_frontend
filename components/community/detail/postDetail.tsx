@@ -11,7 +11,7 @@ interface PostDetailProps {
 
 export default function PostDetail({ postId, initialData }: PostDetailProps) {
   return (
-    <div className="mx-auto max-w-212 px-5 py-12">
+    <div className="mx-auto max-w-212 px-5 py-12 pb-30">
       {/* 헤더: 카테고리 + 작성자 정보 */}
       <PostDetailHeader
         secondaryCategory={initialData.secondaryCategory}
