@@ -143,13 +143,13 @@ export default function SecondaryCategoryFilter({
           "hover:border-primary-50 focus:border-primary-50 focus:ring-primary-10 focus:ring-2 focus:outline-none",
           "cursor-pointer",
           isOpen && "border-primary-50 ring-primary-10 ring-2",
-          isDisabled && "cursor-default",
+          isDisabled && "pointer-events-none",
           {
             // filter 스타일
             "text-neutral-20 h-10 w-40 rounded-full px-4 py-3 text-sm font-medium":
               !isSelector,
             // selector 스타일
-            "text-neutral-20 h-11 w-full rounded-lg px-3 py-2.5 text-[15px] leading-normal font-medium tracking-[-0.01em] md:w-60 md:px-4.5":
+            "text-neutral-20 h-11 w-full rounded-lg px-4.5 py-3 text-[15px] leading-normal font-medium tracking-[-0.01em] md:w-60 md:px-4.5":
               isSelector,
           }
         )}

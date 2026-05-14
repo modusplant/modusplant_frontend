@@ -19,7 +19,7 @@ function ContentEditor({
   return (
     <div className="border-surface-stroke flex w-full flex-col self-stretch rounded-[10px] border">
       {/* 본문 입력 영역 */}
-      <div className="flex flex-1 flex-col gap-2.5 self-stretch p-5">
+      <div className="flex flex-1 flex-col gap-2.5 self-stretch p-4.5">
         <textarea
           value={textContent}
           onChange={(e) => onTextChange(e.target.value)}
