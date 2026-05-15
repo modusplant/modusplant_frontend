@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import { ApiError } from '@/lib/types/common';
 import { useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
 import { authApi } from '@/lib/api/client/auth';
 import { SignoutRequestBody } from '@/lib/types/auth';
@@ -13,6 +12,7 @@ import { useMemberAuthInfo } from '@/lib/hooks/mypage/useMemberAuthInfo';
 import { showModal } from '@/lib/store/modalStore';
 import { parseAuthProvider } from '@/lib/utils/oauth/parseAuthProvider';
 import { buildAuthUrl } from '@/lib/utils/oauth/buildAuthUrl';
+import { clientApiInstance } from '@/lib/api/instances/clientInstance';
 
 export const useSignout = () => {
   const queryClient = useQueryClient();
@@ -21,7 +21,6 @@ export const useSignout = () => {
 
   const { data } = useMemberAuthInfo(user?.id);
 
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
 
@@ -67,13 +66,12 @@ export const useSignout = () => {
 
       await authApi.signout(requestBody); // 회원 탈퇴 요청
       queryClient.clear(); // 쿼리 캐시 초기화
-      reset(); // 전역 유저 상태 초기화
-      deleteAllCookies(); // client accessToken 삭제
+      reset(); // zustand 유저 상태 초기화
+      deleteAllCookies(); // client cookie 삭제
+      await clientApiInstance.post('/api/auth/clear-cookies'); // server cookie 삭제
+      sessionStorage.removeItem('signoutForm'); // sessionStorage 정리
 
-      // sessionStorage 정리
-      sessionStorage.removeItem('signoutForm');
-
-      router.replace('/');
+      window.location.href = '/';
       showModal({ description: '회원 탈퇴되었습니다.', type: 'snackbar' });
     } catch (error) {
       if (error instanceof ApiError) {

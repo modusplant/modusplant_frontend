@@ -13,6 +13,7 @@ import { useLinkError } from '@/lib/hooks/mypage/useLinkError';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { SignoutFormValues } from './SignoutForm';
 import { useSignout } from '@/lib/hooks/auth/useSignout';
+import { showModal } from '@/lib/store/modalStore';
 
 /**
  * 계정 설정 섹션
@@ -48,7 +49,7 @@ export default function AccountSection() {
 
   const { data: authInfo, isLoading, error } = useMemberAuthInfo(user?.id);
 
-  const { executeSignout, handleSignout } = useSignout();
+  const { executeSignout, handleSignout, error: signoutError } = useSignout();
 
   const isSocialMember = authInfo?.authProvider !== 'BASIC';
 
@@ -72,7 +73,7 @@ export default function AccountSection() {
       authProvider: signoutProvider,
     });
   }, []);
-  console.log({ savedFormValues });
+
   const openSignoutModal = () => {
     setSavedFormValues(undefined);
     open();
@@ -82,6 +83,15 @@ export default function AccountSection() {
     close();
     setSavedFormValues(undefined);
   };
+
+  useEffect(() => {
+    if (signoutError) {
+      showModal({
+        type: 'snackbar',
+        description: '회원탈퇴에 실패했어요. 다시 시도해주세요.',
+      });
+    }
+  }, [signoutError]);
 
   if (isLoading) {
     return (
