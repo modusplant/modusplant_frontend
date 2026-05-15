@@ -95,10 +95,10 @@ export const SignoutForm = ({
     <div className={cn(className)}>
       <form
         onSubmit={handleSubmit(handleSignout)}
-        className="text-neutral-20 flex flex-col gap-7.5"
+        className="text-neutral-20 flex flex-col gap-3 sm:gap-5 md:gap-7.5"
       >
         <div className="flex flex-col items-center justify-center">
-          <p className="typo-bold20 pb-6.5 text-[24px]">회원탈퇴</p>
+          <p className="typo-bold20 pb-2 text-[24px] sm:pb-6.5">회원탈퇴</p>
           <p className="typo-regular14 text-neutral-20 text-[16px]">
             탈퇴 하기 전 아래 내용을 확인해주세요
           </p>
@@ -152,7 +152,7 @@ export const SignoutForm = ({
           />
         </div>
         <div className="flex flex-col gap-6.5">
-          <ul className="bg-surface-99 typo-regular14 text-neutral-20 list-disc rounded-lg p-4 pl-10 text-[16px] leading-8">
+          <ul className="bg-surface-99 typo-regular14 text-neutral-20 list-disc rounded-lg p-4 pl-10 leading-5 sm:text-[16px] sm:leading-8">
             <li>탈퇴시 개인정보에 해당하는 정보가 모두 삭제됩니다.</li>
             <li>탈퇴 후에도 작성한 게시글, 댓글, 대댓글 정보는 유지됩니다.</li>
             <li>탈퇴 후 동일한 이메일 정보를 사용하여 재가입할 수 있습니다.</li>
