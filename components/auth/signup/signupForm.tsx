@@ -17,10 +17,14 @@ import EmailSection from './emailSection';
 import PasswordSection from './passwordSection';
 import NicknameSection from './nicknameSection';
 import TermsSection from './termsSection';
+import { useState } from 'react';
 
 export default function SignupForm() {
   const router = useRouter();
   const login = useAuthStore((state) => state.login);
+
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [isNicknameVerified, setIsNicknameVerified] = useState(false);
 
   const {
     register,
@@ -47,7 +51,7 @@ export default function SignupForm() {
   const onSubmit = async (data: SignupFormValues) => {
     try {
       // 1. 회원가입 API 호출
-      const signupData = {
+      const signupPayload = {
         email: data.email,
         password: data.password,
         nickname: data.nickname,
@@ -56,7 +60,7 @@ export default function SignupForm() {
         agreedCommunityPolicyVersion: TERMS_VERSIONS.communityPolicy,
       };
 
-      const signupResult = await authApi.signup(signupData);
+      const signupResult = await authApi.signup(signupPayload);
 
       if (signupResult.status === 200) {
         // 2. 회원가입 성공 후 자동 로그인
@@ -111,6 +115,7 @@ export default function SignupForm() {
           errors={errors}
           watch={watch}
           trigger={trigger}
+          onEmailVerified={setIsEmailVerified}
         />
 
         {/* 비밀번호 섹션 */}
@@ -122,6 +127,7 @@ export default function SignupForm() {
           errors={errors}
           watch={watch}
           trigger={trigger}
+          onNicknameVerified={setIsNicknameVerified}
         />
       </div>
 
@@ -131,9 +137,15 @@ export default function SignupForm() {
       {/* 회원가입 버튼 */}
       <Button
         type="submit"
-        disabled={!isValid || isSubmitting}
+        disabled={
+          !isValid || !isEmailVerified || !isNicknameVerified || isSubmitting
+        }
         className="w-full rounded-lg py-3 text-[16px] font-semibold md:py-4"
-        variant={isValid || !isSubmitting ? 'point' : 'secondary'}
+        variant={
+          !isValid || !isEmailVerified || !isNicknameVerified || isSubmitting
+            ? 'secondary'
+            : 'point'
+        }
       >
         {isSubmitting ? (
           <Image

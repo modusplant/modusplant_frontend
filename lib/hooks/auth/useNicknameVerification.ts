@@ -17,7 +17,11 @@ export const useNicknameVerification = () => {
   // 닉네임 중복 확인
   const checkNickname = useCallback(async (nickname: string) => {
     if (!nickname.trim()) {
-      return { success: false, message: '닉네임을 입력해주세요.' };
+      return {
+        success: false,
+        available: false,
+        message: '닉네임을 입력해주세요.',
+      };
     }
 
     setIsLoading(true);
