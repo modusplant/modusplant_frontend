@@ -26,10 +26,10 @@ export const OauthCallback = ({
   const queryClient = useQueryClient();
   const { reset } = useAuthStore();
 
+  const intent = parseState(state) ?? { action: 'LOGIN' };
+
   useEffect(() => {
     if (!code) return;
-
-    const intent = parseState(state) ?? { action: 'LOGIN' };
 
     const runCallback = async () => {
       switch (intent.action) {
@@ -105,9 +105,18 @@ export const OauthCallback = ({
     };
 
     runCallback();
-  }, [code, router, provider, state, queryClient, reset]);
+  }, [code, router, provider, state, queryClient, reset, intent]);
 
-  return (
-    <div>{provider === 'google' ? '구글' : '카카오'} 로그인 처리중...</div>
-  );
+  if (intent.action === 'SIGNOUT' || intent.action === 'UNLINK') {
+    return (
+      <div>
+        {provider === 'google' ? '구글' : '카카오'} 연동 해제를 위한 로그인 시도
+        중...
+      </div>
+    );
+  } else {
+    return (
+      <div>{provider === 'google' ? '구글' : '카카오'} 로그인 처리 중...</div>
+    );
+  }
 };
