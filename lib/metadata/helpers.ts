@@ -70,6 +70,12 @@ export function createMetadata({
     alternates: {
       canonical: url,
     },
+    verification: {
+      google:
+        url === SITE_CONFIG.domain
+          ? "RdUtFq3eNV7ijA0xIasmh166791jTA0fcIf6lOHh53E"
+          : "",
+    },
   };
 }
 
