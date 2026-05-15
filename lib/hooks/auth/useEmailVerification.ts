@@ -30,6 +30,10 @@ export const useEmailVerification = ({
   const [isRequestLoading, setIsRequestLoading] = useState(false);
   const [isVerifyLoading, setIsVerifyLoading] = useState(false);
 
+  const [duplicateEmailError, setDuplicateEmailError] = useState<string | null>(
+    null
+  );
+
   // 카운트다운 타이머
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -160,6 +164,8 @@ export const useEmailVerification = ({
   // 인증 요청 핸들러
   const handleRequestVerification = useCallback(
     async (email: string) => {
+      setDuplicateEmailError(null); // 재요청 시 초기화
+
       // trigger가 제공된 경우에만 유효성 검사
       if (trigger) {
         const emailValid = await trigger('email');
@@ -177,15 +183,19 @@ export const useEmailVerification = ({
         return result;
       } catch (error: any) {
         if (error.status === 409) {
-          showModal({
-            type: 'two-button',
-            title: error.message,
-            description: '로그인 페이지로 이동하시겠습니까?',
-            buttonText: '이동하기',
-            onConfirm: () => {
-              router.push('/login');
-            },
-          });
+          if (error.code === 'already_registered_basic_email') {
+            setDuplicateEmailError('이미 사용 중인 이메일입니다.');
+          } else {
+            showModal({
+              type: 'two-button',
+              title: error.message,
+              description: '로그인 페이지로 이동하시겠습니까?',
+              buttonText: '이동하기',
+              onConfirm: () => {
+                router.push('/login');
+              },
+            });
+          }
         } else {
           showModal({
             type: 'snackbar',
@@ -248,6 +258,7 @@ export const useEmailVerification = ({
     verifyCode,
     resetVerification,
     formatTime,
+    duplicateEmailError,
     // 핸들러 함수들
     handleRequestVerification,
     handleResendVerification,
