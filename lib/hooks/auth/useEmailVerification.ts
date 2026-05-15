@@ -34,6 +34,12 @@ export const useEmailVerification = ({
     null
   );
 
+  const getSocialErrorTitle = (code: string) => {
+    if (code.includes('kakao')) return '카카오와 연동된 계정이에요.';
+    if (code.includes('google')) return '구글과 연동된 계정이에요.';
+    return '이미 가입된 계정이에요.'; // fallback
+  };
+
   // 카운트다운 타이머
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -188,7 +194,7 @@ export const useEmailVerification = ({
           } else {
             showModal({
               type: 'two-button',
-              title: error.message,
+              title: getSocialErrorTitle(error.code),
               description: '로그인 페이지로 이동하시겠습니까?',
               buttonText: '이동하기',
               onConfirm: () => {
