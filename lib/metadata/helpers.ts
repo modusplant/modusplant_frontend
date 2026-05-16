@@ -7,7 +7,8 @@ export const SITE_CONFIG = {
   name: '모두의식물',
   domain: 'https://modusplant.kr',
   defaultImage: '/logo_favicon/og-image-v2.png',
-  description: '식물에 관심 있는 사용자들을 위한 정보 제공 플랫폼',
+  description:
+    '식집사들의 식물 정보 공유 커뮤니티. 품종, 환경, 성장 기록을 함께 나눕니다.',
 } as const;
 
 /**

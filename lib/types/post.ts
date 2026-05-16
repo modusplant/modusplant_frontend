@@ -28,6 +28,8 @@ export interface GetPostsResponseData {
   nextPostPublishedAt?: string;
   hasNext: boolean;
   size: number;
+  nextPostImportance?: number;
+  nextPostSimilarity?: number;
 }
 
 /**

@@ -1,4 +1,5 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { format } from 'date-fns';
 import { searchApi } from '@/lib/api/client/search';
 import { GetPostsResponseData } from '@/lib/types/post';
 import { SearchRequest } from '@/lib/types/search';
@@ -74,9 +75,16 @@ export const useGetInfiniteSearchResult = (
       return lastPage?.hasNext
         ? {
             lastPostId: lastPage.nextPostId ?? undefined,
-            lastPostImportance: 3,
-            lastPostSimilarity: 0.53464353,
-            lastPostPublishedAt: lastPage.nextPostPublishedAt,
+            lastPostPublishedAt: lastPage.nextPostPublishedAt
+              ? format(
+                  new Date(lastPage.nextPostPublishedAt),
+                  "yyyy-MM-dd'T'HH:mm:ss"
+                )
+              : undefined,
+            ...(queryParams.sort === 'relevance' && {
+              lastPostImportance: lastPage.nextPostImportance,
+              lastPostSimilarity: lastPage.nextPostSimilarity,
+            }),
           }
         : undefined;
     },

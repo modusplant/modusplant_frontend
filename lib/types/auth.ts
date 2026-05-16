@@ -170,6 +170,7 @@ export interface EmailSectionProps {
     email?: { message?: string };
     verificationCode?: { message?: string };
   };
+  onEmailVerified: (isValid: boolean) => void;
   className?: string;
 }
 
@@ -196,6 +197,7 @@ export interface NicknameSectionProps<
   trigger: UseFormTrigger<T>;
   watch: UseFormWatch<T>;
   errors: { nickname?: FieldError };
+  onNicknameVerified: (isValid: boolean) => void;
   className?: string;
 }
 

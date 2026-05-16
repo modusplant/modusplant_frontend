@@ -11,6 +11,7 @@ export default function EmailSection({
   trigger,
   watch,
   errors,
+  onEmailVerified,
   className,
 }: EmailSectionProps) {
   const watchedEmail = watch('email');
@@ -27,6 +28,16 @@ export default function EmailSection({
     isVerifyLoading,
     isRequestLoading,
   } = useEmailVerification({ trigger, watch });
+
+  const handleVerify = async () => {
+    const result = await handleVerifyCode(watchedEmail);
+    if (result?.success) onEmailVerified(true);
+  };
+
+  const handleResend = async () => {
+    onEmailVerified(false);
+    await handleResendVerification(watchedEmail);
+  };
 
   const emailDisabled =
     !watchedEmail || !!errors.email || (isCodeSent && !canResend) || isVerified;
@@ -55,9 +66,7 @@ export default function EmailSection({
         <Button
           type="button"
           onClick={() =>
-            canResend
-              ? handleResendVerification(watchedEmail)
-              : handleRequestVerification(watchedEmail)
+            canResend ? handleResend() : handleRequestVerification(watchedEmail)
           }
           disabled={emailDisabled || isRequestLoading}
           className="w-full min-w-23 cursor-pointer rounded-lg px-5 py-3 text-sm font-medium sm:w-auto"
@@ -100,7 +109,7 @@ export default function EmailSection({
             </div>
             <Button
               type="button"
-              onClick={() => handleVerifyCode(watchedEmail)}
+              onClick={handleVerify}
               disabled={!watch('verificationCode') || isVerifyLoading}
               className="w-full min-w-23 rounded-lg px-5 py-3 text-sm font-medium sm:w-auto"
               variant={watch('verificationCode') ? 'point' : 'secondary'}

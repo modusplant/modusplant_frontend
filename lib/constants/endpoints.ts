@@ -30,6 +30,11 @@ export const AUTH_ENDPOINTS = {
   CHANGE_EMAIL: (userId: string) => `${API_V1}/members/${userId}/modify/email`,
   // 회원탈퇴
   SIGNOUT: `${API_V1}/members`,
+  // 마이페이지 소셜 연동
+  MYPAGE_SOCIAL_LINK: (provider: AuthProviderParam) =>
+    `${API_V1}/members/social/${provider}`,
+  MYPAGE_SOCIAL_UNLINK: (provider: AuthProviderParam) =>
+    `${API_V1}/members/social/${provider}/unlink`,
 } as const;
 
 /**
@@ -62,6 +67,7 @@ export const POST_ENDPOINTS = {
     `${API_V1}/members/like/communication/post/${postUlid}`,
   BOOKMARK_POST: (postUlid: string) =>
     `${API_V1}/members/bookmark/communication/post/${postUlid}`,
+  REPORT_POST: (postUlid: string) => `/api/v1/report/abuse/post/${postUlid}`,
 
   // 쿼리 파라미터를 포함한 엔드포인트 빌더
   withQueryParams: (
@@ -124,6 +130,7 @@ export const SEARCH_ENDPOINTS = {
     secondaryCategoryId?: string;
   }) => `${API_V1}/search/posts${buildQueryString(params)}`,
   GET_SEARCH_HISTORY: () => `${API_V1}/search/posts/history?size=10`,
+  DELETE_ALL_SEARCH_HISTORY: () => `${API_V1}/search/posts/history`,
   DELETE_SEARCH_HISTORY: (keyword?: string) =>
     `${API_V1}/search/posts/history/${keyword}`,
 };

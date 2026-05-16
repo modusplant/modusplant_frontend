@@ -8,7 +8,7 @@ const TitleField = () => {
   const title = useWatch({ control, name: 'title', defaultValue: '' });
 
   return (
-    <div className="border-surface-stroke flex items-center justify-between gap-2 self-stretch rounded-[10px] border px-3 py-3 md:px-4.5 md:py-4.5">
+    <div className="border-surface-stroke flex items-center justify-between gap-2 self-stretch rounded-[10px] border px-4.5 py-3 md:px-4.5 md:py-4.5">
       <input
         {...register('title')}
         type="text"

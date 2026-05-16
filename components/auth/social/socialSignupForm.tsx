@@ -14,17 +14,21 @@ import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import { useSocialAuth } from '@/lib/hooks/auth/useSocialAuth';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function SocialSignupForm() {
-  const { signupData, handleSignupSubmit } = useSocialAuth();
+  const { signupData, handleSignupSubmit, isSocialAuthCompleted } =
+    useSocialAuth();
   const router = useRouter();
 
+  const [isNicknameVerified, setIsNicknameVerified] = useState(false);
+
   useEffect(() => {
-    if (!signupData) {
+    if (!signupData && !isSocialAuthCompleted.current) {
       router.replace('/login');
     }
-  }, [signupData, router]);
+  }, [signupData, router]); // eslint-disable-line react-hooks/exhaustive-deps
+  // isSocialAuthCompleted는 useRef로 항상 동일한 참조라 deps에 포함하지 않음
 
   const {
     register,
@@ -62,6 +66,7 @@ export default function SocialSignupForm() {
           errors={errors}
           watch={watch}
           trigger={trigger}
+          onNicknameVerified={setIsNicknameVerified}
         />
 
         {/* 프로필 소개글 */}
@@ -85,9 +90,13 @@ export default function SocialSignupForm() {
 
       <Button
         type="submit"
-        disabled={!isValid || isSubmitting}
+        disabled={!isValid || !isNicknameVerified || isSubmitting}
         className="w-full rounded-lg py-3 text-[16px] font-semibold md:py-4"
-        variant={!isValid || isSubmitting ? 'secondary' : 'point'}
+        variant={
+          !isValid || !isNicknameVerified || isSubmitting
+            ? 'secondary'
+            : 'point'
+        }
       >
         {isSubmitting ? (
           <Image

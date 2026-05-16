@@ -29,4 +29,13 @@ export const searchApi = {
       SEARCH_ENDPOINTS.GET_SEARCH_HISTORY()
     );
   },
+
+  /**
+   * 검색 기록 전체 삭제
+   */
+  async deleteSearchHistory(): Promise<ApiResponse<void>> {
+    return clientApiInstance.delete<void>(
+      SEARCH_ENDPOINTS.DELETE_ALL_SEARCH_HISTORY()
+    );
+  },
 };

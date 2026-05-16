@@ -27,9 +27,7 @@ export default function CommentHeader({
 }: CommentHeaderProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { mutate: reportComment, isPending: isReporting } =
-    useCommentReportMutation({
-      onSuccess: () => setIsDropdownOpen(false),
-    });
+    useCommentReportMutation();
 
   const handleOpenReportModal = () => {
     setIsDropdownOpen(false);
