@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import { ApiError } from '@/lib/types/common';
 import { useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
 import { authApi } from '@/lib/api/client/auth';
 import { SignoutRequestBody } from '@/lib/types/auth';
@@ -11,9 +10,9 @@ import { deleteAllCookies } from '@/lib/utils/cookies/client';
 
 import { useMemberAuthInfo } from '@/lib/hooks/mypage/useMemberAuthInfo';
 import { showModal } from '@/lib/store/modalStore';
-import { openOAuthPopup } from '@/lib/utils/oauth/openOAuthPopup';
-import { AuthProviderParam } from '@/lib/constants/oauth';
 import { parseAuthProvider } from '@/lib/utils/oauth/parseAuthProvider';
+import { buildAuthUrl } from '@/lib/utils/oauth/buildAuthUrl';
+import { clientApiInstance } from '@/lib/api/instances/clientInstance';
 
 export const useSignout = () => {
   const queryClient = useQueryClient();
@@ -22,31 +21,41 @@ export const useSignout = () => {
 
   const { data } = useMemberAuthInfo(user?.id);
 
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
 
   const handleSignout = async (formValues: SignoutFormValues) => {
-    setIsLoading(true);
-    setError(null);
-    let authCode: string | undefined;
-    let authProvider: AuthProviderParam | undefined;
-
     sessionStorage.setItem('signoutForm', JSON.stringify({ ...formValues }));
 
-    if (data) {
-      const { authProvider: provider } = data;
-      authProvider = parseAuthProvider(provider) ?? undefined;
-    }
+    const authProvider = data
+      ? parseAuthProvider(data.authProvider)
+      : undefined;
 
     if (authProvider) {
-      const { code } = await openOAuthPopup({
+      const url = buildAuthUrl({
         provider: authProvider,
-        intent: { action: 'SIGNOUT' },
+        intent: {
+          action: 'SIGNOUT',
+          returnTo: '/mypage/account?signout=pending',
+        },
       });
-      authCode = code;
+      window.location.href = url;
+      return;
     }
+    await executeSignout({ formValues });
+  };
 
+  const executeSignout = async ({
+    formValues,
+    authCode,
+    authProvider,
+  }: {
+    formValues: SignoutFormValues;
+    authCode?: string;
+    authProvider?: string;
+  }) => {
+    setIsLoading(true);
+    setError(null);
     try {
       const requestBody: SignoutRequestBody = {
         authCode,
@@ -57,10 +66,12 @@ export const useSignout = () => {
 
       await authApi.signout(requestBody); // 회원 탈퇴 요청
       queryClient.clear(); // 쿼리 캐시 초기화
-      reset(); // 전역 유저 상태 초기화
-      deleteAllCookies(); // client accessToken 삭제
+      reset(); // zustand 유저 상태 초기화
+      deleteAllCookies(); // client cookie 삭제
+      await clientApiInstance.post('/api/auth/clear-cookies'); // server cookie 삭제
+      sessionStorage.removeItem('signoutForm'); // sessionStorage 정리
 
-      router.replace('/');
+      window.location.href = '/';
       showModal({ description: '회원 탈퇴되었습니다.', type: 'snackbar' });
     } catch (error) {
       if (error instanceof ApiError) {
@@ -71,6 +82,8 @@ export const useSignout = () => {
         );
       }
     } finally {
+      sessionStorage.removeItem('signoutCode');
+      sessionStorage.removeItem('signoutProvider');
       setIsLoading(false);
     }
   };
@@ -79,5 +92,6 @@ export const useSignout = () => {
     isLoading,
     error,
     handleSignout,
+    executeSignout,
   };
 };

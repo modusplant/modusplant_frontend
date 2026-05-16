@@ -3,7 +3,9 @@ import { OauthCallback } from './OAuthCallback';
 import { isValidProvider, AuthProviderParam } from '@/lib/constants/oauth';
 import { notFound } from 'next/navigation';
 
-type Props = { params: Promise<{ provider: AuthProviderParam }> };
+type Props = {
+  params: Promise<{ provider: AuthProviderParam }>;
+};
 
 export default async function OAuthCallbackPage({ params }: Props) {
   const { provider } = await params;

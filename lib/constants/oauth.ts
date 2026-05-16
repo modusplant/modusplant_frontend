@@ -62,6 +62,6 @@ export const SOCIAL_CONFLICT_MESSAGES: Record<string, string> = {
 };
 export type OAuthIntent =
   | { action: 'LOGIN' }
-  | { action: 'SIGNOUT' }
+  | { action: 'SIGNOUT'; returnTo: string }
   | { action: 'LINK' }
   | { action: 'UNLINK' };

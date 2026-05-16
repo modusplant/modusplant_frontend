@@ -6,10 +6,14 @@ import EmailInfoSection from './emailInfoSection';
 import PasswordSection from './passwordSection';
 import SocialLinkSection from './socialLinkSection';
 import ChangeEmailModal from './changeEmailModal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SignoutModal from './SignoutModal';
 import { useDropdownState } from '@/lib/hooks/category/useDropdownState';
 import { useLinkError } from '@/lib/hooks/mypage/useLinkError';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { SignoutFormValues } from './SignoutForm';
+import { useSignout } from '@/lib/hooks/auth/useSignout';
+import { showModal } from '@/lib/store/modalStore';
 
 /**
  * 계정 설정 섹션
@@ -18,17 +22,86 @@ import { useLinkError } from '@/lib/hooks/mypage/useLinkError';
  * - 가입일 (읽기 전용)
  */
 export default function AccountSection() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const { user } = useAuthStore();
 
-  const { isOpen, open, close } = useDropdownState();
+  const { isOpen: isSignoutModalOpen, open, close } = useDropdownState();
+
+  const [savedFormValues, setSavedFormValues] = useState<
+    SignoutFormValues | undefined
+  >(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    if (
+      new URLSearchParams(window.location.search).get('signout') !== 'pending'
+    ) {
+      return;
+    }
+
+    const raw = sessionStorage.getItem('signoutForm');
+    if (!raw) return;
+    return JSON.parse(raw) as SignoutFormValues;
+  });
 
   const [emailModalVisible, setEmailModalVisible] = useState(false);
 
   const { data: authInfo, isLoading, error } = useMemberAuthInfo(user?.id);
 
+  const { executeSignout, handleSignout, error: signoutError } = useSignout();
+
   const isSocialMember = authInfo?.authProvider !== 'BASIC';
+  // BASIC 멤버가 아니면서, BASIC_GOOGLE 또는 BASIC_KAKAO 인 멤버
+  const isSocialLinkedMember =
+    isSocialMember && authInfo?.authProvider.startsWith('BASIC');
 
   useLinkError();
+
+  useEffect(() => {
+    if (searchParams.get('signout') !== 'pending') return;
+    const signoutFormValues = JSON.parse(
+      sessionStorage.getItem('signoutForm')!
+    );
+    const signoutCode = sessionStorage.getItem('signoutCode') ?? undefined;
+    const signoutProvider =
+      sessionStorage.getItem('signoutProvider') ?? undefined;
+
+    router.replace('/mypage/account');
+    open();
+
+    executeSignout({
+      formValues: signoutFormValues!,
+      authCode: signoutCode,
+      authProvider: signoutProvider,
+    });
+  }, []);
+
+  const openSignoutModal = () => {
+    if (isSocialLinkedMember) {
+      showModal({
+        description: '회원탈퇴를 위해서 소셜 연동 해제를 먼저 진행해주세요.',
+        type: 'snackbar',
+      });
+      return;
+    }
+    setSavedFormValues(undefined);
+    open();
+  };
+
+  const closeSignoutModal = () => {
+    close();
+    setSavedFormValues(undefined);
+  };
+
+  useEffect(() => {
+    if (signoutError) {
+      showModal({
+        type: 'snackbar',
+        description: '회원탈퇴에 실패했어요. 다시 시도해주세요.',
+      });
+    }
+  }, [signoutError]);
 
   if (isLoading) {
     return (
@@ -69,12 +142,18 @@ export default function AccountSection() {
       <div className="flex justify-end">
         <button
           className="typo-regular14 text-neutral-40 text-[15px] underline underline-offset-4"
-          onClick={open}
+          onClick={openSignoutModal}
         >
           회원 탈퇴
         </button>
       </div>
-      {isOpen && <SignoutModal onClose={close} />}
+      {isSignoutModalOpen && (
+        <SignoutModal
+          handleSignout={handleSignout}
+          savedFormValues={savedFormValues}
+          onClose={closeSignoutModal}
+        />
+      )}
     </div>
   );
 }
