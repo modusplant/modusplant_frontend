@@ -37,7 +37,7 @@ export function useCarousel(
   const [isPlaying, setIsPlaying] = useState(autoPlay);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // 무한 루프를 위해 앞뒤로 복제: [마지막, 1, 2, 3, 첫번째]
+  // 무한 루프를 위해 앞뒤로 복제: [마지막, 1, 2, 첫번째]
   const totalSlides = images.length;
   const extendedImages = [images[images.length - 1], ...images, images[0]];
 

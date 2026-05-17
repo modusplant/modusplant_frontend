@@ -20,12 +20,12 @@ export interface HeroBannerProps {
 
 /**
  * 메인페이지 히어로 배너 (자동 슬라이드)
- * - 3개 이미지 자동 재생 (5초 간격)
+ * - 2개 이미지 자동 재생 (5초 간격)
  * - 좌우 화살표 네비게이션
  * - 루프 슬라이더
  */
 export default function HeroBanner({
-  images = [Banner1, Banner2, Banner1],
+  images = [Banner1, Banner2],
   autoPlayInterval = 5000,
   className,
   title,
