@@ -17,13 +17,13 @@ export default function HeaderGuestActions() {
 
       {/* 회원가입 버튼 */}
       <Link href="/signup">
-        <Button
+        {/* <Button
           variant="point"
           size="sm"
           className="h-9 cursor-pointer rounded-full border-none"
         >
           회원가입
-        </Button>
+        </Button> */}
       </Link>
     </>
   );

@@ -66,7 +66,9 @@ export default function Header({ className, initialUser }: HeaderProps) {
         <HeaderLogo isRootPath={isRootPath} scrolled={scrolled} />
         {/* 로그인 상태에 따른 버튼 */}
         <div className="flex items-center gap-2.5 text-[13px] font-medium">
-          {pathname !== '/signup' && pathname !== '/search' && <SearchButton />}
+          {pathname !== '/signup' && pathname !== '/search' && (
+            <SearchButton scrolled={scrolled} isRootPath={isRootPath} />
+          )}
           {pathname !== '/signup' &&
             (user ? (
               <HeaderAuthActions
