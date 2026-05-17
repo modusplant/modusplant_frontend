@@ -1,16 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import type { AuthProviderParam } from '@/lib/constants/oauth';
+import type { AuthProviderParam, OAuthIntent } from '@/lib/constants/oauth';
 import { parseState } from '@/lib/utils/oauth/parseState';
 import { requestOAuthLogin } from '@/lib/utils/oauth/requestOAuthLogin';
-import { SignoutRequestBody } from '@/lib/types/auth';
-import { authApi } from '@/lib/api/client/auth';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/lib/store/authStore';
-import { deleteAllCookies } from '@/lib/utils/cookies/client';
 import { OauthApi } from '@/lib/api/client/oauth';
 
 export const OauthCallback = ({
@@ -20,13 +17,17 @@ export const OauthCallback = ({
 }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
+
   const code = searchParams.get('code');
   const state = searchParams.get('state');
 
   const queryClient = useQueryClient();
   const { reset } = useAuthStore();
 
-  const intent = parseState(state) ?? { action: 'LOGIN' };
+  const intent: OAuthIntent = useMemo(
+    () => parseState(state) ?? { action: 'LOGIN' },
+    [state]
+  );
 
   useEffect(() => {
     if (!code) return;
@@ -39,36 +40,9 @@ export const OauthCallback = ({
         }
 
         case 'SIGNOUT': {
-          if (window.opener) {
-            window.opener.postMessage(
-              {
-                type: 'OAUTH_CALLBACK',
-                code,
-                intent,
-              },
-              window.location.origin
-            );
-            window.close();
-            break;
-          }
-          // 모바일인 경우 팝업이 아닌 리다이렉트로 처리
-          const raw = sessionStorage.getItem('signoutForm');
-          const formData = raw
-            ? (JSON.parse(raw) as SignoutRequestBody)
-            : ({} as SignoutRequestBody);
-
-          sessionStorage.removeItem('signoutForm');
-
-          await authApi.signout({
-            ...formData,
-            authCode: code,
-            authProvider: provider,
-          });
-          queryClient.clear(); // 쿼리 캐시 초기화
-          reset(); // 전역 유저 상태 초기화
-          deleteAllCookies(); // client accessToken 삭제
-
-          router.replace('/');
+          sessionStorage.setItem('signoutCode', code);
+          sessionStorage.setItem('signoutProvider', provider);
+          router.replace(intent.returnTo);
           break;
         }
 
