@@ -35,9 +35,11 @@ export default function PostContent({ content }: PostContentProps) {
               key={index}
               src={item.src || ''}
               alt={item.filename || `이미지 ${index + 1}`}
-              width={800}
-              height={600}
+              width={0}
+              height={0}
+              sizes="100vw"
               className="my-6 cursor-pointer rounded-lg"
+              style={{ width: 'auto', maxWidth: '100%', height: 'auto' }}
               priority={index === 0}
               onClick={() => setSelectedImage(item.src || null)}
             />
