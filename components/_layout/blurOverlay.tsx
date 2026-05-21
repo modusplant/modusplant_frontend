@@ -54,15 +54,6 @@ export default function BlurOverlay({
                   로그인
                 </Button>
               </Link>
-              <Link href="/signup">
-                <Button
-                  variant="point"
-                  size="lg"
-                  className="cursor-pointer rounded-full"
-                >
-                  회원가입
-                </Button>
-              </Link>
             </div>
           </div>
         </div>
