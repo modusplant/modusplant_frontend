@@ -11,7 +11,7 @@ const baseComment: Comment = {
   content: '오늘 물을 너무 많이 줬나봐요. 잎이 노래지고 있어요 😢',
   likeCount: 5,
   createdAt: '2025-03-20T10:00:00',
-  updatedAt: '2025-03-20T10:00:00',
+  editedAt: null,
   isDeleted: false,
   isLiked: false,
   profileImagePath: undefined,
@@ -28,7 +28,7 @@ const commentWithReplies: Comment = {
       content: '과습일 가능성이 높아요! 흙이 마를 때까지 물을 주지 마세요.',
       likeCount: 3,
       createdAt: '2025-03-20T11:00:00',
-      updatedAt: '2025-03-20T11:00:00',
+      editedAt: null,
       isDeleted: false,
       isLiked: true,
       profileImagePath: undefined,
@@ -137,7 +137,7 @@ export const Updated: Story = {
     comment: {
       ...baseComment,
       content: '이 댓글은 수정되었어요!',
-      updatedAt: '2025-03-21T10:00:00',
+      editedAt: '2025-03-21T10:00:00',
     },
   },
 };
