@@ -38,7 +38,7 @@ export default function PostContent({ content }: PostContentProps) {
               width={0}
               height={0}
               sizes="100vw"
-              className="my-6 cursor-pointer rounded-lg"
+              className="mx-auto my-6 cursor-pointer rounded-lg"
               style={{ width: 'auto', maxWidth: '100%', height: 'auto' }}
               priority={index === 0}
               onClick={() => setSelectedImage(item.src || null)}
