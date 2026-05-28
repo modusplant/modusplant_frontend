@@ -11,7 +11,9 @@ const API_V1 = '/api/v1';
 export const AUTH_ENDPOINTS = {
   LOGIN: `/api/auth/login`,
   SOCIAL_LOGIN: (provider: AuthProviderParam) =>
-    `${API_V1}/auth/social-login/${provider}`,
+    process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
+      ? `${API_V1}/local/auth/social-login/${provider}`
+      : `${API_V1}/auth/social-login/${provider}`,
   SOCIAL_SIGNUP: `${API_V1}/auth/social-signup`,
   SOCIAL_LINK: `${API_V1}/auth/social-link`,
   CANCEL_SOCIAL_CONNECT: `${API_V1}/auth/social-connect`,
@@ -32,9 +34,13 @@ export const AUTH_ENDPOINTS = {
   SIGNOUT: `${API_V1}/members`,
   // 마이페이지 소셜 연동
   MYPAGE_SOCIAL_LINK: (provider: AuthProviderParam) =>
-    `${API_V1}/members/social/${provider}`,
+    process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
+      ? `${API_V1}/local/members/social/${provider}`
+      : `${API_V1}/members/social/${provider}`,
   MYPAGE_SOCIAL_UNLINK: (provider: AuthProviderParam) =>
-    `${API_V1}/members/social/${provider}/unlink`,
+    process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
+      ? `${API_V1}/local/members/social/${provider}/unlink`
+      : `${API_V1}/members/social/${provider}/unlink`,
 } as const;
 
 /**
