@@ -5,6 +5,8 @@ import { DraftPostData } from '@/lib/types/post';
 import DraftListItem from './DraftListItem';
 import DraftListPopupHeader from './DraftListPopupHeader';
 import { useDeleteDraftMutation } from '@/lib/hooks/community/useDeleteDraftMutation';
+import { OVERLAY_Z_INDEX } from '@/lib/constants/overlayLayers';
+import { cn } from '@/lib/utils/tailwindHelper';
 
 interface DraftListPopupProps {
   isOpen: boolean;
@@ -44,11 +46,14 @@ const DraftListPopup = ({
 
   return (
     <div
-      className="fixed inset-0 z-[90] flex items-center justify-center bg-black/40 px-4"
+      className={cn(
+        'bg-surface-overlay-medium fixed inset-0 flex items-center justify-center px-4',
+        OVERLAY_Z_INDEX.modal
+      )}
       onClick={onClose}
     >
       <div
-        className="border-surface-stroke w-full max-w-2xl rounded-2xl border bg-neutral-100"
+        className="border-border-subtle bg-surface-card w-full max-w-2xl rounded-2xl border"
         onClick={(e) => e.stopPropagation()}
       >
         <DraftListPopupHeader onClose={onClose} />

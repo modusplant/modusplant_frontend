@@ -83,7 +83,7 @@ export const SignoutForm = ({
     },
   });
 
-  const { close, isOpen, toggle } = useDropdownState();
+  const { close, isOpen, open, toggle } = useDropdownState();
 
   const { isLoading } = useSignout();
 
@@ -112,6 +112,7 @@ export const SignoutForm = ({
           </label>
           <Dropdown
             isOpen={isOpen}
+            onOpen={open}
             trigger={
               <Button
                 onClick={(e) => {
@@ -127,7 +128,7 @@ export const SignoutForm = ({
                   )?.label ?? '탈퇴 사유를 선택해주세요'}
                 </p>
                 <Triangle
-                  fill="#ADADAD"
+                  fill="var(--text-placeholder)"
                   stroke="none"
                   className="h-2 scale-x-125 rotate-180"
                 />
@@ -172,7 +173,7 @@ export const SignoutForm = ({
               variant="point"
               disabled={!isValid || !watch('reason') || isLoading}
               fullWidth
-              className="bg-system-alert disabled:bg-neutral-80 hover:bg-#D32F2F typo-semibold14 h-13 rounded-lg text-[16px]"
+              className="bg-feedback-error hover:bg-feedback-error-hover disabled:bg-action-secondary-bg typo-semibold14 h-13 rounded-lg text-[16px]"
               type="submit"
             >
               탈퇴하기

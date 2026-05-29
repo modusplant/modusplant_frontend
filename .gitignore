@@ -55,3 +55,7 @@ AGENTS.md
 .eslintcache
 *storybook.log
 storybook-static
+
+# large Figma binaries (kept locally, excluded from repo)
+*.fig
+*.zip.zip

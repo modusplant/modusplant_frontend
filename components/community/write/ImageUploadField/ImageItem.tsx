@@ -40,7 +40,7 @@ const ImageItem = ({
         <span
           className={cn(
             // TODO: Need to establish a design system
-            'absolute top-[10px] left-[12px] z-10 rounded-[9999px] bg-[#57c04e] px-[7px] py-[2px] text-[10.5px] font-medium text-white'
+            'bg-feedback-success text-action-primary-fg absolute top-[10px] left-[12px] z-10 rounded-[9999px] px-[7px] py-[2px] text-[10.5px] font-medium'
           )}
           aria-label="대표 이미지"
         >
@@ -52,10 +52,10 @@ const ImageItem = ({
           e.preventDefault();
           handleDelete(id);
         }}
-        className="bg-neutral-70 absolute -top-2 -right-2 z-10 rounded-full p-1"
+        className="bg-icon-muted absolute -top-2 -right-2 z-10 rounded-full p-1"
         aria-label="이미지 삭제"
       >
-        <X className="h-4 w-4 text-white" />
+        <X className="text-action-primary-fg h-4 w-4" />
       </button>
     </div>
   );

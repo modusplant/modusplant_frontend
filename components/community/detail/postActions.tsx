@@ -132,8 +132,8 @@ export default function PostActions({
             className={`h-5 w-5 transition-all ${
               isLiked ? '' : 'group-hover:fill-neutral-90'
             }`}
-            color={isLiked ? 'red' : '#919191'}
-            fill={isLiked ? 'red' : 'none'}
+            color={isLiked ? 'var(--feedback-error)' : 'var(--text-muted)'}
+            fill={isLiked ? 'var(--feedback-error)' : 'none'}
           />
           <span>{likeCount.toLocaleString()}</span>
         </button>
@@ -147,8 +147,10 @@ export default function PostActions({
             className={`h-5 w-5 transition-all ${
               isBookmarked ? '' : 'group-hover:fill-neutral-90'
             }`}
-            fill={isBookmarked ? '#3a972e' : 'none'}
-            color={isBookmarked ? '#3a972e' : '#919191'}
+            fill={isBookmarked ? 'var(--action-primary-bg)' : 'none'}
+            color={
+              isBookmarked ? 'var(--action-primary-bg)' : 'var(--text-muted)'
+            }
           />
         </button>
       </div>
@@ -156,6 +158,7 @@ export default function PostActions({
       {user && (
         <Dropdown
           isOpen={isDropdownOpen}
+          onOpen={() => setIsDropdownOpen(true)}
           onClose={() => setIsDropdownOpen(false)}
           trigger={
             <button

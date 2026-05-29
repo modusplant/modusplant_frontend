@@ -20,6 +20,8 @@ const preview: Preview = {
     },
 
     a11y: {
+      // Phase 1 keeps the global default non-blocking. Stable primitives and
+      // overlays opt into `error` at story meta level as enforcement expands.
       // 'todo' - show a11y violations in the test UI only
       // 'error' - fail CI on a11y violations
       // 'off' - skip a11y checks entirely

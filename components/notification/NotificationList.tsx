@@ -37,7 +37,7 @@ export const NotificationList = ({
         {data.map((notificationData) => (
           <li key={notificationData.notificationId}>
             <NotificationItem data={notificationData} />
-            <hr className="border-[#e9e9e9]" />
+            <hr className="border-border-subtle" />
           </li>
         ))}
       </ul>
@@ -51,7 +51,7 @@ export const NotificationList = ({
         {data.map((notificationData) => (
           <li key={notificationData.notificationId}>
             <NotificationItem data={notificationData} />
-            <hr className="border-[#e9e9e9]" />
+            <hr className="border-border-subtle" />
           </li>
         ))}
         <div ref={observerTarget} />
@@ -66,7 +66,7 @@ const EmptyListBox = ({
 }: React.PropsWithChildren & React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div className={cn('flex w-full items-center justify-center', className)}>
-      <span className="typo-regular14 text-neutral-40">{children}</span>
+      <span className="typo-regular14 text-text-secondary">{children}</span>
     </div>
   );
 };

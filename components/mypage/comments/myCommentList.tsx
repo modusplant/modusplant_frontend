@@ -19,7 +19,7 @@ export default function MyCommentList() {
   if (isLoading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="text-body-regular-16 text-neutral-60">로딩 중...</div>
+        <div className="text-text-muted text-base">로딩 중...</div>
       </div>
     );
   }
@@ -27,7 +27,7 @@ export default function MyCommentList() {
   if (error) {
     return (
       <div className="flex justify-center py-20">
-        <div className="text-body-regular-16 text-system-alert">
+        <div className="text-feedback-error text-base">
           댓글 목록을 불러오는데 실패했습니다.
         </div>
       </div>
@@ -51,7 +51,7 @@ export default function MyCommentList() {
             <MyCommentItem comment={comment} />
             {/* 마지막 아이템이 아니면 구분선 추가 */}
             {index < commentList.length - 1 && (
-              <div className="mt-6 h-px w-full bg-[#EFEFEF]" />
+              <div className="bg-surface-divider mt-6 h-px w-full" />
             )}
           </div>
         ))}

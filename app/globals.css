@@ -35,6 +35,54 @@
   --system-alert: #f44335;
   --system-info: #3b82f6;
 
+  /* Semantic Tokens */
+  --text-default: var(--neutral-0);
+  --text-strong: var(--neutral-10);
+  --text-body: var(--neutral-30);
+  --text-secondary: #4b4b4b;
+  --text-subtle: var(--neutral-20);
+  --text-muted: var(--neutral-60);
+  --text-placeholder: var(--neutral-70);
+  --text-inverse: var(--neutral-100);
+
+  --surface-page: var(--neutral-100);
+  --surface-card: var(--neutral-100);
+  --surface-muted: var(--surface-98);
+  --surface-divider: #efefef;
+  --surface-overlay: rgb(0 0 0 / 20%);
+  --surface-overlay-medium: rgb(0 0 0 / 40%);
+  --surface-overlay-strong: rgb(0 0 0 / 60%);
+
+  --border-default: var(--surface-stroke-2);
+  --border-muted: var(--neutral-90);
+  --border-subtle: var(--surface-stroke);
+  --border-inverse-muted: rgb(255 255 255 / 30%);
+
+  --action-primary-bg: var(--primary-50);
+  --action-primary-hover: var(--primary-60);
+  --action-primary-strong-hover: var(--primary-70);
+  --action-primary-fg: var(--neutral-100);
+  --action-secondary-bg: var(--neutral-80);
+  --action-secondary-hover: var(--neutral-70);
+  --action-tertiary-border: var(--primary-40);
+  --action-tertiary-fg: var(--primary-50);
+  --action-tertiary-hover: var(--primary-10);
+  --action-disabled-bg: var(--neutral-90);
+  --action-disabled-fg: var(--neutral-60);
+
+  --feedback-error: var(--system-alert);
+  --feedback-error-hover: #d32f2f;
+  --feedback-success: #57c04e;
+  --feedback-info-strong: #027be5;
+  --icon-default: var(--neutral-20);
+  --icon-subtle: var(--neutral-40);
+  --icon-muted: var(--neutral-70);
+  --icon-inverse-muted: var(--neutral-90);
+  --focus-ring: var(--primary-50);
+
+  --shadow-pop-up-value: 0px 4px 10px 0px rgb(0 0 0 / 10%);
+  --shadow-search-entry-value: 2px 2px 8px 0px rgb(28 74 54 / 15%);
+
   /* Font Variables */
   --font-emphasis: var(--font-nanum-myeongjo);
   --font-body: var(--font-pretendard);
@@ -81,6 +129,57 @@
   /* System Colors */
   --color-system-alert: var(--system-alert);
   --color-system-info: var(--system-info);
+
+  /* Semantic Text Colors */
+  --color-text-default: var(--text-default);
+  --color-text-strong: var(--text-strong);
+  --color-text-body: var(--text-body);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-subtle: var(--text-subtle);
+  --color-text-muted: var(--text-muted);
+  --color-text-placeholder: var(--text-placeholder);
+  --color-text-inverse: var(--text-inverse);
+
+  /* Semantic Surface Colors */
+  --color-surface-page: var(--surface-page);
+  --color-surface-card: var(--surface-card);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-divider: var(--surface-divider);
+  --color-surface-overlay: var(--surface-overlay);
+  --color-surface-overlay-medium: var(--surface-overlay-medium);
+  --color-surface-overlay-strong: var(--surface-overlay-strong);
+
+  /* Semantic Border Colors */
+  --color-border-default: var(--border-default);
+  --color-border-muted: var(--border-muted);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-inverse-muted: var(--border-inverse-muted);
+
+  /* Semantic Action Colors */
+  --color-action-primary-bg: var(--action-primary-bg);
+  --color-action-primary-hover: var(--action-primary-hover);
+  --color-action-primary-strong-hover: var(--action-primary-strong-hover);
+  --color-action-primary-fg: var(--action-primary-fg);
+  --color-action-secondary-bg: var(--action-secondary-bg);
+  --color-action-secondary-hover: var(--action-secondary-hover);
+  --color-action-tertiary-border: var(--action-tertiary-border);
+  --color-action-tertiary-fg: var(--action-tertiary-fg);
+  --color-action-tertiary-hover: var(--action-tertiary-hover);
+  --color-action-disabled-bg: var(--action-disabled-bg);
+  --color-action-disabled-fg: var(--action-disabled-fg);
+
+  /* Semantic Feedback, Icon, Focus Colors */
+  --color-feedback-error: var(--feedback-error);
+  --color-feedback-error-hover: var(--feedback-error-hover);
+  --color-feedback-success: var(--feedback-success);
+  --color-feedback-info-strong: var(--feedback-info-strong);
+  --color-icon-default: var(--icon-default);
+  --color-icon-subtle: var(--icon-subtle);
+  --color-icon-muted: var(--icon-muted);
+  --color-icon-inverse-muted: var(--icon-inverse-muted);
+  --color-focus-ring: var(--focus-ring);
+  --shadow-pop-up: var(--shadow-pop-up-value);
+  --shadow-search-entry: var(--shadow-search-entry-value);
 
   /* Font Families */
   --font-emphasis: var(--font-nanum-myeongjo);
@@ -136,6 +235,6 @@ body {
     BlinkMacSystemFont,
     'Segoe UI',
     sans-serif;
-  color: var(--neutral-0);
-  background-color: var(--neutral-100);
+  color: var(--text-default);
+  background-color: var(--surface-page);
 }

@@ -77,7 +77,7 @@ export default function PostCard({ post, className }: PostCardProps) {
           <Badge
             variant="outline"
             size="md"
-            className="bg-surface-98 h-6 border-none font-medium"
+            className="bg-surface-muted h-6 border-none font-medium"
           >
             {secondaryCategoryLabels[post.secondaryCategory] ||
               post.secondaryCategory}
@@ -86,23 +86,23 @@ export default function PostCard({ post, className }: PostCardProps) {
 
         <div className="flex flex-col gap-1.5">
           {/* 제목 */}
-          <h3 className="text-neutral-20 line-clamp-1 text-lg font-semibold md:text-[17px]">
+          <h3 className="text-text-subtle line-clamp-1 text-lg font-semibold md:text-[17px]">
             {post.title}
           </h3>
 
           {/* 본문 일부 (말줄임표) */}
           {excerpt && (
-            <p className="text-neutral-40 line-clamp-2 text-sm md:min-h-10 lg:min-h-10">
+            <p className="text-text-secondary line-clamp-2 text-sm md:min-h-10 lg:min-h-10">
               {excerpt}
             </p>
           )}
         </div>
 
         {/* 메타 정보 */}
-        <div className="text-neutral-60 flex items-center justify-between text-sm">
+        <div className="text-text-muted flex items-center justify-between text-sm">
           <div className="flex items-center gap-2">
             {/* 작성자 / 통계 (좋아요, 댓글) / 날짜 */}
-            <span className="text-neutral-60 max-w-20">{post.nickname}</span>
+            <span className="text-text-muted max-w-20">{post.nickname}</span>
             <span> | </span>
             <button
               className="flex items-center gap-1"
@@ -114,8 +114,8 @@ export default function PostCard({ post, className }: PostCardProps) {
             >
               <Heart
                 className="md:h-4 md:w-4"
-                color={isLiked ? 'red' : 'currentColor'}
-                fill={isLiked ? 'red' : 'none'}
+                color={isLiked ? 'var(--feedback-error)' : 'currentColor'}
+                fill={isLiked ? 'var(--feedback-error)' : 'none'}
               />
               <span>{likeCount}</span>
             </button>
@@ -135,7 +135,7 @@ export default function PostCard({ post, className }: PostCardProps) {
                 fill={isBookmarked ? 'currentColor' : 'none'}
                 className={cn(
                   'md:h-4 md:w-4',
-                  isBookmarked ? 'text-primary-50' : 'text-neutral-60'
+                  isBookmarked ? 'text-action-tertiary-fg' : 'text-text-muted'
                 )}
               />
             </button>

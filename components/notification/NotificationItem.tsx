@@ -96,14 +96,14 @@ export const NotificationItem = ({
           <p className="typo-semibold14">
             {buildTitleString(action, actorNickname)}
           </p>
-          <p className="typo-regular14 text-neutral-60 text-[13px]">
+          <p className="typo-regular14 text-text-muted text-[13px]">
             {formatDate(createdAt)}
           </p>
         </div>
         <p className="typo-regular14 truncate text-[13px]">{contentPreview}</p>
       </div>
       {status === 'unread' && (
-        <div className="pl-3 text-[#f44335]">
+        <div className="text-feedback-error pl-3">
           <Dot strokeWidth={5} />
         </div>
       )}

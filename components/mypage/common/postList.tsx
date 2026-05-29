@@ -77,7 +77,7 @@ export default function PostList<
             <PostListItem post={post} />
             {/* 마지막 아이템이 아니면 구분선 추가 */}
             {index < data.posts.length - 1 && (
-              <div className="mt-6 h-px w-full bg-[#EFEFEF]" />
+              <div className="bg-surface-divider mt-6 h-px w-full" />
             )}
           </div>
         ))}

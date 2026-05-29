@@ -29,7 +29,7 @@ const SearchButton = ({
       <button
         type="button"
         className={cn(
-          'flex h-9 min-w-[240px] items-center rounded-[50px] border border-[#FFFFFF4D] px-4 py-2.5 shadow-[2px_2px_8px_0px_#1C4A3626]',
+          'border-border-inverse-muted shadow-search-entry flex h-9 min-w-[240px] items-center rounded-[50px] border px-4 py-2.5',
           width,
           className
         )}
@@ -38,8 +38,8 @@ const SearchButton = ({
         {...props}
       >
         <div className="flex min-w-0 flex-1 items-center gap-2.5">
-          <Search className="text-neutral-90 h-4 w-4 shrink-0" />
-          <span className="text-neutral-60 placeholder:text-neutral-60 w-full min-w-0 bg-transparent text-left text-[13px] leading-[1.2] tracking-[-0.01em] outline-none">
+          <Search className="text-icon-inverse-muted h-4 w-4 shrink-0" />
+          <span className="text-text-muted placeholder:text-text-muted w-full min-w-0 bg-transparent text-left text-[13px] leading-[1.2] tracking-[-0.01em] outline-none">
             {placeholder}
           </span>
         </div>

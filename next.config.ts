@@ -1,8 +1,10 @@
 import type { NextConfig } from 'next';
 
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 const nextConfig: NextConfig = {
   experimental: {
-    proxyClientMaxBodySize: "120mb",
+    proxyClientMaxBodySize: '120mb',
   },
   images: {
     remotePatterns: [
@@ -25,7 +27,9 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            value: isDevelopment
+              ? 'no-store'
+              : 'public, max-age=31536000, immutable',
           },
         ],
       },
@@ -34,7 +38,9 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            value: isDevelopment
+              ? 'no-store'
+              : 'public, max-age=31536000, immutable',
           },
         ],
       },
@@ -43,7 +49,9 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            value: isDevelopment
+              ? 'no-store'
+              : 'public, max-age=31536000, immutable',
           },
         ],
       },
