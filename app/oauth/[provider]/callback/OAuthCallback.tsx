@@ -9,7 +9,7 @@ import { requestOAuthLogin } from '@/lib/utils/oauth/requestOAuthLogin';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/lib/store/authStore';
 import { OauthApi } from '@/lib/api/client/oauth';
-import EmptyState from '@/components/_common/emptyState';
+import StateMessage from '@/components/_common/stateMessage';
 
 export const OauthCallback = ({
   provider,
@@ -85,18 +85,18 @@ export const OauthCallback = ({
   if (intent.action === 'SIGNOUT' || intent.action === 'UNLINK') {
     return (
       <>
-        <EmptyState
+        <StateMessage
           title={`${provider === 'google' ? '구글' : '카카오'} 연동 해제를 위한 로그인 시도 중 입니다.`}
           description="잠시만 기다려주세요."
-        ></EmptyState>
+        ></StateMessage>
       </>
     );
   } else {
     return (
-      <EmptyState
+      <StateMessage
         title={`${provider === 'google' ? '구글' : '카카오'} 로그인 처리 중입니다.`}
         description="잠시만 기다려주세요."
-      ></EmptyState>
+      ></StateMessage>
     );
   }
 };

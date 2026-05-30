@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-interface EmptyStateProps {
+interface StateMessageProps {
   /**
    * 캐릭터 이미지 경로
    * @default "/character.svg"
@@ -28,11 +28,21 @@ interface EmptyStateProps {
 }
 
 /**
- * 마이페이지 빈 상태 컴포넌트
+ * 상태 안내 메시지 컴포넌트
+ *
+ * 이미지, 제목, 설명, CTA 버튼을 조합하여
+ * 사용자에게 현재 상태를 안내합니다.
+ *
+ * 사용 예시
+ * - 빈 상태 (데이터 없음)
+ * - 로그인 필요
+ * - 404 페이지
+ * - 에러 상태
+ * - 처리 중 상태
  *
  * @example
  * ```tsx
- * <EmptyState
+ * <StateMessage
  *   title="최근 본 식물 기록이 없어요!"
  *   description="초록빛 가득한 이야기들을 탐색하고\n나만의 식물 아카이브를 채워보세요."
  *   buttonText="둘러보기"
@@ -40,13 +50,13 @@ interface EmptyStateProps {
  * />
  * ```
  */
-export default function EmptyState({
+export default function StateMessage({
   imageSrc = '/character.svg',
   title,
   description,
   buttonText,
   buttonHref,
-}: EmptyStateProps) {
+}: StateMessageProps) {
   return (
     <div className="flex flex-col items-center justify-center gap-5 py-15">
       {/* 캐릭터 이미지 */}
