@@ -20,11 +20,11 @@ interface EmptyStateProps {
   /**
    * 버튼 텍스트
    */
-  buttonText: string;
+  buttonText?: string;
   /**
    * 버튼 클릭 시 이동할 경로
    */
-  buttonHref: string;
+  buttonHref?: string;
 }
 
 /**
@@ -76,12 +76,14 @@ export default function EmptyState({
       </div>
 
       {/* CTA 버튼 */}
-      <Link
-        href={buttonHref}
-        className="border-surface-stroke text-neutral-20 flex h-12 items-center justify-center gap-2.25 rounded-[31px] border px-6 py-4 text-base leading-[1.2] font-medium tracking-[-0.03em]"
-      >
-        {buttonText}
-      </Link>
+      {buttonText && buttonHref && (
+        <Link
+          href={buttonHref}
+          className="border-surface-stroke text-neutral-20 flex h-12 items-center justify-center gap-2.25 rounded-[31px] border px-6 py-4 text-base leading-[1.2] font-medium tracking-[-0.03em]"
+        >
+          {buttonText}
+        </Link>
+      )}
     </div>
   );
 }
