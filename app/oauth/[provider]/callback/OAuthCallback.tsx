@@ -84,19 +84,21 @@ export const OauthCallback = ({
 
   if (intent.action === 'SIGNOUT' || intent.action === 'UNLINK') {
     return (
-      <>
+      <div className="flex min-h-[calc(100vh-200px)] items-center justify-center">
         <StateMessage
           title={`${provider === 'google' ? '구글' : '카카오'} 연동 해제를 위한 로그인 시도 중 입니다.`}
           description="잠시만 기다려주세요."
-        ></StateMessage>
-      </>
+        />
+      </div>
     );
   } else {
     return (
-      <StateMessage
-        title={`${provider === 'google' ? '구글' : '카카오'} 로그인 처리 중입니다.`}
-        description="잠시만 기다려주세요."
-      ></StateMessage>
+      <div className="flex min-h-[calc(100vh-200px)] items-center justify-center">
+        <StateMessage
+          title={`${provider === 'google' ? '구글' : '카카오'} 로그인 처리 중입니다.`}
+          description="잠시만 기다려주세요."
+        />
+      </div>
     );
   }
 };
