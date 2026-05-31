@@ -10,6 +10,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/lib/store/authStore';
 import { OauthApi } from '@/lib/api/client/oauth';
 import Image from 'next/image';
+import StateMessage from '@/components/_common/stateMessage';
 
 export const OauthCallback = ({
   provider,
@@ -25,7 +26,7 @@ export const OauthCallback = ({
   const isAccessDenied = error === 'access_denied'; // 사용자가 권한 동의를 거부했는지 여부
 
   const queryClient = useQueryClient();
-  const { reset } = useAuthStore();
+  const { reset, logout } = useAuthStore();
 
   const intent: OAuthIntent = useMemo(
     () => parseState(state) ?? { action: 'LOGIN' },
@@ -73,7 +74,9 @@ export const OauthCallback = ({
         case 'UNLINK': {
           try {
             await OauthApi.mypageSocialUnlink(code, provider);
-            router.replace('/mypage/account');
+            sessionStorage.setItem('unlinkSuccess', 'true');
+            router.replace('/login');
+            logout();
           } catch (error: any) {
             sessionStorage.setItem(
               'linkError',
@@ -88,7 +91,16 @@ export const OauthCallback = ({
     };
 
     runCallback();
-  }, [code, router, provider, intent, isAccessDenied, reset, queryClient]);
+  }, [
+    code,
+    router,
+    provider,
+    intent,
+    isAccessDenied,
+    reset,
+    queryClient,
+    logout,
+  ]);
 
   if (isAccessDenied) {
     return (

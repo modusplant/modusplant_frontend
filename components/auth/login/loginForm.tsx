@@ -34,6 +34,16 @@ export default function LoginForm({ className }: LoginFormProps) {
     sessionStorage.removeItem('authCode');
   }, []);
 
+  useEffect(() => {
+    const unlinkSuccess = sessionStorage.getItem('unlinkSuccess');
+    if (!unlinkSuccess) return;
+    showModal({
+      type: 'snackbar',
+      description: '소셜 연동이 해제되었습니다.\n 다시 로그인 후 이용해주세요.',
+    });
+    sessionStorage.removeItem('unlinkSuccess');
+  }, []);
+
   const {
     register,
     handleSubmit,
