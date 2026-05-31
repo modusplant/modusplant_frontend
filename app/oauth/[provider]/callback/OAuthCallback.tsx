@@ -9,7 +9,7 @@ import { requestOAuthLogin } from '@/lib/utils/oauth/requestOAuthLogin';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/lib/store/authStore';
 import { OauthApi } from '@/lib/api/client/oauth';
-import StateMessage from '@/components/_common/stateMessage';
+import Image from 'next/image';
 
 export const OauthCallback = ({
   provider,
@@ -85,19 +85,20 @@ export const OauthCallback = ({
   if (intent.action === 'SIGNOUT' || intent.action === 'UNLINK') {
     return (
       <div className="flex min-h-[calc(100vh-200px)] items-center justify-center">
-        <StateMessage
-          title={`${provider === 'google' ? '구글' : '카카오'} 연동 해제를 위한 로그인 시도 중 입니다.`}
-          description="잠시만 기다려주세요."
-        />
+        <Image src="/icon/loading.gif" alt="로딩 중" width={32} height={32} />
+        <div>
+          {provider === 'google' ? '구글' : '카카오'} 연동 해제를 위한 로그인
+          시도 중 입니다.
+        </div>
       </div>
     );
   } else {
     return (
-      <div className="flex min-h-[calc(100vh-200px)] items-center justify-center">
-        <StateMessage
-          title={`${provider === 'google' ? '구글' : '카카오'} 로그인 처리 중입니다.`}
-          description="잠시만 기다려주세요."
-        />
+      <div className="flex min-h-[calc(100vh-200px)] flex-col items-center justify-center gap-4">
+        <Image src="/icon/loading.gif" alt="로딩 중" width={32} height={32} />
+        <div>
+          {provider === 'google' ? '구글' : '카카오'} 로그인 처리 중입니다.
+        </div>
       </div>
     );
   }
