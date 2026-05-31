@@ -1,8 +1,14 @@
 import { AuthProviderParam, OAuthIntent } from '@/lib/constants/oauth';
 
 const REDIRECT_PATH: Record<AuthProviderParam, string> = {
-  kakao: '/oauth/kakao/callback',
-  google: '/oauth/google/callback',
+  kakao:
+    process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
+      ? '/oauth/kakao/callback'
+      : '/api/auth/kakao/social-login',
+  google:
+    process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
+      ? '/oauth/google/callback'
+      : '/api/auth/google/social-login',
 };
 
 function encodeState(intent: OAuthIntent) {
