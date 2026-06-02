@@ -21,6 +21,8 @@ export const OauthCallback = ({
 
   const code = searchParams.get('code');
   const state = searchParams.get('state');
+  const error = searchParams.get('error');
+  const isAccessDenied = error === 'access_denied'; // 사용자가 권한 동의를 거부했는지 여부
 
   const queryClient = useQueryClient();
   const { reset } = useAuthStore();
@@ -31,6 +33,12 @@ export const OauthCallback = ({
   );
 
   useEffect(() => {
+    if (isAccessDenied) {
+      // 사용자가 소셜 연동 권한 동의 창에서 '취소'를 누를 경우 처리
+      router.replace('/login');
+      return;
+    }
+
     if (!code) return;
 
     const runCallback = async () => {
@@ -80,7 +88,19 @@ export const OauthCallback = ({
     };
 
     runCallback();
-  }, [code, router, provider, state, queryClient, reset, intent]);
+  }, [code, router, provider, intent, isAccessDenied, reset, queryClient]);
+
+  if (isAccessDenied) {
+    return (
+      <div className="flex min-h-[calc(100vh-200px)] items-center justify-center">
+        <StateMessage
+          imageSrc="/character_sad.svg"
+          title={`${provider === 'google' ? '구글' : '카카오'} 로그인이 취소되었습니다.`}
+          description="로그인 페이지로 이동합니다."
+        />
+      </div>
+    );
+  }
 
   if (intent.action === 'SIGNOUT' || intent.action === 'UNLINK') {
     return (
