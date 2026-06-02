@@ -81,8 +81,13 @@ export default function SocialLinkSection({
         </div>
 
         {SOCIAL_PROVIDER_MESSAGES[authProvider] && (
-          <div className="text-neutral-60 text-[13px]">
-            {SOCIAL_PROVIDER_MESSAGES[authProvider]}
+          <div>
+            <div className="text-neutral-60 text-[13px]">
+              {SOCIAL_PROVIDER_MESSAGES[authProvider]}
+            </div>
+            <div className="text-neutral-80 text-[11px]">
+              계정당 1개의 소셜 계정만 연결할 수 있습니다.
+            </div>
           </div>
         )}
       </div>
