@@ -1,9 +1,9 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import Header from './header/header';
 import Footer from './footer';
 import { User } from '@/lib/types/auth';
+import DesktopHeader from './header/desktopHeader';
 
 export default function ConditionalLayout({
   children,
@@ -24,7 +24,7 @@ export default function ConditionalLayout({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Header initialUser={initialUser} />
+      <DesktopHeader initialUser={initialUser} />
       <main className="flex-1">{children}</main>
       <Footer />
     </div>

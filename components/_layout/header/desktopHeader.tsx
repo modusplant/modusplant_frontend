@@ -15,7 +15,7 @@ export interface HeaderProps {
   initialUser: User | null;
 }
 
-export default function Header({ className, initialUser }: HeaderProps) {
+export default function DesktopHeader({ className, initialUser }: HeaderProps) {
   const { isAuthenticated, user: storeUser, logout } = useAuthStore();
   const pathname = usePathname();
   const router = useRouter();
