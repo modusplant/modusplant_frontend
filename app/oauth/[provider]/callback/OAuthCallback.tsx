@@ -10,6 +10,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/lib/store/authStore';
 import { OauthApi } from '@/lib/api/client/oauth';
 import Image from 'next/image';
+import StateMessage from '@/components/_common/stateMessage';
 
 export const OauthCallback = ({
   provider,
@@ -84,6 +85,21 @@ export const OauthCallback = ({
 
           break;
         }
+
+        case 'UNLINK_AND_SIGNOUT': {
+          try {
+            await OauthApi.mypageSocialUnlink(code, provider);
+            router.replace('/mypage/account?signout=pending');
+          } catch (error: any) {
+            sessionStorage.setItem(
+              'linkError',
+              error.message || '소셜 연동 해제에 실패했습니다.'
+            );
+            router.replace('/mypage/account');
+          }
+
+          break;
+        }
       }
     };
 
@@ -102,7 +118,11 @@ export const OauthCallback = ({
     );
   }
 
-  if (intent.action === 'SIGNOUT' || intent.action === 'UNLINK') {
+  if (
+    intent.action === 'SIGNOUT' ||
+    intent.action === 'UNLINK' ||
+    intent.action === 'UNLINK_AND_SIGNOUT'
+  ) {
     return (
       <div className="flex min-h-[calc(100vh-200px)] items-center justify-center">
         <Image src="/icon/loading.gif" alt="로딩 중" width={32} height={32} />
