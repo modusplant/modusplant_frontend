@@ -4,19 +4,11 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/_common/button';
 import Profile from '@/components/_common/profileImage';
 import Dropdown from '@/components/_common/dropdown';
-import { User } from '@/lib/types/auth';
 import { Bell } from 'lucide-react';
 import { NotificationBox } from '@/components/notification/NotificationBox';
 import { useGetNotificationCountQuery } from '@/lib/hooks/notification/useGetNotificationCountQuery';
 import { useNotificationStore } from '@/lib/store/notificationStore';
-
-interface HeaderAuthActionsProps {
-  user: User;
-  onLogout: () => void;
-  showWriteButton?: boolean;
-  scrolled: boolean;
-  isRootPath: boolean;
-}
+import { HeaderSharedProps } from '@/lib/types/header';
 
 export default function HeaderAuthActions({
   user,
@@ -24,7 +16,7 @@ export default function HeaderAuthActions({
   showWriteButton = true,
   scrolled = false,
   isRootPath,
-}: HeaderAuthActionsProps) {
+}: HeaderSharedProps) {
   const router = useRouter();
   const { isOpen, close, toggle } = useNotificationStore();
   const { data: unreadNotificationsCount } = useGetNotificationCountQuery();
