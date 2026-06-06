@@ -3,7 +3,7 @@
 import { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
-import EmptyState from '@/components/_common/emptyState';
+import StateMessage from '@/components/_common/stateMessage';
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -55,7 +55,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   // 미인증 상태에서 보호된 경로 접근 시 로그인 안내
   return (
     <div className="flex min-h-[calc(100vh-200px)] items-center justify-center">
-      <EmptyState
+      <StateMessage
         imageSrc="/character_sad.svg"
         title="로그인이 필요한 서비스예요"
         description="회원 전용 콘텐츠를 이용하려면\n먼저 로그인해주세요."
