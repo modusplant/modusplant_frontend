@@ -34,7 +34,7 @@ export default function CommentItem({
     nickname,
     path,
     profileImagePath,
-    updatedAt,
+    editedAt,
     children,
   } = comment;
   const { user, isAuthenticated } = useAuthStore();
@@ -52,11 +52,10 @@ export default function CommentItem({
   });
 
   // 삭제 훅
-  const { deleteComment, isDeleting, updateComment, isUpdating } =
-    useCommentMutations({
-      postId,
-      onSuccess: refetch,
-    });
+  const { deleteComment, isDeleting, updateComment } = useCommentMutations({
+    postId,
+    onSuccess: refetch,
+  });
 
   const handleDelete = () => {
     deleteComment({ commentPath: path });
@@ -89,9 +88,6 @@ export default function CommentItem({
   ) => {
     setUpdatingComment(event.target.value);
   };
-
-  const isUpdated =
-    new Date(updatedAt).getTime() > new Date(createdAt).getTime();
 
   return (
     <>
@@ -130,8 +126,7 @@ export default function CommentItem({
 
             <CommentActions
               createdAt={createdAt}
-              updatedAt={updatedAt}
-              isUpdated={isUpdated}
+              editedAt={editedAt}
               likeCount={likeCount}
               isLiked={isLiked}
               isLiking={isLiking}

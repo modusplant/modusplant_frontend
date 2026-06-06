@@ -27,6 +27,7 @@ export default function EmailSection({
     handleVerifyCode,
     isVerifyLoading,
     isRequestLoading,
+    duplicateEmailError,
   } = useEmailVerification({ trigger, watch });
 
   const handleVerify = async () => {
@@ -89,9 +90,9 @@ export default function EmailSection({
       </div>
 
       {/* 이메일 에러 메시지 */}
-      {errors.email && (
+      {(errors.email || duplicateEmailError) && (
         <p className="text-system-alert text-sm font-medium">
-          {errors.email.message}
+          {duplicateEmailError || errors.email?.message}
         </p>
       )}
 
