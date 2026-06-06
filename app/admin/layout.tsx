@@ -19,7 +19,7 @@ export default async function AdminLayout({
 
   const payload = decodeJWT(token);
 
-  if (!payload || payload.role !== 'ADMIN') {
+  if (!payload || payload.roles !== 'ADMIN') {
     redirect('/');
   }
 

@@ -42,8 +42,7 @@ export async function proxy(request: NextRequest) {
     }
 
     const payload = decodeJWT(token);
-
-    if (payload?.role !== 'ADMIN') {
+    if (payload?.roles !== 'ADMIN') {
       return NextResponse.redirect(new URL('/', request.url));
     }
   }
