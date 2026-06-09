@@ -32,12 +32,12 @@ export const useSignout = () => {
       : undefined;
 
     if (authProvider) {
+      const isSocialLinkedMember = data?.authProvider.startsWith('BASIC_');
       const url = buildAuthUrl({
         provider: authProvider,
-        intent: {
-          action: 'SIGNOUT',
-          returnTo: '/mypage/account?signout=pending',
-        },
+        intent: isSocialLinkedMember
+          ? { action: 'UNLINK_AND_SIGNOUT' }
+          : { action: 'SIGNOUT', returnTo: '/mypage/account?signout=pending' },
       });
       window.location.href = url;
       return;
