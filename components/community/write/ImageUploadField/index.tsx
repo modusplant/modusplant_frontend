@@ -69,13 +69,11 @@ const ImageUploadField = () => {
     return false;
   };
 
-  // keyboard event handlers for image popup
+  // keyboard event handlers for image popup navigation.
+  // Escape close is handled by ImagePopup overlay lifecycle.
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!popupImageId) return;
-
-      // close popup on Escape key
-      if (e.key === 'Escape') setPopupImageId(null);
 
       // navigate images with Arrow keys
       const currentIndex = images.findIndex(({ id }) => id === popupImageId);

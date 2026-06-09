@@ -2,6 +2,7 @@ import { HTMLAttributes, useEffect } from 'react';
 import { SignoutForm, SignoutFormValues } from './SignoutForm';
 import { cn } from '@/lib/utils/tailwindHelper';
 import Button from '@/components/_common/button';
+import { OVERLAY_Z_INDEX } from '@/lib/constants/overlayLayers';
 import { X } from 'lucide-react';
 
 interface DialogModalProps extends HTMLAttributes<HTMLDivElement> {
@@ -34,13 +35,14 @@ export default function SignoutModal({
   return (
     <div
       className={cn(
-        'fixed inset-0 z-99 flex items-center justify-center bg-black/20',
+        'bg-surface-overlay fixed inset-0 flex items-center justify-center',
+        OVERLAY_Z_INDEX.modal,
         className
       )}
       onClick={onClose}
     >
       <div
-        className="relative rounded-2xl bg-neutral-100 py-4 shadow-lg"
+        className="bg-surface-card relative rounded-2xl py-4 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
         <Button

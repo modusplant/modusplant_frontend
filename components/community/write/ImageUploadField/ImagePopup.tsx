@@ -1,6 +1,8 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import Image from 'next/image';
 
+import { OVERLAY_Z_INDEX } from '@/lib/constants/overlayLayers';
+import { useOverlayLifecycle } from '@/lib/hooks/common/useOverlayLifecycle';
 import { WriteImageData } from '@/lib/schemas/writeForm';
 import { cn } from '@/lib/utils/tailwindHelper';
 
@@ -17,10 +19,17 @@ const ImagePopup = ({
   handleThumbnailImage,
 }: ImagePopupProps) => {
   const { id, content, isThumbnail } = image;
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   const src = useMemo(() => {
     return typeof content === 'string' ? content : URL.createObjectURL(content);
   }, [content]);
+
+  useOverlayLifecycle({
+    isOpen: true,
+    onEscape: handleClose,
+    initialFocusRef: dialogRef,
+  });
 
   useEffect(() => {
     if (typeof content === 'string') return;
@@ -29,28 +38,23 @@ const ImagePopup = ({
     };
   }, [content, src]);
 
-  useEffect(() => {
-    const prevOverflow = document.body.style.overflow;
-    const prevUserSelect = document.body.style.userSelect;
-
-    document.body.style.overflow = 'hidden';
-    document.body.style.userSelect = 'none';
-
-    return () => {
-      document.body.style.overflow = prevOverflow;
-      document.body.style.userSelect = prevUserSelect;
-    };
-  }, []);
-
   return (
     <div
-      className="fixed inset-0 z-[9999] touch-none bg-black/60 select-none"
+      className={cn(
+        'bg-surface-overlay-strong fixed inset-0 touch-none select-none',
+        OVERLAY_Z_INDEX.modal
+      )}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Image preview"
       onClick={handleClose}
       onDragStart={(e) => e.preventDefault()}
     >
       <div className="flex h-full w-full items-center justify-center p-6">
         <div
-          className="relative w-[800px] max-w-[90vw]"
+          ref={dialogRef}
+          tabIndex={-1}
+          className="relative w-[800px] max-w-[90vw] focus-visible:outline-none"
           onClick={(e) => e.stopPropagation()}
         >
           <button
@@ -61,9 +65,11 @@ const ImagePopup = ({
               handleThumbnailImage(id);
             }}
             className={cn(
-              'absolute top-3 left-10 z-10 cursor-pointer rounded-full px-2 py-1 text-xs font-medium text-white',
-              isThumbnail ? 'bg-[#57c04e]' : 'bg-neutral-70'
+              'focus-visible:ring-focus-ring text-action-primary-fg absolute top-3 left-10 z-10 cursor-pointer rounded-full px-2 py-1 text-xs font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+              isThumbnail ? 'bg-feedback-success' : 'bg-icon-muted'
             )}
+            aria-pressed={isThumbnail}
+            aria-label="Set as thumbnail image"
           >
             대표
           </button>

@@ -18,7 +18,9 @@ export default function ConditionalLayout({
   const isAuthPage = pathname?.startsWith('/login');
   // 알림 페이지에서도 Header와 Footer 표시하지 않음
   const isNotificationPage = pathname?.startsWith('/notifications');
-  if (isAuthPage || isNotificationPage) {
+  // 디자인시스템 운영 페이지는 서비스 chrome 없이 독립 화면으로 확인
+  const isDesignSystemPage = pathname?.startsWith('/design-system');
+  if (isAuthPage || isNotificationPage || isDesignSystemPage) {
     return <>{children}</>;
   }
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 import {
   SECONDARY_CATEGORIES,
   type Category,
@@ -36,7 +36,10 @@ export default function SecondaryCategoryFilter({
   className,
   disableAutoReset = false,
 }: SecondaryCategoryFilterProps) {
-  const { isOpen, dropdownRef, toggle, close } = useDropdownState();
+  const { isOpen, dropdownRef, toggle, open, close } = useDropdownState();
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const listboxId = useId();
   const isSelector = variant === 'selector';
 
   // variant="filter"일 때만 내부 상태로 임시 선택 관리
@@ -66,6 +69,7 @@ export default function SecondaryCategoryFilter({
       // 단일 선택 (게시글 작성) - 즉시 반영
       onCategoriesChange([category.id]);
       close();
+      requestAnimationFrame(() => triggerRef.current?.focus());
       return;
     }
 
@@ -122,11 +126,74 @@ export default function SecondaryCategoryFilter({
   const handleApplyAndClose = () => {
     onCategoriesChange(tempSelectedIds);
     close();
+    requestAnimationFrame(() => triggerRef.current?.focus());
   };
 
   const isDisabled =
     (isSelector && !primaryCategoryId) ||
     (!isSelector && primaryCategoryId === 'all');
+
+  const focusOption = (index: number) => {
+    optionRefs.current[index]?.focus();
+  };
+
+  const focusSelectedOrEdgeOption = (edge: 'first' | 'last' = 'first') => {
+    const selectedIds = isSelector ? selectedCategoryIds : tempSelectedIds;
+    const selectedIndex = secondaryOptions.findIndex((option) =>
+      selectedIds.includes(option.id)
+    );
+    const fallbackIndex = edge === 'last' ? secondaryOptions.length - 1 : 0;
+
+    requestAnimationFrame(() =>
+      focusOption(selectedIndex >= 0 ? selectedIndex : fallbackIndex)
+    );
+  };
+
+  const handleTriggerKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (isDisabled) return;
+    if (event.key === 'Escape' && isOpen) {
+      event.preventDefault();
+      close();
+      return;
+    }
+
+    if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+
+    event.preventDefault();
+    open();
+    focusSelectedOrEdgeOption(event.key === 'ArrowUp' ? 'last' : 'first');
+  };
+
+  const handleListboxKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const currentIndex = optionRefs.current.findIndex(
+      (option) => option === document.activeElement
+    );
+    const lastIndex = secondaryOptions.length - 1;
+
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        focusOption(currentIndex >= 0 ? Math.min(currentIndex + 1, lastIndex) : 0);
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        focusOption(currentIndex >= 0 ? Math.max(currentIndex - 1, 0) : lastIndex);
+        break;
+      case 'Home':
+        event.preventDefault();
+        focusOption(0);
+        break;
+      case 'End':
+        event.preventDefault();
+        focusOption(lastIndex);
+        break;
+      case 'Escape':
+        event.preventDefault();
+        close();
+        requestAnimationFrame(() => triggerRef.current?.focus());
+        break;
+    }
+  };
 
   return (
     <div
@@ -135,8 +202,10 @@ export default function SecondaryCategoryFilter({
     >
       {/* 드롭다운 버튼 */}
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => !isDisabled && toggle()}
+        onKeyDown={handleTriggerKeyDown}
         disabled={isDisabled}
         className={cn(
           'border-surface-stroke flex items-center justify-between border',
@@ -155,6 +224,7 @@ export default function SecondaryCategoryFilter({
         )}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
+        aria-controls={isOpen ? listboxId : undefined}
       >
         <span
           className={cn({
@@ -166,7 +236,7 @@ export default function SecondaryCategoryFilter({
         </span>
         <Image
           src="/icon/arrow-down.svg"
-          alt="arrow"
+          alt=""
           width={12}
           height={12}
           className={cn(isOpen && 'rotate-180')}
@@ -177,6 +247,7 @@ export default function SecondaryCategoryFilter({
       {/* 드롭다운 박스 */}
       {isOpen && (
         <div
+          id={listboxId}
           className={cn(
             'border-surface-stroke absolute z-50 border bg-neutral-100 shadow-lg',
             {
@@ -187,14 +258,19 @@ export default function SecondaryCategoryFilter({
             }
           )}
           role="listbox"
+          aria-multiselectable={!isSelector && multiSelect ? true : undefined}
+          onKeyDown={handleListboxKeyDown}
         >
           {isSelector ? (
             // 게시글 작성: 리스트 형태
             <>
-              {secondaryOptions.map((option) => (
+              {secondaryOptions.map((option, index) => (
                 <button
                   key={option.id}
                   type="button"
+                  ref={(element) => {
+                    optionRefs.current[index] = element;
+                  }}
                   onClick={() => handleCategorySelect(option)}
                   className="text-neutral-20 hover:bg-surface-98 block w-full px-4 py-2.5 text-left text-[15px] leading-normal font-medium tracking-[-0.01em] transition-colors"
                   role="option"
@@ -208,7 +284,7 @@ export default function SecondaryCategoryFilter({
             // 메인페이지: 칩 형태
             <>
               <div className="mb-4 flex flex-wrap items-center gap-1.5 md:gap-2">
-                {secondaryOptions.map((option) => {
+                {secondaryOptions.map((option, index) => {
                   // filter 모드에서는 tempSelectedIds로 선택 상태 표시
                   const isSelected = tempSelectedIds.includes(option.id);
 
@@ -216,6 +292,9 @@ export default function SecondaryCategoryFilter({
                     <button
                       key={option.id}
                       type="button"
+                      ref={(element) => {
+                        optionRefs.current[index] = element;
+                      }}
                       onClick={() => handleCategorySelect(option)}
                       className={cn(
                         'rounded-full px-3.5 py-2.5 text-xs font-medium whitespace-nowrap transition-all md:px-4 md:py-2 md:text-sm',

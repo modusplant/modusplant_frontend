@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { X } from 'lucide-react';
@@ -9,6 +9,9 @@ import SearchHistory from './searchHistory';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useGetSearchHistory } from '@/lib/hooks/search/useGetSearchHistory';
 import { useDeleteSearchHistory } from '@/lib/hooks/search/useDeleteSearchHistory';
+import { OVERLAY_Z_INDEX } from '@/lib/constants/overlayLayers';
+import { useOverlayLifecycle } from '@/lib/hooks/common/useOverlayLifecycle';
+import { cn } from '@/lib/utils/tailwindHelper';
 
 interface SearchOverlayProps {
   isOpen: boolean;
@@ -23,6 +26,7 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const currentSearchParams = useSearchParams();
+  const titleId = useId();
   const [pendingSearchUrl, setPendingSearchUrl] = useState<string | null>(null);
   const { register, handleSubmit, reset } = useForm<SearchFormValues>({
     defaultValues: {
@@ -66,6 +70,11 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
     onClose();
   };
 
+  useOverlayLifecycle({
+    isOpen,
+    onEscape: handleClose,
+  });
+
   useEffect(() => {
     if (!pendingSearchUrl) return;
 
@@ -83,17 +92,28 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-100 flex min-h-screen justify-center bg-white">
+    <div
+      className={cn(
+        'bg-surface-page fixed inset-0 flex min-h-screen justify-center',
+        OVERLAY_Z_INDEX.overlay
+      )}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+    >
       <div className="flex w-full max-w-[780px] flex-col gap-5 px-5 py-8">
+        <h2 id={titleId} className="sr-only">
+          Search
+        </h2>
         <div className="px-4">
           <button
             type="button"
-            className="text-neutral-20 ml-auto flex h-6 w-6 items-center justify-center"
+            className="text-text-subtle focus-visible:ring-focus-ring ml-auto flex h-6 w-6 items-center justify-center rounded-full focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             onClick={handleClose}
             disabled={!!pendingSearchUrl}
             aria-label="검색 오버레이 닫기"
           >
-            <X className="text-neutral-80 h-8 w-8 shrink-0" />
+            <X className="text-icon-muted h-8 w-8 shrink-0" />
           </button>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -109,12 +129,12 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
         {isAuthenticated && (
           <>
             <div className="flex items-center justify-between">
-              <p className="text-neutral-5 text-[17px] leading-[1.2] font-semibold -tracking-[0.01em]">
+              <p className="text-text-strong text-[17px] leading-[1.2] font-semibold -tracking-[0.01em]">
                 최근 검색어
               </p>
               <button
                 type="button"
-                className="text-[16px] leading-1.5 font-semibold -tracking-[0.01em] text-neutral-50"
+                className="text-text-muted text-[16px] leading-1.5 font-semibold -tracking-[0.01em]"
                 onClick={() => deleteSearchHistory()}
                 disabled={!!pendingSearchUrl || isDeletingSearchHistory}
               >

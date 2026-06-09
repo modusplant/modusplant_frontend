@@ -35,10 +35,10 @@ const ImagePreviewItem = ({ preview, onRemove }: ImagePreviewItemProps) => {
           e.preventDefault();
           onRemove(id);
         }}
-        className="bg-neutral-70 absolute -top-2 -right-2 z-10 rounded-full p-1"
+        className="bg-icon-muted absolute -top-2 -right-2 z-10 rounded-full p-1"
         aria-label="이미지 삭제"
       >
-        <X className="h-4 w-4 text-white" />
+        <X className="text-action-primary-fg h-4 w-4" />
       </button>
     </div>
   );

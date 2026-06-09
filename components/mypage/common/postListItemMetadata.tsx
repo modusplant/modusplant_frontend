@@ -46,7 +46,7 @@ export default function PostListItemMetadata({
   const formattedDate = formatRelativeTime(post.publishedAt);
 
   return (
-    <div className="text-neutral-60 flex flex-wrap items-center text-[11px] leading-[1.2] tracking-[-0.02em] whitespace-nowrap sm:gap-2 md:text-xs">
+    <div className="text-text-muted flex flex-wrap items-center text-[11px] leading-[1.2] tracking-[-0.02em] whitespace-nowrap sm:gap-2 md:text-xs">
       <div className="flex items-center gap-2 md:gap-2">
         {/* 1차 카테고리 */}
         <span>{post.primaryCategory}</span>
@@ -62,8 +62,8 @@ export default function PostListItemMetadata({
         >
           <Heart
             className="h-3 w-3 md:h-4 md:w-4"
-            color={isLiked ? 'red' : 'currentColor'}
-            fill={isLiked ? 'red' : 'none'}
+            color={isLiked ? 'var(--feedback-error)' : 'currentColor'}
+            fill={isLiked ? 'var(--feedback-error)' : 'none'}
           />
           <span>{likeCount || initialLikeCount}</span>
         </button>
@@ -86,7 +86,7 @@ export default function PostListItemMetadata({
             fill={isBookmarked ? 'currentColor' : 'none'}
             className={cn(
               'h-3 w-3 md:h-4 md:w-4',
-              isBookmarked ? 'text-primary-50' : 'text-neutral-60'
+              isBookmarked ? 'text-action-tertiary-fg' : 'text-text-muted'
             )}
           />
         </button>

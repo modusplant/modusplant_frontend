@@ -71,6 +71,7 @@ export default function CommentHeader({
 
       <Dropdown
         isOpen={isDropdownOpen}
+        onOpen={() => setIsDropdownOpen(true)}
         onClose={() => setIsDropdownOpen(false)}
         trigger={
           <button

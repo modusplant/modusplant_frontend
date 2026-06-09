@@ -56,3 +56,10 @@ CLAUDE.md
 .eslintcache
 *storybook.log
 storybook-static
+
+# large Figma binaries (kept locally, excluded from repo)
+*.fig
+*.zip.zip
+
+# codex tool logs (kept locally, excluded from repo)
+.codex-*.log

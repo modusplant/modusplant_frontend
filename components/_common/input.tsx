@@ -1,9 +1,10 @@
-import React, { forwardRef, useState } from 'react';
-import { cn } from '@/lib/utils/tailwindHelper';
+import React, { forwardRef, useEffect, useId, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { cn } from '@/lib/utils/tailwindHelper';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string | boolean;
+  helperText?: React.ReactNode;
   showPasswordToggle?: boolean;
   showCount?: boolean;
 }
@@ -11,39 +12,50 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
+      id,
       className,
       type,
       error,
+      helperText,
       showPasswordToggle = false,
       showCount = false,
       maxLength,
+      onChange,
+      value,
+      defaultValue,
+      required,
+      disabled,
+      'aria-describedby': ariaDescribedBy,
+      'aria-invalid': ariaInvalid,
       ...props
     },
     ref
   ) => {
+    const generatedId = useId();
+    const inputId = id ?? generatedId;
     const [showPassword, setShowPassword] = useState(false);
-
     const [charCount, setCharCount] = useState(
-      props.value
-        ? String(props.value).length
-        : props.defaultValue
-          ? String(props.defaultValue).length
+      value
+        ? String(value).length
+        : defaultValue
+          ? String(defaultValue).length
           : 0
     );
 
+    useEffect(() => {
+      if (value !== undefined) setCharCount(String(value).length);
+    }, [value]);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      let value = e.target.value;
+      let nextValue = e.target.value;
 
-      if (maxLength && value.length > maxLength) {
-        value = value.slice(0, maxLength);
-        e.target.value = value;
+      if (maxLength && nextValue.length > maxLength) {
+        nextValue = nextValue.slice(0, maxLength);
+        e.target.value = nextValue;
       }
-      setCharCount(value.length);
 
-      // 상위 컴포넌트나 react-hook-form에서 전달한 onChange가 동작하도록 유지
-      if (props.onChange) {
-        props.onChange(e);
-      }
+      setCharCount(nextValue.length);
+      onChange?.(e);
     };
 
     const inputType =
@@ -52,34 +64,75 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           ? 'text'
           : 'password'
         : type;
-
     const isError = !!error;
+    const errorMessage = typeof error === 'string' ? error : undefined;
+    const helperId = helperText && !errorMessage ? `${inputId}-helper` : undefined;
+    const errorId = errorMessage ? `${inputId}-error` : undefined;
+    const countId = showCount ? `${inputId}-count` : undefined;
+    const describedBy =
+      [ariaDescribedBy, errorId, helperId, countId].filter(Boolean).join(' ') ||
+      undefined;
+
+    const inputProps = {
+      id: inputId,
+      type: inputType,
+      ref,
+      maxLength,
+      onChange: handleChange,
+      value,
+      defaultValue,
+      required,
+      disabled,
+      'aria-invalid': isError ? true : ariaInvalid,
+      'aria-describedby': describedBy,
+      ...props,
+    };
+
+    const inputClassName = cn(
+      'text-text-default placeholder:text-text-placeholder w-full bg-transparent text-base',
+      'rounded-lg border px-4 py-3 outline-none',
+      isError ? 'border-feedback-error' : 'border-border-default',
+      'focus:border-focus-ring',
+      'focus-visible:ring-focus-ring focus-visible:ring-2 focus-visible:ring-offset-2',
+      'disabled:cursor-not-allowed disabled:opacity-50',
+      'transition-colors',
+      className
+    );
+
+    const renderMeta = (control: React.ReactNode) => {
+      if (!helperText && !errorMessage) return control;
+
+      return (
+        <div className="flex w-full flex-col gap-1.5">
+          {control}
+          {errorMessage ? (
+            <p id={errorId} className="text-feedback-error text-sm">
+              {errorMessage}
+            </p>
+          ) : (
+            <p id={helperId} className="text-text-muted text-sm">
+              {helperText}
+            </p>
+          )}
+        </div>
+      );
+    };
 
     if (showPasswordToggle && type === 'password') {
-      // 비밀번호 토글이 필요한 경우만 wrapper div 사용
-      return (
+      return renderMeta(
         <div className="relative flex items-center">
           <input
-            type={inputType}
-            className={cn(
-              'text-neutral-0 placeholder:text-neutral-70 w-full bg-transparent text-base',
-              'rounded-lg border px-4 py-3 outline-none',
-              isError ? 'border-system-alert' : 'border-surface-stroke-2',
-              'focus:border-primary-50',
-              'disabled:cursor-not-allowed disabled:opacity-50',
-              'transition-colors',
-              className
-            )}
-            ref={ref}
-            maxLength={maxLength}
-            onChange={handleChange}
-            {...props}
+            {...inputProps}
+            className={cn(inputClassName, 'pr-10')}
           />
           <button
             type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="text-neutral-70 hover:text-neutral-20 absolute right-3 transition-colors"
-            aria-label="비밀번호 표시/숨김"
+            onClick={() => setShowPassword((current) => !current)}
+            disabled={disabled}
+            className="text-icon-muted hover:text-icon-default focus-visible:ring-focus-ring absolute right-3 rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            aria-controls={inputId}
+            aria-pressed={showPassword}
           >
             {showPassword ? (
               <Eye width={16} height={16} stroke="currentColor" />
@@ -91,28 +144,28 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       );
     }
 
-    // 일반 input의 경우
     if (showCount) {
-      return (
+      return renderMeta(
         <div className="relative flex items-center">
           <input
-            type={inputType}
+            {...inputProps}
             className={cn(
-              'placeholder:text-neutral-70 placeholder:typo-regular14 w-full bg-transparent',
+              'placeholder:text-text-placeholder placeholder:typo-regular14 w-full bg-transparent',
               'rounded-lg border px-4 py-3 outline-none',
-              isError ? 'border-system-alert' : 'border-surface-stroke-2',
-              'focus:border-primary-50',
+              isError ? 'border-feedback-error' : 'border-border-default',
+              'focus:border-focus-ring',
+              'focus-visible:ring-focus-ring focus-visible:ring-2 focus-visible:ring-offset-2',
               'disabled:cursor-not-allowed disabled:opacity-50',
               'transition-colors',
               'pr-16',
               className
             )}
-            ref={ref}
-            maxLength={maxLength}
-            onChange={handleChange}
-            {...props}
           />
-          <span className="typo-regular14 text-neutral-70 absolute right-4">
+          <span
+            id={countId}
+            className="typo-regular14 text-text-placeholder absolute right-4"
+            aria-live="polite"
+          >
             {charCount}
             {maxLength ? `/${maxLength}` : ''}
           </span>
@@ -120,25 +173,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       );
     }
 
-    // showCount가 없는 일반 input 태그 반환
-    return (
-      <input
-        type={inputType}
-        className={cn(
-          'text-neutral-0 placeholder:text-neutral-70 w-full bg-transparent text-base',
-          'rounded-lg border px-4 py-3 outline-none',
-          isError ? 'border-system-alert' : 'border-surface-stroke-2',
-          'focus:border-primary-50',
-          'disabled:cursor-not-allowed disabled:opacity-50',
-          'transition-colors',
-          className
-        )}
-        ref={ref}
-        maxLength={maxLength}
-        onChange={handleChange}
-        {...props}
-      />
-    );
+    return renderMeta(<input {...inputProps} className={inputClassName} />);
   }
 );
 

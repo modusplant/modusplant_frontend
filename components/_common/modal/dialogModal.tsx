@@ -1,6 +1,8 @@
 import Button from '@/components/_common/button';
+import { OVERLAY_Z_INDEX } from '@/lib/constants/overlayLayers';
+import { useOverlayLifecycle } from '@/lib/hooks/common/useOverlayLifecycle';
 import { cn } from '@/lib/utils/tailwindHelper';
-import { useEffect } from 'react';
+import { useId, useRef } from 'react';
 
 interface DialogModalProps {
   title: string;
@@ -25,38 +27,50 @@ export default function DialogModal({
   align,
   shouldUseLineBreak,
 }: DialogModalProps) {
-  // 오버레이 영역 스크롤 방지
-  useEffect(() => {
-    const prev = {
-      overflow: document.body.style.overflow,
-      userSelect: document.body.style.userSelect,
-    };
+  const titleId = useId();
+  const descriptionId = useId();
+  const dialogRef = useRef<HTMLDivElement>(null);
 
-    document.body.style.overflow = 'hidden';
-    document.body.style.userSelect = 'none';
+  const handleCancelAndClose = () => {
+    onCancel?.();
+    hideModal();
+  };
 
-    return () => {
-      document.body.style.overflow = prev.overflow;
-      document.body.style.userSelect = prev.userSelect;
-    };
-  }, []);
+  const handleConfirmAndClose = () => {
+    onConfirm?.();
+    hideModal();
+  };
+
+  useOverlayLifecycle({
+    isOpen: true,
+    onEscape: handleCancelAndClose,
+    initialFocusRef: dialogRef,
+  });
+
   return (
     <div
-      className="fixed inset-0 z-99 flex items-center justify-center bg-black/20 select-none"
-      onClick={() => {
-        onCancel?.();
-        hideModal();
-      }}
+      className={cn(
+        'bg-surface-overlay fixed inset-0 flex items-center justify-center select-none',
+        OVERLAY_Z_INDEX.modal
+      )}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+      aria-describedby={descriptionId}
+      onClick={handleCancelAndClose}
       onDragStart={(e) => e.preventDefault()}
     >
       <div
-        className="w-85 rounded-2xl bg-neutral-100 py-4 shadow-lg"
+        ref={dialogRef}
+        tabIndex={-1}
+        className="bg-surface-card w-85 rounded-2xl py-4 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col items-center gap-1 py-10">
           <h2
+            id={titleId}
             className={cn(
-              'text-neutral-10 text-xl text-[17px] font-semibold',
+              'text-text-strong text-xl text-[17px] font-semibold',
               align === 'center' && 'text-center',
               shouldUseLineBreak && 'whitespace-pre-line'
             )}
@@ -64,8 +78,9 @@ export default function DialogModal({
             {title}
           </h2>
           <p
+            id={descriptionId}
             className={cn(
-              'text-neutral-30 text-[16px]',
+              'text-text-body text-[16px]',
               align === 'center' && 'text-center',
               shouldUseLineBreak && 'whitespace-pre-line'
             )}
@@ -78,11 +93,8 @@ export default function DialogModal({
             <Button
               variant="default"
               size="lg"
-              onClick={() => {
-                onCancel?.();
-                hideModal();
-              }}
-              className="text-neutral-10 min-w-20 rounded-[7px] px-5 py-3 text-[15px]"
+              onClick={handleCancelAndClose}
+              className="text-text-strong min-w-20 rounded-[7px] px-5 py-3 text-[15px]"
             >
               취소
             </Button>
@@ -90,11 +102,8 @@ export default function DialogModal({
           <Button
             variant="point"
             size="lg"
-            onClick={() => {
-              onConfirm?.();
-              hideModal();
-            }}
-            className="min-w-20 rounded-[7px] px-5 py-3 text-[15px] text-neutral-100"
+            onClick={handleConfirmAndClose}
+            className="text-action-primary-fg min-w-20 rounded-[7px] px-5 py-3 text-[15px]"
           >
             {buttonText || 'OK'}
           </Button>

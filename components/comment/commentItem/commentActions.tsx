@@ -50,8 +50,8 @@ export default function CommentActions({
             className={`h-4 w-4 transition-all ${
               isLiked ? '' : 'group-hover:fill-neutral-90'
             }`}
-            color={isLiked ? 'red' : '#919191'}
-            fill={isLiked ? 'red' : 'none'}
+            color={isLiked ? 'var(--feedback-error)' : 'var(--text-muted)'}
+            fill={isLiked ? 'var(--feedback-error)' : 'none'}
           />
           <span>{likeCount}</span>
         </button>

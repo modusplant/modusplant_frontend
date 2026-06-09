@@ -39,6 +39,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     '/oauth/kakao/callback', // 카카오 인가 페이지
     '/oauth/google/callback', // 구글 인가 페이지
     '/search', // 검색 페이지
+    '/design-system', // 디자인시스템 운영 페이지
   ];
 
   // 현재 경로가 공개 경로인지 확인

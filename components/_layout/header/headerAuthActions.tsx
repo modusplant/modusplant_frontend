@@ -26,7 +26,7 @@ export default function HeaderAuthActions({
   isRootPath,
 }: HeaderAuthActionsProps) {
   const router = useRouter();
-  const { isOpen, close, toggle } = useNotificationStore();
+  const { isOpen, open, close, toggle } = useNotificationStore();
   const { data: unreadNotificationsCount } = useGetNotificationCountQuery();
 
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] =
@@ -50,6 +50,7 @@ export default function HeaderAuthActions({
       {/* 알림 드롭다운 */}
       <Dropdown
         isOpen={isOpen}
+        onOpen={open}
         onClose={close}
         trigger={
           <button
@@ -59,8 +60,8 @@ export default function HeaderAuthActions({
           >
             <Bell color={scrolled || !isRootPath ? 'black' : 'white'} />
             {!!unreadNotificationsCount && unreadNotificationsCount > 0 && (
-              <div className="absolute top-0 right-0 flex size-3.5 items-center justify-center rounded-full bg-[#f44335]">
-                <span className="typo-semibold14 text-[9px] text-white">
+              <div className="bg-feedback-error absolute top-0 right-0 flex size-3.5 items-center justify-center rounded-full">
+                <span className="typo-semibold14 text-action-primary-fg text-[9px]">
                   {unreadNotificationsCount > 99
                     ? `99+`
                     : unreadNotificationsCount}
@@ -69,13 +70,15 @@ export default function HeaderAuthActions({
             )}
           </button>
         }
-        children={<NotificationBox isMobile={false} />}
         className="-right-28.75 h-105 w-95 overflow-hidden p-0"
-      />
+      >
+        <NotificationBox isMobile={false} />
+      </Dropdown>
 
       {/* 프로필 드롭다운 */}
       <Dropdown
         isOpen={isProfileDropdownOpen}
+        onOpen={() => setIsProfileDropdownOpen(true)}
         onClose={() => setIsProfileDropdownOpen(false)}
         trigger={
           <button
