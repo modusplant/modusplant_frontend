@@ -1,9 +1,13 @@
+/** 전체 레이아웃 레벨 조건 관리
+ * 예: Header 자체를 보여줄지
+ */
+
 'use client';
 
 import { usePathname } from 'next/navigation';
 import Footer from './footer';
 import { User } from '@/lib/types/auth';
-import DesktopHeader from './header/desktopHeader';
+import HeaderWrapper from './header/headerWrapper';
 
 export default function ConditionalLayout({
   children,
@@ -24,7 +28,7 @@ export default function ConditionalLayout({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <DesktopHeader initialUser={initialUser} />
+      <HeaderWrapper initialUser={initialUser} />
       <main className="flex-1">{children}</main>
       <Footer />
     </div>

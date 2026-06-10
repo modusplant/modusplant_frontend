@@ -3,44 +3,22 @@
 import { cn } from '@/lib/utils/tailwindHelper';
 import { useAuthStore } from '@/lib/store/authStore';
 import { usePathname, useRouter } from 'next/navigation';
-import { User } from '@/lib/types/auth';
-import { useState, useEffect } from 'react';
 import HeaderLogo from './headerLogo';
 import HeaderAuthActions from './headerAuthActions';
 import HeaderGuestActions from './headerGuestActions';
 import SearchButton from '@/components/search/searchButton';
+import { HeaderSharedProps } from '@/lib/types/header';
 
-export interface HeaderProps {
-  className?: string;
-  initialUser: User | null;
-}
-
-export default function DesktopHeader({ className, initialUser }: HeaderProps) {
-  const { isAuthenticated, user: storeUser, logout } = useAuthStore();
-  const pathname = usePathname();
+export default function DesktopHeader({
+  user,
+  scrolled,
+  isRootPath,
+  className,
+}: HeaderSharedProps) {
   const router = useRouter();
-  const isRootPath = pathname.endsWith('/');
-  const showWriteButton = !pathname.startsWith('/community/write');
-  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
 
-  // Use store user if authenticated, otherwise use initialUser
-  const user = isAuthenticated ? storeUser : initialUser;
-
-  // 스크롤 감지 (70vh 기준)
-  useEffect(() => {
-    if (!isRootPath) return;
-
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const viewportHeight = window.innerHeight;
-      const threshold = viewportHeight * 0.7; // 70vh
-
-      setScrolled(scrollY > threshold);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [isRootPath]);
+  const { logout } = useAuthStore();
 
   const handleLogout = async () => {
     logout();
@@ -48,39 +26,30 @@ export default function DesktopHeader({ className, initialUser }: HeaderProps) {
   };
 
   return (
-    <header
+    <div
       className={cn(
-        isRootPath ? 'sticky top-0' : '',
-        'z-50 w-full',
-        scrolled && 'bg-white',
+        'flex h-14 w-full items-center justify-between px-4 lg:px-6',
+        !isRootPath && 'border-b border-[#000000]/10',
         className
       )}
     >
-      <div
-        className={cn(
-          'flex h-14 w-full items-center justify-between px-2 md:px-4 lg:px-6',
-          !isRootPath && 'border-b border-[#000000]/10'
-        )}
-      >
-        {/* 로고 */}
-        <HeaderLogo isRootPath={isRootPath} scrolled={scrolled} />
-        {/* 로그인 상태에 따른 버튼 */}
-        <div className="flex items-center gap-2.5 text-[13px] font-medium">
-          {pathname !== '/signup' && pathname !== '/search' && <SearchButton />}
-          {pathname !== '/signup' &&
-            (user ? (
-              <HeaderAuthActions
-                user={user}
-                onLogout={handleLogout}
-                showWriteButton={showWriteButton}
-                scrolled={scrolled}
-                isRootPath={isRootPath}
-              />
-            ) : (
-              <HeaderGuestActions />
-            ))}
-        </div>
+      {/* 로고 */}
+      <HeaderLogo isRootPath={isRootPath} scrolled={scrolled} />
+      {/* 로그인 상태에 따른 버튼 */}
+      <div className="flex items-center gap-2.5 text-[13px] font-medium">
+        {pathname !== '/signup' && pathname !== '/search' && <SearchButton />}
+        {pathname !== '/signup' &&
+          (user ? (
+            <HeaderAuthActions
+              user={user}
+              onLogout={handleLogout}
+              scrolled={scrolled}
+              isRootPath={isRootPath}
+            />
+          ) : (
+            <HeaderGuestActions />
+          ))}
       </div>
-    </header>
+    </div>
   );
 }
