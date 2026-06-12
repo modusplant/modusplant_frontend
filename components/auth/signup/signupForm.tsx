@@ -18,6 +18,7 @@ import PasswordSection from './passwordSection';
 import NicknameSection from './nicknameSection';
 import TermsSection from './termsSection';
 import { useState } from 'react';
+import FixedBottomButton from '@/components/_common/fixedBottomButton';
 
 export default function SignupForm() {
   const router = useRouter();
@@ -135,30 +136,32 @@ export default function SignupForm() {
       <TermsSection errors={errors} watch={watch} setValue={setValue} />
 
       {/* 회원가입 버튼 */}
-      <Button
-        type="submit"
-        disabled={
-          !isValid || !isEmailVerified || !isNicknameVerified || isSubmitting
-        }
-        className="w-full rounded-lg py-3 text-[16px] font-semibold md:py-4"
-        variant={
-          !isValid || !isEmailVerified || !isNicknameVerified || isSubmitting
-            ? 'secondary'
-            : 'point'
-        }
-      >
-        {isSubmitting ? (
-          <Image
-            src={'/icon/loading.gif'}
-            alt="Loading"
-            width={20}
-            height={20}
-            unoptimized
-          />
-        ) : (
-          '회원가입'
-        )}
-      </Button>
+      <FixedBottomButton>
+        <Button
+          type="submit"
+          disabled={
+            !isValid || !isEmailVerified || !isNicknameVerified || isSubmitting
+          }
+          className="w-full rounded-lg text-[16px] font-semibold md:py-4"
+          variant={
+            !isValid || !isEmailVerified || !isNicknameVerified || isSubmitting
+              ? 'secondary'
+              : 'point'
+          }
+        >
+          {isSubmitting ? (
+            <Image
+              src={'/icon/loading.gif'}
+              alt="Loading"
+              width={20}
+              height={20}
+              unoptimized
+            />
+          ) : (
+            '회원가입'
+          )}
+        </Button>
+      </FixedBottomButton>
     </form>
   );
 }
