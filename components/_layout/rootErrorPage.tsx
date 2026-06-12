@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { Button } from '@/components/_common/button';
 
 interface RootErrorPageProps {
@@ -38,12 +37,12 @@ export default function RootErrorPage({ error, reset }: RootErrorPageProps) {
           <Button variant="point" size="md" onClick={reset}>
             다시 시도
           </Button>
-          <Link
-            href="/"
+          <button
+            onClick={() => (window.location.href = '/')}
             className="border-surface-stroke text-neutral-20 flex h-12 items-center justify-center gap-2.25 rounded-[31px] border px-6 py-4 text-base leading-[1.2] font-medium tracking-[-0.03em]"
           >
             홈으로 가기
-          </Link>
+          </button>
         </div>
       </div>
     </div>

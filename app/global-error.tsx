@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 
 export default function GlobalError({
   // error,
@@ -99,8 +98,8 @@ export default function GlobalError({
               >
                 다시 시도
               </button>
-              <Link
-                href="/"
+              <button
+                onClick={() => (window.location.href = '/')}
                 style={{
                   border: '1px solid #e9e9e9',
                   color: '#313131',
@@ -115,7 +114,7 @@ export default function GlobalError({
                 }}
               >
                 홈으로 가기
-              </Link>
+              </button>
             </div>
           </div>
         </div>
