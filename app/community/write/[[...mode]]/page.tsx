@@ -9,7 +9,7 @@ import usePostWrite from '@/lib/hooks/community/usePostWrite';
 import { getTextContent, getImageContent } from '@/lib/utils/post';
 import TitleField from '@/components/community/write/TitleField';
 import ContentField from '@/components/community/write/ContentField';
-import ActionButtonField from '@/components/community/write/ActionButtonField';
+import { ActionButtonField } from '@/components/community/write/ActionButtonField';
 import ImageUploadField from '@/components/community/write/ImageUploadField';
 import PostWriteHeader from '@/components/community/write/PostWriteHeader';
 import CategorySelector from '@/components/community/write/CategorySelector';
@@ -24,7 +24,7 @@ import { showModal } from '@/lib/store/modalStore';
 import { useDraftListQuery } from '@/lib/hooks/community/useDraftListQuery';
 import { DRAFT_INVALID_MESSAGE } from '@/lib/constants/write';
 import { usePostQuery } from '@/lib/hooks/community/usePostQuery';
-import DraftListPopup from '@/components/community/write/DraftListPopup';
+import { DraftListPopup } from '@/components/community/write/DraftListPopup';
 
 const PostWritePage = () => {
   const { mode } = useParams<{ mode: string[] | undefined }>();
@@ -88,7 +88,13 @@ const PostWritePage = () => {
     resetForm(draftPost);
   }, [draftPost, resetForm]);
 
-  const buildWritePayload = (data: WriteFormData, isPublished: boolean) => {
+  const buildWritePayload = ({
+    data,
+    isPublished,
+  }: {
+    data: WriteFormData;
+    isPublished: boolean;
+  }) => {
     const images = data.images.map(({ content, isThumbnail }) => {
       return { content, isThumbnail };
     });
@@ -113,7 +119,7 @@ const PostWritePage = () => {
   };
 
   const onValid = (data: WriteFormData) => {
-    const payload = buildWritePayload(data, true);
+    const payload = buildWritePayload({ data, isPublished: true });
 
     // 수정 모드 여부에 따라 적절한 Mutation 호출
     if (postId) return updatePost({ postId, payload });
@@ -133,7 +139,10 @@ const PostWritePage = () => {
       return;
     }
 
-    const payload = buildWritePayload(parseResult.data, false);
+    const payload = buildWritePayload({
+      data: parseResult.data,
+      isPublished: false,
+    });
     if (draftPostId) {
       updatePost({ postId: draftPostId, payload });
       return;

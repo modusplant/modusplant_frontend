@@ -9,7 +9,7 @@ interface ActionButtonFieldProps {
   onClickSaveDraft: () => void;
 }
 
-const ActionButtonField = ({
+export const ActionButtonField = ({
   isEditMode,
   draftCount,
   onClickLoadDraft,
@@ -65,5 +65,3 @@ const ActionButtonField = ({
     </div>
   );
 };
-
-export default ActionButtonField;
