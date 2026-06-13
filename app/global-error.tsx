@@ -99,7 +99,9 @@ export default function GlobalError({
                 다시 시도
               </button>
               <button
-                onClick={() => (window.location.href = '/')}
+                onClick={() => {
+                  window.location.href = '/';
+                }}
                 style={{
                   border: '1px solid #e9e9e9',
                   color: '#313131',

@@ -38,7 +38,9 @@ export default function RootErrorPage({ error, reset }: RootErrorPageProps) {
             다시 시도
           </Button>
           <button
-            onClick={() => (window.location.href = '/')}
+            onClick={() => {
+              window.location.href = '/';
+            }}
             className="border-surface-stroke text-neutral-20 flex h-12 items-center justify-center gap-2.25 rounded-[31px] border px-6 py-4 text-base leading-[1.2] font-medium tracking-[-0.03em]"
           >
             홈으로 가기
