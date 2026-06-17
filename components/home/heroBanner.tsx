@@ -47,6 +47,7 @@ export default function HeroBanner({
 
   return (
     <section
+      id="hero-banner"
       className={cn(
         'bg-surface-98 relative h-[70vh] w-full overflow-hidden',
         className
