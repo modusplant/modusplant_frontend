@@ -7,7 +7,6 @@ export default function EmailSentNotice() {
   return (
     <div className="mx-auto flex max-w-80 flex-col gap-10">
       <div className="flex flex-col items-center gap-6">
-        {/* TODO: 아이콘 변경(배경 투명한 체크 아이콘 필요) */}
         <Image
           src="/icon/check.svg"
           alt="Check Icon"
