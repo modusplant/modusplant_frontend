@@ -14,6 +14,7 @@ import {
   NewPasswordFormValues,
 } from '@/lib/constants/schema';
 import { cn } from '@/lib/utils/tailwindHelper';
+import FixedBottomButton from '@/components/_common/fixedBottomButton';
 
 interface ResetPasswordFormProps {
   uuid: string;
@@ -81,10 +82,12 @@ export default function ResetPasswordForm({ uuid }: ResetPasswordFormProps) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="mx-auto w-130 space-y-10 p-10"
+      className="mx-auto space-y-10 p-5 pb-20 md:w-130 md:p-10"
     >
       {/* 페이지 제목 */}
-      <h1 className="text-center text-2xl font-bold">비밀번호 재설정</h1>
+      <h1 className="text-center text-2xl font-bold max-md:hidden">
+        비밀번호 재설정
+      </h1>
 
       <div className="space-y-2">
         {/* 비밀번호 입력 */}
@@ -121,7 +124,7 @@ export default function ResetPasswordForm({ uuid }: ResetPasswordFormProps) {
 
         {/* 비밀번호 안내 문구 */}
         {!errors.password && !errors.passwordConfirm && (
-          <p className="text-neutral-60 text-xs">
+          <p className="text-neutral-60 text-[13px]">
             영문 대소문자, 숫자, 특수문자를 포함한 8자 이상의 비밀번호로
             입력해주세요.
           </p>
@@ -135,16 +138,18 @@ export default function ResetPasswordForm({ uuid }: ResetPasswordFormProps) {
         )}
       </div>
 
-      <Button
-        type="submit"
-        variant="point"
-        size="lg"
-        className="rounded-lg"
-        disabled={isSubmitting}
-        fullWidth
-      >
-        {isSubmitting ? '처리 중...' : '재설정'}
-      </Button>
+      <FixedBottomButton>
+        <Button
+          type="submit"
+          variant="point"
+          size="lg"
+          className="rounded-lg"
+          disabled={isSubmitting}
+          fullWidth
+        >
+          {isSubmitting ? '처리 중...' : '재설정'}
+        </Button>
+      </FixedBottomButton>
     </form>
   );
 }
