@@ -13,7 +13,7 @@ const DraftListItem = ({
   onClick,
   onDelete,
 }: DraftListItemProps) => {
-  const { title, updatedAt, postId } = draftPost;
+  const { title, editedAt, postId } = draftPost;
 
   return (
     <li className="border-surface-stroke flex items-center gap-3 border-b-[1px] last:border-0">
@@ -25,7 +25,7 @@ const DraftListItem = ({
           {title?.trim() || '(제목 없음)'}
         </p>
         <span className="text-neutral-60 shrink-0 text-xs">
-          {formatDate(updatedAt, 'yyyy.MM.dd HH:mm')}
+          {formatDate(editedAt, 'yyyy.MM.dd HH:mm')}
         </span>
       </div>
       <button

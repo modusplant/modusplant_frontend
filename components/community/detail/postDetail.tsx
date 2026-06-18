@@ -20,7 +20,7 @@ export default function PostDetail({ postId, initialData }: PostDetailProps) {
         nickname={initialData.nickname}
         publishedAt={initialData.publishedAt}
         viewCount={initialData.viewCount}
-        isUpdated={initialData.publishedAt !== initialData.updatedAt}
+        isUpdated={initialData.publishedAt !== initialData.editedAt}
       />
 
       {/* 본문 */}
