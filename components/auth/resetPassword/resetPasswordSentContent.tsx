@@ -9,7 +9,7 @@ export default function ResetPasswordSentContent() {
   const router = useRouter();
 
   return (
-    <div className="mx-auto flex min-h-[calc(100dvh-56px-80px)] flex-col justify-center gap-10">
+    <div className="mx-auto flex min-h-[calc(100dvh-56px-80px)] max-w-80 flex-col justify-center gap-10">
       <EmailSentNotice />
       <FixedBottomButton>
         <Button
