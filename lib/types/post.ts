@@ -58,7 +58,7 @@ export interface PostDetail extends PostData {
   viewCount: number;
   isPublished: boolean;
   publishedAt: string;
-  updatedAt: string;
+  editedAt: string;
 }
 
 /**
@@ -73,7 +73,7 @@ export interface PostEditData extends Omit<
   authorId: string;
   thumbnailFilename: string;
   isPublished: boolean;
-  updatedAt: string;
+  editedAt: string;
 }
 
 /**
@@ -107,7 +107,7 @@ export interface DraftPostData {
   secondaryCategory: string | null;
   title: string | null;
   content: DraftContentPart[] | null;
-  updatedAt: string;
+  editedAt: string;
 }
 
 /**
