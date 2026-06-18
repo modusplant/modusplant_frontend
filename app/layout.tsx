@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import AuthInitializer from '@/components/_layout/authInitializer';
 import AuthGuard from '@/components/_layout/authGuard';
 import ConditionalLayout from '@/components/_layout/conditionalLayout';
+import RootErrorBoundary from '@/components/_layout/rootErrorBoundary';
 import ModalProvider from '@/components/_layout/modalProvider';
 import { getInitialAuthState } from '@/lib/utils/getInitialAuthState';
 import { layoutMetadata } from '@/lib/metadata/layout';
@@ -69,9 +70,11 @@ export default async function RootLayout({
       >
         <QueryProvider>
           <AuthInitializer initialUser={initialUser} />
-          <ConditionalLayout initialUser={initialUser}>
-            <AuthGuard>{children}</AuthGuard>
-          </ConditionalLayout>
+          <RootErrorBoundary>
+            <ConditionalLayout initialUser={initialUser}>
+              <AuthGuard>{children}</AuthGuard>
+            </ConditionalLayout>
+          </RootErrorBoundary>
           <ModalProvider />
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryProvider>
