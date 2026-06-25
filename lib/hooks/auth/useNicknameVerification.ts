@@ -13,6 +13,7 @@ export const useNicknameVerification = () => {
     });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [lastCheckedValue, setLastCheckedValue] = useState<string | null>(null); // 추가
 
   // 닉네임 중복 확인
   const checkNickname = useCallback(async (nickname: string) => {
@@ -33,6 +34,7 @@ export const useNicknameVerification = () => {
         isAvailable: res.available,
         message: res.message,
       });
+      setLastCheckedValue(nickname);
 
       return res;
     } catch (error) {
@@ -64,6 +66,7 @@ export const useNicknameVerification = () => {
     isLoading,
     checkNickname,
     resetVerification,
+    lastCheckedValue,
     // 편의 속성들
     isChecked: verificationState.isChecked,
     isAvailable: verificationState.isAvailable,
