@@ -52,9 +52,6 @@ export default function AccountSection() {
   const { executeSignout, handleSignout, error: signoutError } = useSignout();
 
   const isSocialMember = authInfo?.authProvider !== 'BASIC';
-  // BASIC 멤버가 아니면서, BASIC_GOOGLE 또는 BASIC_KAKAO 인 멤버
-  const isSocialLinkedMember =
-    isSocialMember && authInfo?.authProvider.startsWith('BASIC');
 
   useLinkError();
 
@@ -78,13 +75,6 @@ export default function AccountSection() {
   }, []);
 
   const openSignoutModal = () => {
-    if (isSocialLinkedMember) {
-      showModal({
-        description: '회원탈퇴를 위해서 소셜 연동 해제를 먼저 진행해주세요.',
-        type: 'snackbar',
-      });
-      return;
-    }
     setSavedFormValues(undefined);
     open();
   };

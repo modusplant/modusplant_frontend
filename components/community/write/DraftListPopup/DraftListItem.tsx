@@ -1,5 +1,5 @@
 import { DraftPostData } from '@/lib/types/post';
-import { formatDate } from 'date-fns';
+import { formatDate, parseISO } from 'date-fns';
 import { Trash2 as IcTrash } from 'lucide-react';
 
 interface DraftListItemProps {
@@ -8,15 +8,15 @@ interface DraftListItemProps {
   onDelete: (draftPostId: string) => void;
 }
 
-const DraftListItem = ({
+export const DraftListItem = ({
   draftPost,
   onClick,
   onDelete,
 }: DraftListItemProps) => {
-  const { title, updatedAt, postId } = draftPost;
+  const { title, editedAt, postId } = draftPost;
 
   return (
-    <li className="border-surface-stroke flex items-center gap-3 border-b-[1px] last:border-0">
+    <li className="border-surface-stroke flex items-center gap-3 border-b last:border-0">
       <div
         className="flex-1 cursor-pointer flex-col justify-center py-4"
         onClick={() => onClick(postId)}
@@ -25,7 +25,7 @@ const DraftListItem = ({
           {title?.trim() || '(제목 없음)'}
         </p>
         <span className="text-neutral-60 shrink-0 text-xs">
-          {formatDate(updatedAt, 'yyyy.MM.dd HH:mm')}
+          {formatDate(parseISO(editedAt), 'yyyy.MM.dd HH:mm')}
         </span>
       </div>
       <button
@@ -42,5 +42,3 @@ const DraftListItem = ({
     </li>
   );
 };
-
-export default DraftListItem;

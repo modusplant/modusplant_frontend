@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { DraftPostData } from '@/lib/types/post';
-import DraftListItem from './DraftListItem';
+import { DraftListItem } from './DraftListItem';
 import DraftListPopupHeader from './DraftListPopupHeader';
 import { useDeleteDraftMutation } from '@/lib/hooks/community/useDeleteDraftMutation';
 
@@ -13,7 +13,7 @@ interface DraftListPopupProps {
   onSelectDraft: (draftPostId: string) => void;
 }
 
-const DraftListPopup = ({
+export const DraftListPopup = ({
   isOpen,
   drafts,
   onClose,
@@ -44,7 +44,7 @@ const DraftListPopup = ({
 
   return (
     <div
-      className="fixed inset-0 z-[90] flex items-center justify-center bg-black/40 px-4"
+      className="fixed inset-0 z-90 flex items-center justify-center bg-black/40 px-4"
       onClick={onClose}
     >
       <div
@@ -68,5 +68,3 @@ const DraftListPopup = ({
     </div>
   );
 };
-
-export default DraftListPopup;
