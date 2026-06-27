@@ -64,4 +64,5 @@ export type OAuthIntent =
   | { action: 'LOGIN' }
   | { action: 'SIGNOUT'; returnTo: string }
   | { action: 'LINK' }
-  | { action: 'UNLINK' };
+  | { action: 'UNLINK' }
+  | { action: 'UNLINK_AND_SIGNOUT' };

@@ -1,33 +1,35 @@
 import React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/_common/button';
 import Profile from '@/components/_common/profileImage';
 import Dropdown from '@/components/_common/dropdown';
-import { User } from '@/lib/types/auth';
 import { Bell } from 'lucide-react';
 import { NotificationBox } from '@/components/notification/NotificationBox';
 import { useGetNotificationCountQuery } from '@/lib/hooks/notification/useGetNotificationCountQuery';
 import { useNotificationStore } from '@/lib/store/notificationStore';
+import { User } from '@/lib/types/auth';
 
 interface HeaderAuthActionsProps {
   user: User;
   onLogout: () => void;
-  showWriteButton?: boolean;
-  scrolled: boolean;
+  scrolled?: boolean;
   isRootPath: boolean;
 }
 
 export default function HeaderAuthActions({
   user,
   onLogout,
-  showWriteButton = true,
   scrolled = false,
   isRootPath,
 }: HeaderAuthActionsProps) {
   const router = useRouter();
+  const pathname = usePathname();
+
   const { isOpen, close, toggle } = useNotificationStore();
   const { data: unreadNotificationsCount } = useGetNotificationCountQuery();
+
+  const showWriteButton = !pathname.startsWith('/community/write');
 
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] =
     React.useState(false);
