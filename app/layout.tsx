@@ -10,6 +10,7 @@ import { layoutMetadata } from '@/lib/metadata/layout';
 import './globals.css';
 import QueryProvider from '@/components/_layout/queryProvider';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Analytics } from '@vercel/analytics/next';
 
 export { layoutMetadata as metadata };
 
@@ -72,7 +73,10 @@ export default async function RootLayout({
           <AuthInitializer initialUser={initialUser} />
           <RootErrorBoundary>
             <ConditionalLayout initialUser={initialUser}>
-              <AuthGuard>{children}</AuthGuard>
+              <AuthGuard>
+                {children}
+                <Analytics />
+              </AuthGuard>
             </ConditionalLayout>
           </RootErrorBoundary>
           <ModalProvider />
