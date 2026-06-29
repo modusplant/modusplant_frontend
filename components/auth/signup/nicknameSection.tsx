@@ -25,11 +25,16 @@ export default function NicknameSection<
     isAvailable,
     message,
     isLoading,
+    lastCheckedValue,
     checkNickname,
     resetVerification,
   } = useNicknameVerification();
 
-  const nicknameDisabled = !watchedNickname || !!errors.nickname || isLoading;
+  const isSameAsLastChecked =
+    !!watchedNickname && watchedNickname === lastCheckedValue;
+
+  const nicknameDisabled =
+    !watchedNickname || !!errors.nickname || isLoading || isSameAsLastChecked;
 
   // 닉네임 중복 확인 핸들러
   const handleCheckNickname = async () => {
