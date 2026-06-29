@@ -50,7 +50,7 @@ export default function DialogModal({
       onDragStart={(e) => e.preventDefault()}
     >
       <div
-        className="w-85 rounded-2xl bg-neutral-100 py-4 shadow-lg"
+        className="mx-5 w-85 rounded-2xl bg-neutral-100 py-4 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col items-center gap-1 py-10">

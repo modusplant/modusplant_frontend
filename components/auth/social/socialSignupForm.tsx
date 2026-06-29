@@ -15,6 +15,7 @@ import Image from 'next/image';
 import { useSocialAuth } from '@/lib/hooks/auth/useSocialAuth';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import FixedBottomButton from '@/components/_common/fixedBottomButton';
 
 export default function SocialSignupForm() {
   const { signupData, handleSignupSubmit, isSocialAuthCompleted } =
@@ -88,28 +89,30 @@ export default function SocialSignupForm() {
       {/* 이용 약관 영역 */}
       <TermsSection errors={errors} watch={watch} setValue={setValue} />
 
-      <Button
-        type="submit"
-        disabled={!isValid || !isNicknameVerified || isSubmitting}
-        className="w-full rounded-lg py-3 text-[16px] font-semibold md:py-4"
-        variant={
-          !isValid || !isNicknameVerified || isSubmitting
-            ? 'secondary'
-            : 'point'
-        }
-      >
-        {isSubmitting ? (
-          <Image
-            src={'/icon/loading.gif'}
-            alt="Loading"
-            width={20}
-            height={20}
-            unoptimized
-          />
-        ) : (
-          '회원가입'
-        )}
-      </Button>
+      <FixedBottomButton>
+        <Button
+          type="submit"
+          disabled={!isValid || !isNicknameVerified || isSubmitting}
+          className="w-full rounded-lg py-3 text-[16px] font-semibold md:py-4"
+          variant={
+            !isValid || !isNicknameVerified || isSubmitting
+              ? 'secondary'
+              : 'point'
+          }
+        >
+          {isSubmitting ? (
+            <Image
+              src={'/icon/loading.gif'}
+              alt="Loading"
+              width={20}
+              height={20}
+              unoptimized
+            />
+          ) : (
+            '회원가입'
+          )}
+        </Button>
+      </FixedBottomButton>
     </form>
   );
 }
