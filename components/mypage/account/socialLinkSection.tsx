@@ -67,12 +67,12 @@ export default function SocialLinkSection({
   };
 
   return (
-    <div className="border-surface-98 rounded-xl border bg-white p-10">
-      <div className="flex flex-col gap-5">
-        <label className="text-neutral-5 text-[18px] leading-normal font-semibold tracking-[-0.02em]">
+    <div className="lg:border-surface-98 rounded-xl py-6 lg:border lg:bg-white lg:p-10">
+      <div className="flex flex-col">
+        <label className="text-neutral-5 mb-5 text-[17px] leading-normal font-semibold tracking-[-0.02em] lg:text-[18px]">
           소셜 연동 관리
         </label>
-        <div className="flex gap-4">
+        <div className="mb-3 flex gap-4 md:mb-5">
           <SocialIconButtonGroup
             mode="mypage_link"
             onProviderClick={handleSocialConnectClick}

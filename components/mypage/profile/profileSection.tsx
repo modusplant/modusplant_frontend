@@ -1,6 +1,5 @@
 'use client';
 
-import { useAuthStore } from '@/lib/store/authStore';
 import { useProfileMutation } from '@/lib/hooks/mypage/useProfileMutation';
 import { useProfileForm } from '@/lib/hooks/mypage/useProfileForm';
 import ProfileImageUploader from './profileImageUploader';
@@ -8,6 +7,7 @@ import ProfileFormFields from './profileFormFields';
 import Button from '@/components/_common/button';
 import { showModal } from '@/lib/store/modalStore';
 import Image from 'next/image';
+import FixedBottomButton from '@/components/_common/fixedBottomButton';
 
 export default function ProfileSection() {
   // 프로필 수정 Mutation
@@ -51,8 +51,8 @@ export default function ProfileSection() {
   return (
     <div className="flex flex-col gap-5">
       {/* 프로필 정보 카드 */}
-      <div className="border-surface-98 flex flex-col gap-7.5 rounded-xl border bg-white p-10">
-        <h2 className="text-neutral-5 text-[18px] leading-[1.2] font-semibold tracking-[-0.01em]">
+      <div className="lg:border-surface-98 flex flex-col gap-7.5 rounded-xl bg-white lg:border lg:p-10">
+        <h2 className="text-neutral-5 sr-only text-[18px] leading-[1.2] font-semibold tracking-[-0.01em] lg:not-sr-only">
           프로필 정보
         </h2>
 
@@ -75,27 +75,29 @@ export default function ProfileSection() {
       </div>
 
       {/* 저장 버튼 */}
-      <div className="border-surface-98 flex justify-end border-t">
-        <Button
-          variant={hasChanges && !isPending ? 'point' : 'deactivate'}
-          size="md"
-          onClick={handleSave}
-          disabled={!hasChanges || isPending}
-          className="h-12.5 rounded-full px-5 text-[15px] font-medium"
-        >
-          {isPending ? (
-            <Image
-              src={'/icon/loading.gif'}
-              alt="Loading"
-              width={20}
-              height={20}
-              unoptimized
-            />
-          ) : (
-            '변경사항 저장'
-          )}
-        </Button>
-      </div>
+      <FixedBottomButton>
+        <div className="border-surface-98 flex border-t lg:flex-col lg:items-end">
+          <Button
+            variant={hasChanges && !isPending ? 'point' : 'deactivate'}
+            size="md"
+            onClick={handleSave}
+            disabled={!hasChanges || isPending}
+            className="w-full rounded-lg py-3 text-[16px] font-semibold md:w-auto lg:h-12.5 lg:rounded-full lg:px-5 lg:text-[15px] lg:font-medium"
+          >
+            {isPending ? (
+              <Image
+                src={'/icon/loading.gif'}
+                alt="Loading"
+                width={20}
+                height={20}
+                unoptimized
+              />
+            ) : (
+              '변경사항 저장'
+            )}
+          </Button>
+        </div>
+      </FixedBottomButton>
     </div>
   );
 }

@@ -13,13 +13,13 @@ interface PasswordSectionProps {
 
 export default function PasswordSection({ disabled }: PasswordSectionProps) {
   return (
-    <div className="border-surface-98 rounded-xl border bg-white p-10">
+    <div className="lg:border-surface-98 rounded-xl bg-white py-6 lg:border lg:p-10">
       <div className="flex flex-col gap-5">
-        <label className="text-neutral-5 text-[18px] leading-normal font-semibold tracking-[-0.02em]">
+        <label className="text-neutral-5 text-[17px] leading-normal font-semibold tracking-[-0.02em] lg:text-[18px]">
           비밀번호
         </label>
         <div className="flex flex-col gap-6">
-          <p className="text-neutral-20">
+          <p className="text-neutral-20 text-sm">
             보안을 위해 정기적으로 비밀번호를 변경하는 것을 권장합니다.
           </p>
           <div className="flex items-center gap-3">
