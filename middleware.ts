@@ -9,7 +9,8 @@ import { BASE_URL } from '@/lib/constants/apiInstance';
 import { decodeJWT } from '@/lib/utils/auth/decodeJWT';
 
 /**
- * JWT 토큰이 만료되었는지 확인 (5분 여유 시간 포함)
+ * JWT 토큰이 만료되었는지 확인 (10초 여유 시간)
+ * 운영 시: bufferTime = 5 * 60 (5분)
  */
 function isTokenExpired(token: string): boolean {
   const payload = decodeJWT(token);
@@ -24,7 +25,7 @@ function isTokenExpired(token: string): boolean {
 /**
  * Middleware: 모든 요청 전에 토큰 자동 갱신
  */
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const rememberMe = request.cookies.get('rememberMe')?.value;
   const accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE_NAME)?.value;
 
