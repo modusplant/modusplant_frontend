@@ -75,14 +75,14 @@ export default function ProfileSection() {
       </div>
 
       {/* 저장 버튼 */}
-      <FixedBottomButton>
-        <div className="border-surface-98 flex border-t lg:flex-col lg:items-end">
+      <FixedBottomButton className="bg-surface-98">
+        <div className="border-surface-98 flex border-t md:flex-col md:items-end">
           <Button
             variant={hasChanges && !isPending ? 'point' : 'deactivate'}
             size="md"
             onClick={handleSave}
             disabled={!hasChanges || isPending}
-            className="w-full rounded-lg py-3 text-[16px] font-semibold md:w-auto lg:h-12.5 lg:rounded-full lg:px-5 lg:text-[15px] lg:font-medium"
+            className="w-full rounded-lg py-3 text-[16px] font-semibold md:h-12.5 md:w-auto md:rounded-full md:px-5 md:font-medium lg:text-[15px]"
           >
             {isPending ? (
               <Image
