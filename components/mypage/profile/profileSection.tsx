@@ -52,7 +52,7 @@ export default function ProfileSection() {
     <div className="flex flex-col gap-5">
       {/* 프로필 정보 카드 */}
       <div className="lg:border-surface-98 flex flex-col gap-7.5 rounded-xl bg-white lg:border lg:p-10">
-        <h2 className="text-neutral-5 sr-only text-[18px] leading-[1.2] font-semibold tracking-[-0.01em] lg:not-sr-only">
+        <h2 className="text-neutral-5 sr-only text-[18px] leading-[1.2] font-semibold tracking-[-0.01em] md:not-sr-only">
           프로필 정보
         </h2>
 
