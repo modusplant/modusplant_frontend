@@ -1,6 +1,7 @@
 'use client';
 
 import { useRecentPostsQuery } from '@/lib/hooks/mypage/useRecentPostsQuery';
+import { useRecentPostsInfiniteQuery } from '@/lib/hooks/mypage/useRecentPostsInfiniteQuery';
 import EmptyRecentPosts from './emptyRecentPosts';
 import PostList from '@/components/mypage/common/postList';
 
@@ -11,6 +12,7 @@ export default function RecentPostList() {
   return (
     <PostList
       useQueryHook={useRecentPostsQuery}
+      useInfiniteQueryHook={useRecentPostsInfiniteQuery}
       emptyComponent={<EmptyRecentPosts />}
     />
   );
