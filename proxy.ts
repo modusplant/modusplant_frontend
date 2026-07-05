@@ -9,8 +9,7 @@ import { BASE_URL } from '@/lib/constants/apiInstance';
 import { decodeJWT } from '@/lib/utils/auth/decodeJWT';
 
 /**
- * JWT 토큰이 만료되었는지 확인 (10초 여유 시간)
- * 운영 시: bufferTime = 5 * 60 (5분)
+ * JWT 토큰이 만료되었는지 확인 (5분 여유 시간)
  */
 function isTokenExpired(token: string): boolean {
   const payload = decodeJWT(token);
@@ -23,15 +22,16 @@ function isTokenExpired(token: string): boolean {
 }
 
 /**
- * Middleware: 모든 요청 전에 토큰 자동 갱신
+ * Proxy: 모든 요청 전에 토큰 자동 갱신
  */
-export async function middleware(request: NextRequest) {
-  const rememberMe = request.cookies.get('rememberMe')?.value;
+export async function proxy(request: NextRequest) {
   const accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE_NAME)?.value;
+  const refreshToken = request.cookies.get('refreshToken')?.value;
 
-  // rememberMe가 true이고 (accessToken이 없거나 만료되었으면) 토큰 갱신 시도
+  // refreshToken이 있고 (accessToken이 없거나 만료되었으면) 토큰 갱신 시도
+  // rememberMe 여부와 무관하게 refreshToken이 유효한 동안은 항상 갱신한다
   const shouldRefreshToken =
-    rememberMe === 'true' && (!accessToken || isTokenExpired(accessToken));
+    !!refreshToken && (!accessToken || isTokenExpired(accessToken));
 
   if (shouldRefreshToken) {
     try {
@@ -84,21 +84,22 @@ export async function middleware(request: NextRequest) {
           }
 
           console.info(
-            '[Middleware] 토큰 갱신 성공:',
+            '[Proxy] 토큰 갱신 성공:',
             accessToken ? '만료된 토큰 갱신' : '토큰 없음으로 갱신'
           );
           return nextResponse;
         }
       } else {
-        // RefreshToken도 만료된 경우 rememberMe 삭제
-        console.warn('[Middleware] 토큰 갱신 실패, rememberMe 삭제');
+        // RefreshToken도 만료된 경우 관련 쿠키 전체 삭제
+        console.warn('[Proxy] 토큰 갱신 실패, 인증 쿠키 삭제');
         const nextResponse = NextResponse.next();
         nextResponse.cookies.delete('rememberMe');
         nextResponse.cookies.delete(ACCESS_TOKEN_COOKIE_NAME);
+        nextResponse.cookies.delete('refreshToken');
         return nextResponse;
       }
     } catch (error) {
-      console.error('[Middleware] 토큰 갱신 중 오류:', error);
+      console.error('[Proxy] 토큰 갱신 중 오류:', error);
     }
   }
 
