@@ -1,8 +1,8 @@
-import PostContent from "./postContent";
-import PostActions from "./postActions";
-import CommentSection from "../../comment/commentSection";
-import PostDetailHeader from "./postDetailHeader";
-import { PostDetail as PostDetailType } from "@/lib/types/post";
+import PostContent from './postContent';
+import PostActions from './postActions';
+import CommentSection from '../../comment/commentSection';
+import PostDetailHeader from './postDetailHeader';
+import { PostDetail as PostDetailType } from '@/lib/types/post';
 
 interface PostDetailProps {
   postId: string;
@@ -11,7 +11,7 @@ interface PostDetailProps {
 
 export default function PostDetail({ postId, initialData }: PostDetailProps) {
   return (
-    <div className="mx-auto max-w-212 px-5 py-12">
+    <div className="mx-auto max-w-212 px-5 py-12 pb-30">
       {/* 헤더: 카테고리 + 작성자 정보 */}
       <PostDetailHeader
         secondaryCategory={initialData.secondaryCategory}
@@ -20,7 +20,7 @@ export default function PostDetail({ postId, initialData }: PostDetailProps) {
         nickname={initialData.nickname}
         publishedAt={initialData.publishedAt}
         viewCount={initialData.viewCount}
-        isUpdated={initialData.publishedAt !== initialData.updatedAt}
+        isUpdated={initialData.publishedAt !== initialData.editedAt}
       />
 
       {/* 본문 */}

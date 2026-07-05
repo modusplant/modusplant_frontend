@@ -4,8 +4,11 @@ import {
   UseFormWatch,
   FieldErrors,
   UseFormSetValue,
-} from "react-hook-form";
-import { SignupFormValues } from "@/lib/constants/schema";
+  FieldValues,
+  FieldError,
+} from 'react-hook-form';
+import { SignupFormValues } from '@/lib/constants/schema';
+import { SignoutFormValues } from '@/components/mypage/account/SignoutForm';
 
 /**
  * 로그인 요청 데이터
@@ -167,6 +170,7 @@ export interface EmailSectionProps {
     email?: { message?: string };
     verificationCode?: { message?: string };
   };
+  onEmailVerified: (isValid: boolean) => void;
   className?: string;
 }
 
@@ -176,27 +180,50 @@ export interface EmailSectionProps {
 export interface PasswordSectionProps {
   register: UseFormRegister<SignupFormValues>;
   watch: UseFormWatch<SignupFormValues>;
-  errors: Pick<FieldErrors<SignupFormValues>, "password" | "passwordConfirm">;
+  errors: Pick<FieldErrors<SignupFormValues>, 'password' | 'passwordConfirm'>;
   className?: string;
 }
 
 /**
  * 닉네임 섹션 컴포넌트 props 타입
+ * 닉네임이 있는 폼 어디든 수용
  */
-export interface NicknameSectionProps {
-  register: UseFormRegister<SignupFormValues>;
-  trigger: UseFormTrigger<SignupFormValues>;
-  watch: UseFormWatch<SignupFormValues>;
-  errors: Pick<FieldErrors<SignupFormValues>, "nickname">;
+
+export type WithNicknameField = { nickname: string };
+export interface NicknameSectionProps<
+  T extends FieldValues & WithNicknameField,
+> {
+  register: UseFormRegister<T>;
+  trigger: UseFormTrigger<T>;
+  watch: UseFormWatch<T>;
+  errors: { nickname?: FieldError };
+  onNicknameVerified: (isValid: boolean) => void;
   className?: string;
 }
 
 /**
  * 약관 동의 섹션 컴포넌트 props 타입
+ * 약관 동의 있는 폼 어디든 수용
  */
-export interface TermsSectionProps {
-  register: UseFormRegister<SignupFormValues>;
-  errors: FieldErrors<SignupFormValues>;
-  watch: (name: keyof SignupFormValues) => any;
-  setValue: UseFormSetValue<SignupFormValues>;
+
+export type WithTermsFields = {
+  agreeToTerms: boolean;
+  agreeToPrivacy: boolean;
+  agreeToCommunity: boolean;
+};
+export interface TermsSectionProps<T extends FieldValues & WithTermsFields> {
+  errors: FieldErrors<T>;
+  watch: UseFormWatch<T>;
+  setValue: UseFormSetValue<T>;
 }
+
+/**
+ * 회원 탈퇴 요청 body 타입
+ */
+
+export type SignoutRequestBody = {
+  authCode?: string;
+  authProvider?: string;
+  reason: SignoutFormValues['reason'];
+  opinion?: SignoutFormValues['opinion'];
+};

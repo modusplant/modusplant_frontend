@@ -1,23 +1,28 @@
-"use client";
+'use client';
 
-import { useState, useCallback } from "react";
-import { NicknameVerificationState } from "@/lib/types/auth";
-import { authApi } from "@/lib/api/client/auth";
+import { useState, useCallback } from 'react';
+import { NicknameVerificationState } from '@/lib/types/auth';
+import { authApi } from '@/lib/api/client/auth';
 
 export const useNicknameVerification = () => {
   const [verificationState, setVerificationState] =
     useState<NicknameVerificationState>({
       isChecked: false,
       isAvailable: false,
-      message: "",
+      message: '',
     });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [lastCheckedValue, setLastCheckedValue] = useState<string | null>(null); // 추가
 
   // 닉네임 중복 확인
   const checkNickname = useCallback(async (nickname: string) => {
     if (!nickname.trim()) {
-      return { success: false, message: "닉네임을 입력해주세요." };
+      return {
+        success: false,
+        available: false,
+        message: '닉네임을 입력해주세요.',
+      };
     }
 
     setIsLoading(true);
@@ -29,10 +34,11 @@ export const useNicknameVerification = () => {
         isAvailable: res.available,
         message: res.message,
       });
+      setLastCheckedValue(nickname);
 
       return res;
     } catch (error) {
-      const errorMessage = "닉네임 확인에 실패했습니다.";
+      const errorMessage = '닉네임 확인에 실패했습니다.';
 
       setVerificationState({
         isChecked: false,
@@ -51,7 +57,7 @@ export const useNicknameVerification = () => {
     setVerificationState({
       isChecked: false,
       isAvailable: false,
-      message: "",
+      message: '',
     });
   }, []);
 
@@ -60,6 +66,7 @@ export const useNicknameVerification = () => {
     isLoading,
     checkNickname,
     resetVerification,
+    lastCheckedValue,
     // 편의 속성들
     isChecked: verificationState.isChecked,
     isAvailable: verificationState.isAvailable,

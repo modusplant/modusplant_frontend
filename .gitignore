@@ -48,3 +48,11 @@ dependency-graph*.svg
 #.github
 .vscode
 /docs
+
+# codex
+AGENTS.md
+CLAUDE.md
+
+.eslintcache
+*storybook.log
+storybook-static

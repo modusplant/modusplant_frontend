@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { authApi } from "@/lib/api/client/auth";
-import { Input } from "@/components/_common/input";
-import Button from "@/components/_common/button";
-import { cn } from "@/lib/utils/tailwindHelper";
+import { useState } from 'react';
+import { authApi } from '@/lib/api/client/auth';
+import { Input } from '@/components/_common/input';
+import Button from '@/components/_common/button';
+import { cn } from '@/lib/utils/tailwindHelper';
 
 interface ProfileFormFieldsProps {
   nickname: string;
@@ -19,8 +19,8 @@ export default function ProfileFormFields({
   onNicknameChange,
   onIntroductionChange,
 }: ProfileFormFieldsProps) {
-  const [nicknameError, setNicknameError] = useState<string>("");
-  const [nicknameSuccess, setNicknameSuccess] = useState<string>("");
+  const [nicknameError, setNicknameError] = useState<string>('');
+  const [nicknameSuccess, setNicknameSuccess] = useState<string>('');
   const [initialNickname] = useState(nickname); // 초기 닉네임 저장
 
   // 닉네임 중복 확인 핸들러
@@ -28,15 +28,15 @@ export default function ProfileFormFields({
     try {
       const result = await authApi.checkNickname(nickname);
       if (result.success && !result.available) {
-        setNicknameError("이미 사용중인 닉네임입니다.");
-        setNicknameSuccess("");
+        setNicknameError('이미 사용중인 닉네임입니다.');
+        setNicknameSuccess('');
       } else {
-        setNicknameError("");
-        setNicknameSuccess("사용 가능한 닉네임입니다.");
+        setNicknameError('');
+        setNicknameSuccess('사용 가능한 닉네임입니다.');
       }
     } catch (error) {
-      setNicknameError("닉네임 확인에 실패했습니다.");
-      setNicknameSuccess("");
+      setNicknameError('닉네임 확인에 실패했습니다.');
+      setNicknameSuccess('');
     }
   };
 
@@ -57,7 +57,7 @@ export default function ProfileFormFields({
             value={nickname}
             onChange={(e) => onNicknameChange(e.target.value)}
             placeholder="닉네임을 입력하세요"
-            className={`flex-1 ${nicknameError ? "border-system-alert" : ""}`}
+            className={`flex-1 ${nicknameError ? 'border-system-alert' : ''}`}
           />
           <Button
             onClick={handleNicknameCheck}
@@ -90,10 +90,10 @@ export default function ProfileFormFields({
           placeholder="한 줄 소개를 입력해주세요."
           rows={1}
           className={cn(
-            "border-surface-stroke-2 min-h-30 w-full resize-none rounded-lg border",
-            "min-h-30 px-4 py-4",
-            "focus:border-primary-50 transition-colors focus:outline-none",
-            "text-neutral-20 placeholder:text-neutral-40 text-[16px] leading-[1.2] tracking-[-0.01em]"
+            'border-surface-stroke-2 min-h-30 w-full resize-none rounded-lg border',
+            'min-h-30 px-4 py-4',
+            'focus:border-primary-50 transition-colors focus:outline-none',
+            'text-neutral-20 placeholder:text-neutral-40 text-[16px] leading-[1.2] tracking-[-0.01em]'
           )}
         />
       </div>

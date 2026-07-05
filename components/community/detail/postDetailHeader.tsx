@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
-import Badge from "@/components/_common/badge";
-import { formatRelativeTime } from "@/lib/utils/formatTime";
-import ProfileImage from "@/components/_common/profileImage";
+import { useRouter } from 'next/navigation';
+import { ArrowLeft } from 'lucide-react';
+import Badge from '@/components/_common/badge';
+import { formatRelativeTime } from '@/lib/utils/formatTime';
+import ProfileImage from '@/components/_common/profileImage';
 
 interface PostDetailHeaderProps {
   secondaryCategory: string;

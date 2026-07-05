@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils/tailwindHelper";
+import { ChevronRight } from 'lucide-react';
+import { cn } from '@/lib/utils/tailwindHelper';
 
 export interface PaginationProps {
   currentPage: number;
@@ -45,16 +45,16 @@ export default function Pagination({
   const showEllipsisEnd = pageNumbers[pageNumbers.length - 1] < totalPages;
 
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <div className={cn('flex items-center gap-2', className)}>
       {/* 이전 페이지 버튼 */}
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         className={cn(
-          "flex h-8 w-8 items-center justify-center rounded-lg border transition-colors",
+          'flex h-8 w-8 items-center justify-center rounded-lg border transition-colors',
           currentPage === 1
-            ? "border-surface-stroke cursor-not-allowed opacity-50"
-            : "border-surface-stroke hover:bg-surface-98"
+            ? 'border-surface-stroke cursor-not-allowed opacity-50'
+            : 'border-surface-stroke hover:bg-surface-98'
         )}
         aria-label="이전 페이지"
       >
@@ -67,13 +67,13 @@ export default function Pagination({
           key={page}
           onClick={() => onPageChange(page)}
           className={cn(
-            "flex h-8 w-8 items-center justify-center rounded-lg text-[13px] leading-normal font-extrabold transition-colors",
+            'flex h-8 w-8 items-center justify-center rounded-lg text-[13px] leading-normal font-extrabold transition-colors',
             page === currentPage
-              ? "bg-primary-50 text-white"
-              : "text-neutral-20 hover:bg-surface-98"
+              ? 'bg-primary-50 text-white'
+              : 'text-neutral-20 hover:bg-surface-98'
           )}
           aria-label={`${page}페이지`}
-          aria-current={page === currentPage ? "page" : undefined}
+          aria-current={page === currentPage ? 'page' : undefined}
         >
           {page}
         </button>
@@ -93,10 +93,10 @@ export default function Pagination({
         <button
           onClick={() => onPageChange(totalPages)}
           className={cn(
-            "flex h-8 w-8 items-center justify-center rounded-lg text-[13px] leading-normal font-medium transition-colors",
+            'flex h-8 w-8 items-center justify-center rounded-lg text-[13px] leading-normal font-medium transition-colors',
             totalPages === currentPage
-              ? "bg-primary-50 text-white"
-              : "text-neutral-20 hover:bg-surface-98"
+              ? 'bg-primary-50 text-white'
+              : 'text-neutral-20 hover:bg-surface-98'
           )}
           aria-label={`${totalPages}페이지`}
         >
@@ -109,10 +109,10 @@ export default function Pagination({
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         className={cn(
-          "flex h-8 w-8 items-center justify-center rounded-lg border transition-colors",
+          'flex h-8 w-8 items-center justify-center rounded-lg border transition-colors',
           currentPage === totalPages
-            ? "border-surface-stroke cursor-not-allowed opacity-50"
-            : "border-surface-stroke hover:bg-surface-98"
+            ? 'border-surface-stroke cursor-not-allowed opacity-50'
+            : 'border-surface-stroke hover:bg-surface-98'
         )}
         aria-label="다음 페이지"
       >

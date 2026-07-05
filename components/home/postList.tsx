@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useMemo, useEffect, useRef } from "react";
-import PostCard from "@/components/_common/postCard";
-import PrimaryCategoryFilter from "@/components/_common/primaryCategoryFilter";
-import SecondaryCategoryFilter from "@/components/_common/secondaryCategoryFilter";
-import { useAuthStore } from "@/lib/store/authStore";
-import BlurOverlay from "@/components/_layout/blurOverlay";
-import { useCategoryFilter } from "@/lib/hooks/category/useCategoryFilter";
-import { usePostsQuery } from "@/lib/hooks/home/usePostsQuery";
-import LoadingState from "./loadingState";
-import ErrorState from "./errorState";
-import HomeEmptyState from "./homeEmptyState";
-import { GetPostsResponseData } from "@/lib/types/post";
+import { useMemo, useEffect, useRef } from 'react';
+import PostCard from '@/components/_common/postCard';
+import PrimaryCategoryFilter from '@/components/_common/primaryCategoryFilter';
+import SecondaryCategoryFilter from '@/components/_common/secondaryCategoryFilter';
+import { useAuthStore } from '@/lib/store/authStore';
+import BlurOverlay from '@/components/_layout/blurOverlay';
+import { useCategoryFilter } from '@/lib/hooks/category/useCategoryFilter';
+import { usePostsQuery } from '@/lib/hooks/home/usePostsQuery';
+import LoadingState from './loadingState';
+import ErrorState from './errorState';
+import HomeEmptyState from './homeEmptyState';
+import { GetPostsResponseData } from '@/lib/types/post';
 
 interface PostListProps {
   initialData?: GetPostsResponseData;
@@ -43,12 +43,12 @@ export default function PostList({ initialData }: PostListProps) {
   } = usePostsQuery({
     size: 12,
     primaryCategoryId:
-      primaryCategory === "전체" ? undefined : primaryCategoryId,
+      primaryCategory === '전체' ? undefined : primaryCategoryId,
     secondaryCategoryId:
-      selectedSecondaryCategories.includes("전체") ||
+      selectedSecondaryCategories.includes('전체') ||
       selectedSecondaryCategoryIds.length === 0
         ? undefined
-        : selectedSecondaryCategoryIds.join(","),
+        : selectedSecondaryCategoryIds.join(','),
     initialData,
   });
 

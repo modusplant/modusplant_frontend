@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { ReactNode } from "react";
-import { usePathname } from "next/navigation";
-import { useAuthStore } from "@/lib/store/authStore";
-import EmptyState from "@/components/_common/emptyState";
+import { ReactNode } from 'react';
+import { usePathname } from 'next/navigation';
+import { useAuthStore } from '@/lib/store/authStore';
+import StateMessage from '@/components/_common/stateMessage';
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -31,17 +31,22 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
   // 인증이 필요없는 공개 경로 목록
   const publicPaths = [
-    "/", // 메인페이지
-    "/login", // 로그인
-    "/signup", // 회원가입
-    "/reset-password", // 비밀번호 재설정
+    '/', // 메인페이지
+    '/login', // 로그인
+    '/signup', // 회원가입
+    '/signup/social', // 소셜 회원가입
+    '/reset-password', // 비밀번호 재설정
+    '/reset-password/sent', // 비밀번호 재설정 메일 발송 완료
+    '/oauth/kakao/callback', // 카카오 인가 페이지
+    '/oauth/google/callback', // 구글 인가 페이지
+    '/search', // 검색 페이지
   ];
 
   // 현재 경로가 공개 경로인지 확인
   const isPublicPath =
     publicPaths.includes(pathname) ||
-    (pathname.startsWith("/community/") &&
-      !pathname.startsWith("/community/write")); // 게시글 상세만 허용
+    (pathname.startsWith('/community/') &&
+      !pathname.startsWith('/community/write')); // 게시글 상세만 허용
 
   // 공개 경로거나 인증된 경우 children 렌더링
   if (isPublicPath || isAuthenticated) {
@@ -51,7 +56,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   // 미인증 상태에서 보호된 경로 접근 시 로그인 안내
   return (
     <div className="flex min-h-[calc(100vh-200px)] items-center justify-center">
-      <EmptyState
+      <StateMessage
         imageSrc="/character_sad.svg"
         title="로그인이 필요한 서비스예요"
         description="회원 전용 콘텐츠를 이용하려면\n먼저 로그인해주세요."

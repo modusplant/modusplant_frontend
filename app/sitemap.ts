@@ -1,7 +1,7 @@
-import { MetadataRoute } from "next";
-import { BASE_URL } from "@/lib/constants/apiInstance";
-import { PostData } from "@/lib/types/post";
-import { POST_ENDPOINTS } from "@/lib/constants/endpoints";
+import { MetadataRoute } from 'next';
+import { BASE_URL } from '@/lib/constants/apiInstance';
+import { PostData } from '@/lib/types/post';
+import { POST_ENDPOINTS } from '@/lib/constants/endpoints';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
@@ -16,30 +16,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const postUrls: MetadataRoute.Sitemap = posts.map((post: PostData) => ({
       url: `${BASE_URL}${POST_ENDPOINTS.POST_DETAIL(post.postId)}`,
       lastModified: new Date(post.publishedAt),
-      changeFrequency: "weekly",
+      changeFrequency: 'weekly',
       priority: 0.7,
     }));
 
     return [
       // 홈페이지 (최우선)
       {
-        url: BASE_URL || "",
+        url: BASE_URL || '',
         lastModified: new Date(),
-        changeFrequency: "daily",
+        changeFrequency: 'daily',
         priority: 1.0,
       },
       // 모든 게시글
       ...postUrls,
     ];
   } catch (error) {
-    console.error("Sitemap generation error:", error);
+    console.error('Sitemap generation error:', error);
 
     // 에러 발생 시 기본 페이지만 반환
     return [
       {
-        url: BASE_URL || "",
+        url: BASE_URL || '',
         lastModified: new Date(),
-        changeFrequency: "daily",
+        changeFrequency: 'daily',
         priority: 1.0,
       },
     ];

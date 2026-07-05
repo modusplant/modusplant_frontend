@@ -1,4 +1,4 @@
-import RecentPostList from "./recentPostList";
+import RecentPostList from './recentPostList';
 
 /**
  * 최근에 본 글 섹션 컴포넌트

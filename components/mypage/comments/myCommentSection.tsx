@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import MyCommentList from "@/components/mypage/comments/myCommentList";
+import MyCommentList from '@/components/mypage/comments/myCommentList';
 
 export default function MyCommentSection() {
   return (

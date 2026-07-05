@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "글쓰기 | 모두의식물",
-  description: "모두의식물 글쓰기 페이지",
+  title: '글쓰기 | 모두의식물',
+  description: '모두의식물 글쓰기 페이지',
 };
 
 export default function WriteLayout({

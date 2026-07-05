@@ -1,13 +1,16 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Heart, Bookmark, EllipsisVertical } from "lucide-react";
-import { postApi } from "@/lib/api/client/post";
-import { useAuthStore } from "@/lib/store/authStore";
-import { showModal } from "@/lib/store/modalStore";
-import { usePostInteraction } from "@/lib/hooks/community/usePostInteraction";
-import Dropdown from "@/components/_common/dropdown";
+import { type ComponentProps, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Heart, Bookmark, EllipsisVertical } from 'lucide-react';
+import { postApi } from '@/lib/api/client/post';
+import { useAuthStore } from '@/lib/store/authStore';
+import { showModal } from '@/lib/store/modalStore';
+import { usePostInteraction } from '@/lib/hooks/community/usePostInteraction';
+import Dropdown from '@/components/_common/dropdown';
+import { useReportPostMutation } from '@/lib/hooks/community/useReportPostMutation';
+
+type DropdownItems = NonNullable<ComponentProps<typeof Dropdown>['items']>;
 
 interface PostActionsProps {
   postId: string;
@@ -51,12 +54,25 @@ export default function PostActions({
     router.push(`/community/write/edit/${postId}`);
   };
 
+  const handleReport = () => {
+    showModal({
+      title: '부적절한 게시글로 신고하시겠어요?',
+      description: '신고 내용은 운영 정책에 따라 검토됩니다.',
+      type: 'two-button',
+      buttonText: '신고',
+      onConfirm: () => reportPost(postId),
+    });
+  };
+
+  const { mutate: reportPost, isPending: isReporting } =
+    useReportPostMutation();
+
   const handleDelete = async () => {
     showModal({
-      title: "게시글을 삭제하시겠습니까?",
-      description: "삭제된 게시글은 복구할 수 없습니다.",
-      type: "two-button",
-      buttonText: "삭제",
+      title: '게시글을 삭제하시겠습니까?',
+      description: '삭제된 게시글은 복구할 수 없습니다.',
+      type: 'two-button',
+      buttonText: '삭제',
       onConfirm: confirmDelete,
     });
   };
@@ -66,21 +82,41 @@ export default function PostActions({
     try {
       await postApi.deletePost(postId);
       showModal({
-        description: "게시글이 성공적으로 삭제되었습니다.",
-        type: "snackbar",
+        description: '게시글이 성공적으로 삭제되었습니다.',
+        type: 'snackbar',
       });
-      router.replace("/");
+      router.replace('/');
     } catch (error) {
       showModal({
-        title: "게시글 삭제 실패",
-        description: "게시글 삭제 중 오류가 발생했습니다. 다시 시도해주세요.",
-        type: "one-button",
-        buttonText: "확인",
+        title: '게시글 삭제 실패',
+        description: '게시글 삭제 중 오류가 발생했습니다. 다시 시도해주세요.',
+        type: 'one-button',
+        buttonText: '확인',
       });
     } finally {
       setIsDeleting(false);
     }
   };
+
+  const dropdownItems: DropdownItems = isAuthor
+    ? [
+        {
+          label: '수정',
+          onClick: handleEdit,
+        },
+        {
+          label: '삭제',
+          onClick: handleDelete,
+          disabled: isDeleting,
+        },
+      ]
+    : [
+        {
+          label: '신고',
+          onClick: handleReport,
+          disabled: isReporting,
+        },
+      ];
 
   return (
     <div className="flex w-full items-center justify-between">
@@ -94,10 +130,10 @@ export default function PostActions({
         >
           <Heart
             className={`h-5 w-5 transition-all ${
-              isLiked ? "" : "group-hover:fill-neutral-90"
+              isLiked ? '' : 'group-hover:fill-neutral-90'
             }`}
-            color={isLiked ? "red" : "#919191"}
-            fill={isLiked ? "red" : "none"}
+            color={isLiked ? 'red' : '#919191'}
+            fill={isLiked ? 'red' : 'none'}
           />
           <span>{likeCount.toLocaleString()}</span>
         </button>
@@ -109,16 +145,15 @@ export default function PostActions({
         >
           <Bookmark
             className={`h-5 w-5 transition-all ${
-              isBookmarked ? "" : "group-hover:fill-neutral-90"
+              isBookmarked ? '' : 'group-hover:fill-neutral-90'
             }`}
-            fill={isBookmarked ? "#3a972e" : "none"}
-            color={isBookmarked ? "#3a972e" : "#919191"}
+            fill={isBookmarked ? '#3a972e' : 'none'}
+            color={isBookmarked ? '#3a972e' : '#919191'}
           />
         </button>
       </div>
 
-      {/* 수정/삭제 버튼 (작성자만) */}
-      {isAuthor && (
+      {user && (
         <Dropdown
           isOpen={isDropdownOpen}
           onClose={() => setIsDropdownOpen(false)}
@@ -131,17 +166,7 @@ export default function PostActions({
               <EllipsisVertical className="text-neutral-60 h-5 w-5" />
             </button>
           }
-          items={[
-            {
-              label: "수정",
-              onClick: handleEdit,
-            },
-            {
-              label: "삭제",
-              onClick: handleDelete,
-              disabled: isDeleting,
-            },
-          ]}
+          items={dropdownItems}
           position="right"
           width="w-24"
         />

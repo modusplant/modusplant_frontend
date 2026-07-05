@@ -29,7 +29,7 @@
 
 ### 필수 요구사항
 
-- Node.js 18+
+- Node.js 24+
 - pnpm 8+
 
 ### 설치 및 실행
@@ -63,7 +63,7 @@ pnpm start
 
 - **Framework**: [Next.js 16](https://nextjs.org) - App Router 기반 SSR/SSG
 - **Language**: [TypeScript 5](https://www.typescriptlang.org) - 타입 안전성
-- **Runtime**: Node.js 18+
+- **Runtime**: Node.js 24+
 
 ### Styling
 
@@ -332,130 +332,3 @@ modusplant/
 
 ---
 
-## 🔄 주요 패턴 & 컨벤션
-
-### API 호출 패턴
-
-```typescript
-import { POST_ENDPOINTS } from "@/lib/constants/endpoints";
-import { clientApiInstance } from "@/lib/api/instances/clientInstance";
-
-// GET 요청
-const post = await clientApiInstance.get<PostDetail>(
-  POST_ENDPOINTS.POST_DETAIL(postId)
-);
-
-// POST 요청 (JSON)
-const response = await clientApiInstance.post<Response>(AUTH_ENDPOINTS.LOGIN, {
-  email,
-  password,
-});
-
-// POST 요청 (FormData)
-const response = await clientApiInstance.post<Response>(
-  endpoint,
-  formData // 자동으로 FormData로 감지
-);
-
-// 옵션 지정
-const response = await clientApiInstance.post(endpoint, data, {
-  skipAuth: true, // 토큰 불필요
-  enableCache: true, // 캐싱 활성화
-});
-```
-
-### 커스텀 Hook 패턴
-
-```typescript
-// 쿼리 훅 (데이터 페칭)
-const { data, isLoading, error } = usePostsQuery();
-
-// 뮤테이션 훅 (데이터 변경)
-const { mutate: createPost, isPending } = useCreatePostMutation();
-
-// 사용
-const handleCreate = async (formData) => {
-  createPost(formData, {
-    onSuccess: () => {
-      console.log("게시글 작성 완료");
-    },
-  });
-};
-```
-
-### 상태 관리 패턴
-
-```typescript
-// Zustand (전역 상태)
-import { useAuthStore } from "@/lib/store/authStore";
-
-const { user, isLoggedIn, logout } = useAuthStore();
-
-// React Query (서버 상태)
-const { data: posts } = useQuery({
-  queryKey: ["posts"],
-  queryFn: () => clientApiInstance.get(POST_ENDPOINTS.POSTS),
-});
-```
-
-### 폼 검증 패턴
-
-```typescript
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema } from "@/lib/constants/schema";
-
-const {
-  register,
-  handleSubmit,
-  formState: { errors },
-} = useForm({
-  resolver: zodResolver(loginSchema),
-});
-```
-
----
-
-## 🎨 개발 가이드
-
-### 코드 스타일
-
-- **Prettier**: 자동 포맷팅 적용
-- **ESLint**: 코드 품질 검사
-- **TypeScript**: 엄격한 타입 체킹
-
-### 컴포넌트 작성 규칙
-
-1. **서버/클라이언트 컴포넌트 명확히 구분**
-
-   ```typescript
-   // 서버 컴포넌트 (기본)
-   export default async function ServerComponent() {}
-
-   // 클라이언트 컴포넌트
-   ("use client");
-   export default function ClientComponent() {}
-   ```
-
-2. **상수 사용**
-   - 엔드포인트: `lib/constants/endpoints.ts`
-   - 카테고리: `lib/constants/categories.ts`
-   - 스키마: `lib/constants/schema.ts`
-
-3. **Tailwind 클래스**
-   - `clsx` / `tailwind-merge` 사용
-   - 반응형: `mobile-first` 접근 (sm:, md:, lg:)
-
-### 타입 정의
-
-- `lib/types/*.ts`에서 타입 정의
-- API 응답 타입과 UI 타입 분리
-- 재사용 가능한 타입 `lib/types/common.ts`에 정의
-
-## 📝 라이선스
-
-이 프로젝트는 개인 포트폴리오 프로젝트입니다.
-
-## 👨‍💼 개발자
-
-[![GitHub](https://img.shields.io/badge/GitHub-deokjin25-181717?style=flat-square&logo=github)](https://github.com/deokjin25)

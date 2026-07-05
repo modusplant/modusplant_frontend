@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import { memberApi } from "@/lib/api/client/member";
-import { ProfileData } from "@/lib/types/member";
-import { ApiResponse } from "@/lib/types/common";
+import { useQuery } from '@tanstack/react-query';
+import { memberApi } from '@/lib/api/client/member';
+import { ProfileData } from '@/lib/types/member';
+import { ApiResponse } from '@/lib/types/common';
 
 /**
  * 프로필 조회 React Query 훅
@@ -9,8 +9,10 @@ import { ApiResponse } from "@/lib/types/common";
  */
 export function useProfileQuery() {
   return useQuery<ApiResponse<ProfileData>, Error>({
-    queryKey: ["profile"],
-    queryFn: () => memberApi.getProfile(),
+    queryKey: ['profile'],
+    queryFn: () => {
+      return memberApi.getProfile();
+    },
     staleTime: 1000 * 60 * 60, // 1시간
     retry: 1,
   });

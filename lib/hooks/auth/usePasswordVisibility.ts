@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useCallback } from "react";
+import { useState, useCallback } from 'react';
 
 export interface UsePasswordVisibilityOptions {
   /** 초기 표시 상태 */
@@ -42,9 +42,9 @@ export const usePasswordVisibility = ({
     hide,
     setVisible,
     // 편의 속성들
-    type: isVisible ? "text" : "password",
-    icon: isVisible ? "EyeOff" : "Eye",
-    ariaLabel: isVisible ? "비밀번호 숨김" : "비밀번호 보기",
+    type: isVisible ? 'text' : 'password',
+    icon: isVisible ? 'EyeOff' : 'Eye',
+    ariaLabel: isVisible ? '비밀번호 숨김' : '비밀번호 보기',
   };
 };
 
@@ -85,9 +85,9 @@ export const useMultiplePasswordVisibility = (fieldNames: string[]) => {
       const isVisible = visibilityStates[fieldName] || false;
       return {
         isVisible,
-        type: isVisible ? "text" : "password",
-        icon: isVisible ? "EyeOff" : "Eye",
-        ariaLabel: isVisible ? "비밀번호 숨김" : "비밀번호 보기",
+        type: isVisible ? 'text' : 'password',
+        icon: isVisible ? 'EyeOff' : 'Eye',
+        ariaLabel: isVisible ? '비밀번호 숨김' : '비밀번호 보기',
         toggle: () => toggle(fieldName),
       };
     },

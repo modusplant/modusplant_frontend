@@ -1,13 +1,22 @@
+import { AuthProviderParam } from './oauth';
+
 /**
  * API 베이스 경로
  */
-const API_V1 = "/api/v1";
+const API_V1 = '/api/v1';
 
 /**
  * 인증 관련 엔드포인트
  */
 export const AUTH_ENDPOINTS = {
   LOGIN: `/api/auth/login`,
+  SOCIAL_LOGIN: (provider: AuthProviderParam) =>
+    process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
+      ? `${API_V1}/local/auth/social-login/${provider}`
+      : `${API_V1}/auth/social-login/${provider}`,
+  SOCIAL_SIGNUP: `${API_V1}/auth/social-signup`,
+  SOCIAL_LINK: `${API_V1}/auth/social-link`,
+  CANCEL_SOCIAL_CONNECT: `${API_V1}/auth/social-connect`,
   SIGNUP: `/api/members/register`,
   TOKEN_REFRESH: `/api/auth/token/refresh`,
   CHECK_NICKNAME: (nickname: string) =>
@@ -21,6 +30,17 @@ export const AUTH_ENDPOINTS = {
   VERIFY_EMAIL_CODE: `/api/members/verify-email`,
   VERIFY_EMAIL_CODE_SEND: `/api/members/verify-email/send`,
   CHANGE_EMAIL: (userId: string) => `${API_V1}/members/${userId}/modify/email`,
+  // 회원탈퇴
+  SIGNOUT: `${API_V1}/members`,
+  // 마이페이지 소셜 연동
+  MYPAGE_SOCIAL_LINK: (provider: AuthProviderParam) =>
+    process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
+      ? `${API_V1}/local/members/social/${provider}`
+      : `${API_V1}/members/social/${provider}`,
+  MYPAGE_SOCIAL_UNLINK: (provider: AuthProviderParam) =>
+    process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
+      ? `${API_V1}/local/members/social/${provider}/unlink`
+      : `${API_V1}/members/social/${provider}/unlink`,
 } as const;
 
 /**
@@ -35,6 +55,7 @@ export const MEMBER_ENDPOINTS = {
   MY_POSTS: `${API_V1}/communication/posts/me`,
   MY_LIKED_POSTS: `${API_V1}/communication/posts/me/likes`,
   MY_BOOKMARKED_POSTS: `${API_V1}/communication/posts/me/bookmarks`,
+  MY_BUG_REPORTS: `${API_V1}/report/proposal-or-bug`,
 } as const;
 
 /**
@@ -43,6 +64,7 @@ export const MEMBER_ENDPOINTS = {
 export const POST_ENDPOINTS = {
   // 기본 CRUD
   POSTS: `${API_V1}/communication/posts`,
+  MY_DRAFTS: `${API_V1}/communication/posts/me/drafts`,
   POST_DETAIL: (postId: string) => `${API_V1}/communication/posts/${postId}`,
   POST_DETAIL_EDIT: (postId: string) =>
     `${API_V1}/communication/posts/${postId}/data`,
@@ -51,6 +73,7 @@ export const POST_ENDPOINTS = {
     `${API_V1}/members/like/communication/post/${postUlid}`,
   BOOKMARK_POST: (postUlid: string) =>
     `${API_V1}/members/bookmark/communication/post/${postUlid}`,
+  REPORT_POST: (postUlid: string) => `/api/v1/report/abuse/post/${postUlid}`,
 
   // 쿼리 파라미터를 포함한 엔드포인트 빌더
   withQueryParams: (
@@ -75,13 +98,48 @@ export const COMMENT_ENDPOINTS = {
   COMMENTS: `${API_V1}/communication/comments`,
   POST_COMMENTS: (postId: string) =>
     `${API_V1}/communication/comments/post/${postId}`,
+  UPDATE_COMMENTS: () => `${API_V1}/communication/comments/update`,
   DELETE_COMMENT: (postUlid: string, path: string) =>
     `${API_V1}/communication/comments/post/${postUlid}/path/${path}`,
   LIKE_COMMENT: (postUlid: string, path: string) =>
     `${API_V1}/members/like/communication/post/${postUlid}/path/${path}`,
   MY_COMMENTS: (uuid: string) =>
     `${API_V1}/communication/comments/member/auth/${uuid}`,
+  REPORT_COMMENTS: (postUlid: string, path: string) =>
+    `/api/v1/report/abuse/post/${postUlid}/path/${path}`,
 } as const;
+
+/**
+ * 알림 관련 엔드포인트
+ */
+export const NOTIFICATION_ENDPOINTS = {
+  GET_NOTIFICATIONS: () => `${API_V1}/notifications`,
+  READ_ONE_NOTIFICATION: (id: string) => `${API_V1}/notifications/${id}/read`,
+  READ_ALL_NOTIFICATIONS: () => `${API_V1}/notifications/read-all`,
+  GET_UNREAD_NOTIFICATIONS_COUNT: () => `${API_V1}/notifications/unread-count`,
+};
+
+/**
+ * 검색 관련 엔드포인트
+ */
+export const SEARCH_ENDPOINTS = {
+  GET_SEARCH_RESULT: (params: {
+    size: number;
+    lastPostId?: string;
+    lastPostImportance?: number;
+    lastPostSimilarity?: number;
+    lastPostPublishedAt?: string;
+    keyword: string;
+    target: string;
+    sort: string;
+    primaryCategoryId?: string;
+    secondaryCategoryId?: string;
+  }) => `${API_V1}/search/posts${buildQueryString(params)}`,
+  GET_SEARCH_HISTORY: () => `${API_V1}/search/posts/history?size=10`,
+  DELETE_ALL_SEARCH_HISTORY: () => `${API_V1}/search/posts/history`,
+  DELETE_SEARCH_HISTORY: (keyword?: string) =>
+    `${API_V1}/search/posts/history/${keyword}`,
+};
 
 /**
  * 타입 안전한 쿼리 파라미터 빌더
@@ -92,11 +150,11 @@ export function buildQueryString(
   const queryParams = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== "") {
+    if (value !== undefined && value !== null && value !== '') {
       queryParams.append(key, String(value));
     }
   });
 
   const queryString = queryParams.toString();
-  return queryString ? `?${queryString}` : "";
+  return queryString ? `?${queryString}` : '';
 }

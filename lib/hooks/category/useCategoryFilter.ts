@@ -1,8 +1,8 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback } from 'react';
 import {
   getCategoryNameById,
   getCategoryNamesByIds,
-} from "@/lib/utils/category";
+} from '@/lib/utils/category';
 
 /**
  * 카테고리 필터 상태 관리 훅
@@ -16,12 +16,12 @@ export function useCategoryFilter(initialValues?: {
 }) {
   // 1차 카테고리 상태 (ID만 관리)
   const [primaryCategoryId, setPrimaryCategoryId] = useState<string>(
-    initialValues?.primaryCategoryId || "all"
+    initialValues?.primaryCategoryId || 'all'
   );
 
   // 2차 카테고리 상태 (선택 중, ID만 관리)
   const [selectedSecondaryCategoryIds, setSelectedSecondaryCategoryIds] =
-    useState<string[]>(initialValues?.secondaryCategoryIds || ["all"]);
+    useState<string[]>(initialValues?.secondaryCategoryIds || ['all']);
 
   // 1차 카테고리 변경 핸들러
   const handlePrimaryCategoryChange = useCallback((categoryId: string) => {
@@ -38,8 +38,8 @@ export function useCategoryFilter(initialValues?: {
 
   // 초기화
   const reset = useCallback(() => {
-    setPrimaryCategoryId("all");
-    setSelectedSecondaryCategoryIds(["all"]);
+    setPrimaryCategoryId('all');
+    setSelectedSecondaryCategoryIds(['all']);
   }, []);
 
   return {

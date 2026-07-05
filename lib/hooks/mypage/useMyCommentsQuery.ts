@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
-import { commentApi } from "@/lib/api/client/comment";
-import { GetMyCommentsResponseData } from "@/lib/types/comment";
+import { useQuery } from '@tanstack/react-query';
+import { commentApi } from '@/lib/api/client/comment';
+import { GetMyCommentsResponseData } from '@/lib/types/comment';
 
 /**
  * 내 댓글 목록 조회 훅
@@ -14,7 +14,7 @@ export default function useMyCommentsQuery(
   userId?: string
 ) {
   return useQuery<GetMyCommentsResponseData>({
-    queryKey: ["myComments", page, size, userId],
+    queryKey: ['myComments', page, size, userId],
     queryFn: async () => {
       const response = await commentApi.getMyComments({
         page,
@@ -22,7 +22,7 @@ export default function useMyCommentsQuery(
         uuid: userId,
       });
       if (!response.data) {
-        throw new Error("내 댓글 목록을 불러오는데 실패했습니다.");
+        throw new Error('내 댓글 목록을 불러오는데 실패했습니다.');
       }
       return response.data;
     },

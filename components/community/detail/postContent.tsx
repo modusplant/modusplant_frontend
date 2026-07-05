@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Image from "next/image";
-import { ContentPart } from "@/lib/types/post";
-import { getTextContent, getImageContent } from "@/lib/utils/post";
-import { parseTextWithLinks } from "@/lib/utils/textParser";
-import ImageModal from "./imageModal";
+import { useState } from 'react';
+import Image from 'next/image';
+import { ContentPart } from '@/lib/types/post';
+import { getTextContent, getImageContent } from '@/lib/utils/post';
+import { parseTextWithLinks } from '@/lib/utils/textParser';
+import ImageModal from './imageModal';
 
 interface PostContentProps {
   content: ContentPart[];
@@ -33,11 +33,13 @@ export default function PostContent({ content }: PostContentProps) {
           return (
             <Image
               key={index}
-              src={item.src || ""}
+              src={item.src || ''}
               alt={item.filename || `이미지 ${index + 1}`}
-              width={800}
-              height={600}
-              className="my-6 cursor-pointer rounded-lg"
+              width={0}
+              height={0}
+              sizes="100vw"
+              className="mx-auto my-6 cursor-pointer rounded-lg"
+              style={{ width: 'auto', maxWidth: '100%', height: 'auto' }}
               priority={index === 0}
               onClick={() => setSelectedImage(item.src || null)}
             />

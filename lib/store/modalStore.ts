@@ -1,28 +1,34 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 export interface ModalStore {
   isVisible: boolean;
   title?: string;
   description: string;
-  type: "one-button" | "two-button" | "snackbar";
+  type: 'one-button' | 'two-button' | 'snackbar';
   buttonText?: string;
   onConfirm?: () => void;
+  onCancel?: () => void;
   showModal: (
-    modalData: Omit<ModalStore, "isVisible" | "showModal" | "hideModal">
+    modalData: Omit<ModalStore, 'isVisible' | 'showModal' | 'hideModal'>
   ) => void;
   hideModal: () => void;
+  align?: 'center';
+  shouldUseLineBreak?: boolean;
 }
 
 const useModalStore = create<ModalStore>((set) => ({
   isVisible: false,
-  title: "",
-  description: "",
-  type: "one-button",
+  title: '',
+  description: '',
+  type: 'one-button',
   buttonText: undefined,
   onConfirm: undefined,
+  onCancel: undefined,
+  align: undefined,
+  shouldUseLineBreak: false,
 
   showModal: (
-    modalData: Omit<ModalStore, "isVisible" | "showModal" | "hideModal">
+    modalData: Omit<ModalStore, 'isVisible' | 'showModal' | 'hideModal'>
   ) => {
     set(() => ({
       isVisible: true,
@@ -33,11 +39,12 @@ const useModalStore = create<ModalStore>((set) => ({
   hideModal: () => {
     set(() => ({
       isVisible: false,
-      title: "",
-      description: "",
-      type: "one-button",
+      title: '',
+      description: '',
+      type: 'one-button',
       buttonText: undefined,
       onConfirm: undefined,
+      onCancel: undefined,
     }));
   },
 }));
@@ -45,5 +52,5 @@ const useModalStore = create<ModalStore>((set) => ({
 export default useModalStore;
 
 export const showModal = (
-  modalData: Omit<ModalStore, "isVisible" | "showModal" | "hideModal">
+  modalData: Omit<ModalStore, 'isVisible' | 'showModal' | 'hideModal'>
 ) => useModalStore.getState().showModal(modalData);

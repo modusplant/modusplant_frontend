@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { PostData } from "@/lib/types/post";
-import Badge from "@/components/_common/badge";
-import { secondaryCategoryLabels } from "@/lib/constants/categories";
-import { getTextContent } from "@/lib/utils/post";
+import { PostData } from '@/lib/types/post';
+import Badge from '@/components/_common/badge';
+import { secondaryCategoryLabels } from '@/lib/constants/categories';
+import { getTextContent } from '@/lib/utils/post';
 
 export interface PostListItemContentProps {
   post: PostData;

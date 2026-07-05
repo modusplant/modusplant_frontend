@@ -3,7 +3,7 @@
  */
 
 /** AccessToken 쿠키 이름 */
-export const ACCESS_TOKEN_COOKIE_NAME = "accessToken";
+export const ACCESS_TOKEN_COOKIE_NAME = 'accessToken';
 
 /** AccessToken 쿠키 만료 시간 (30분, 초 단위) */
 export const ACCESS_TOKEN_MAX_AGE = 30 * 60;

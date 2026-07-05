@@ -1,26 +1,67 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { EllipsisVertical } from "lucide-react";
-import ProfileImage from "@/components/_common/profileImage";
-import Dropdown from "@/components/_common/dropdown";
+import { useState } from 'react';
+import { EllipsisVertical } from 'lucide-react';
+import Dropdown from '@/components/_common/dropdown';
+import { useCommentReportMutation } from '@/lib/hooks/comment/useCommentReportMutation';
+import { showModal } from '@/lib/store/modalStore';
 
 interface CommentHeaderProps {
   nickname: string;
-  profileImagePath?: string;
+  postUlid: string;
+  path: string;
   isMyComment: boolean;
   onDelete: () => void;
+  onUpdate: () => void;
   isDeleting: boolean;
 }
 
 export default function CommentHeader({
   nickname,
-  profileImagePath,
+  postUlid,
+  path,
   isMyComment,
   onDelete,
+  onUpdate,
   isDeleting,
 }: CommentHeaderProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { mutate: reportComment, isPending: isReporting } =
+    useCommentReportMutation();
+
+  const handleOpenReportModal = () => {
+    setIsDropdownOpen(false);
+    showModal({
+      type: 'two-button',
+      title: '부적절한 댓글로 신고하시겠어요?',
+      description: '신고 내용은 운영 정책에 따라 검토됩니다.',
+      buttonText: '신고하기',
+      onConfirm: () => {
+        reportComment({ postUlid, path });
+      },
+    });
+  };
+
+  const dropdownItems = isMyComment
+    ? [
+        {
+          label: '삭제',
+          onClick: onDelete,
+          disabled: isDeleting,
+        },
+        {
+          label: '수정',
+          onClick: onUpdate,
+          disabled: false,
+        },
+      ]
+    : [
+        {
+          label: '신고',
+          onClick: handleOpenReportModal,
+          disabled: isReporting,
+        },
+      ];
 
   return (
     <div className="mb-2 flex items-center justify-between">
@@ -28,30 +69,22 @@ export default function CommentHeader({
         {nickname}
       </span>
 
-      {isMyComment && (
-        <Dropdown
-          isOpen={isDropdownOpen}
-          onClose={() => setIsDropdownOpen(false)}
-          trigger={
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full"
-              aria-label="댓글 옵션"
-            >
-              <EllipsisVertical className="text-neutral-60 h-4 w-4" />
-            </button>
-          }
-          items={[
-            {
-              label: "삭제",
-              onClick: onDelete,
-              disabled: isDeleting,
-            },
-          ]}
-          position="right"
-          width="w-24"
-        />
-      )}
+      <Dropdown
+        isOpen={isDropdownOpen}
+        onClose={() => setIsDropdownOpen(false)}
+        trigger={
+          <button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full"
+            aria-label="댓글 옵션"
+          >
+            <EllipsisVertical className="text-neutral-60 h-4 w-4" />
+          </button>
+        }
+        items={dropdownItems}
+        position="right"
+        width="w-24"
+      />
     </div>
   );
 }

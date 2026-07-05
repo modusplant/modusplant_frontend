@@ -1,13 +1,12 @@
-"use client";
+'use client';
 
-import { Checkbox } from "@/components/_common/checkbox";
-import { UseFormRegisterReturn } from "react-hook-form";
+import { Checkbox } from '@/components/_common/checkbox';
 
 interface TermsItemProps {
   id: string;
   label: string;
   checked: boolean;
-  register: UseFormRegisterReturn;
+  onChange: (checked: boolean) => void;
   isExpanded: boolean;
   onToggle: () => void;
   content: {
@@ -20,7 +19,7 @@ export default function TermsItem({
   id,
   label,
   checked,
-  register,
+  onChange,
   isExpanded,
   onToggle,
   content,
@@ -29,20 +28,19 @@ export default function TermsItem({
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Checkbox {...register} id={id} checked={checked} />
-          <label
-            htmlFor={id}
-            className="text-neutral-60 cursor-pointer text-sm"
-          >
-            {label}
-          </label>
+          <Checkbox
+            id={id}
+            checked={checked}
+            label={label}
+            onChange={(e) => onChange(e.target.checked)}
+          />
         </div>
         <button
           type="button"
           onClick={onToggle}
           className="text-neutral-60 ml-2 cursor-pointer text-sm whitespace-nowrap underline"
         >
-          {isExpanded ? "접기" : "보기"}
+          {isExpanded ? '접기' : '보기'}
         </button>
       </div>
       {isExpanded && (

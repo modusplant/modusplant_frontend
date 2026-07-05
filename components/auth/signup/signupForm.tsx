@@ -1,26 +1,31 @@
-"use client";
+'use client';
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { showModal } from "@/lib/store/modalStore";
-import { signupSchema, SignupFormValues } from "@/lib/constants/schema";
-import { authApi } from "@/lib/api/client/auth";
-import { useAuthStore } from "@/lib/store/authStore";
-import { TERMS_VERSIONS } from "@/lib/constants/terms";
-import { Button } from "@/components/_common/button";
-import { processSuccessfulAuth } from "@/lib/utils/auth/processSuccessfulAuth";
-import Image from "next/image";
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { showModal } from '@/lib/store/modalStore';
+import { signupSchema, SignupFormValues } from '@/lib/constants/schema';
+import { authApi } from '@/lib/api/client/auth';
+import { useAuthStore } from '@/lib/store/authStore';
+import { TERMS_VERSIONS } from '@/lib/constants/terms';
+import { Button } from '@/components/_common/button';
+import { processSuccessfulAuth } from '@/lib/utils/auth/processSuccessfulAuth';
+import Image from 'next/image';
 
 // Sub-components
-import EmailSection from "./emailSection";
-import PasswordSection from "./passwordSection";
-import NicknameSection from "./nicknameSection";
-import TermsSection from "./termsSection";
+import EmailSection from './emailSection';
+import PasswordSection from './passwordSection';
+import NicknameSection from './nicknameSection';
+import TermsSection from './termsSection';
+import { useState } from 'react';
+import FixedBottomButton from '@/components/_common/fixedBottomButton';
 
 export default function SignupForm() {
   const router = useRouter();
   const login = useAuthStore((state) => state.login);
+
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [isNicknameVerified, setIsNicknameVerified] = useState(false);
 
   const {
     register,
@@ -28,15 +33,26 @@ export default function SignupForm() {
     watch,
     setValue,
     trigger,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
   } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
+    defaultValues: {
+      email: '',
+      verificationCode: '',
+      password: '',
+      passwordConfirm: '',
+      nickname: '',
+      agreeToTerms: false,
+      agreeToPrivacy: false,
+      agreeToCommunity: false,
+    },
+    mode: 'onTouched',
   });
 
   const onSubmit = async (data: SignupFormValues) => {
     try {
       // 1. 회원가입 API 호출
-      const signupData = {
+      const signupPayload = {
         email: data.email,
         password: data.password,
         nickname: data.nickname,
@@ -45,7 +61,7 @@ export default function SignupForm() {
         agreedCommunityPolicyVersion: TERMS_VERSIONS.communityPolicy,
       };
 
-      const signupResult = await authApi.signup(signupData);
+      const signupResult = await authApi.signup(signupPayload);
 
       if (signupResult.status === 200) {
         // 2. 회원가입 성공 후 자동 로그인
@@ -65,38 +81,31 @@ export default function SignupForm() {
           login(user);
 
           showModal({
-            type: "snackbar",
-            description: "회원가입이 완료되었습니다!",
+            type: 'snackbar',
+            description: '회원가입이 완료되었습니다!',
           });
-          router.push("/"); // 메인 페이지로 이동
+          router.push('/'); // 메인 페이지로 이동
         } else {
           // 로그인 실패 시 로그인 페이지로 이동
           showModal({
-            type: "one-button",
-            title: "회원가입이 완료되었습니다!",
-            description: "로그인을 진행해주세요.",
-            buttonText: "로그인",
+            type: 'one-button',
+            title: '회원가입이 완료되었습니다!',
+            description: '로그인을 진행해주세요.',
+            buttonText: '로그인',
             onConfirm: () => {
-              router.push("/login");
+              router.push('/login');
             },
           });
         }
       }
     } catch (error: any) {
-      console.error("회원가입 오류:", error);
+      // console.error('회원가입 오류:', error);
       showModal({
-        type: "snackbar",
-        description: error.message || "회원가입 중 오류가 발생했습니다.",
+        type: 'snackbar',
+        description: error.message || '회원가입 중 오류가 발생했습니다.',
       });
     }
   };
-
-  // 폼 유효성 검사
-  const formData = watch();
-  const isFormValid =
-    formData.agreeToTerms &&
-    formData.agreeToPrivacy &&
-    !Object.keys(errors).length;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 md:space-y-10">
@@ -107,6 +116,7 @@ export default function SignupForm() {
           errors={errors}
           watch={watch}
           trigger={trigger}
+          onEmailVerified={setIsEmailVerified}
         />
 
         {/* 비밀번호 섹션 */}
@@ -118,36 +128,40 @@ export default function SignupForm() {
           errors={errors}
           watch={watch}
           trigger={trigger}
+          onNicknameVerified={setIsNicknameVerified}
         />
       </div>
 
       {/* 약관 동의 섹션 */}
-      <TermsSection
-        register={register}
-        errors={errors}
-        watch={watch}
-        setValue={setValue}
-      />
+      <TermsSection errors={errors} watch={watch} setValue={setValue} />
 
       {/* 회원가입 버튼 */}
-      <Button
-        type="submit"
-        disabled={!isFormValid || isSubmitting}
-        className="w-full rounded-lg py-3 text-[16px] font-semibold md:py-4"
-        variant={isFormValid || !isSubmitting ? "point" : "secondary"}
-      >
-        {isSubmitting ? (
-          <Image
-            src={"/icon/loading.gif"}
-            alt="Loading"
-            width={20}
-            height={20}
-            unoptimized
-          />
-        ) : (
-          "회원가입"
-        )}
-      </Button>
+      <FixedBottomButton>
+        <Button
+          type="submit"
+          disabled={
+            !isValid || !isEmailVerified || !isNicknameVerified || isSubmitting
+          }
+          className="w-full rounded-lg text-[16px] font-semibold md:py-4"
+          variant={
+            !isValid || !isEmailVerified || !isNicknameVerified || isSubmitting
+              ? 'secondary'
+              : 'point'
+          }
+        >
+          {isSubmitting ? (
+            <Image
+              src={'/icon/loading.gif'}
+              alt="Loading"
+              width={20}
+              height={20}
+              unoptimized
+            />
+          ) : (
+            '회원가입'
+          )}
+        </Button>
+      </FixedBottomButton>
     </form>
   );
 }

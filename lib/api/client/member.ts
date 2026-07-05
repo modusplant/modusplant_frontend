@@ -1,13 +1,18 @@
-import { clientApiInstance } from "@/lib/api/instances/clientInstance";
-import { ApiResponse } from "@/lib/types/common";
-import { ProfileData, AuthInfo } from "@/lib/types/member";
-import { MEMBER_ENDPOINTS, buildQueryString } from "@/lib/constants/endpoints";
+import { clientApiInstance } from '@/lib/api/instances/clientInstance';
+import { ApiResponse } from '@/lib/types/common';
+import { ProfileData, AuthInfo } from '@/lib/types/member';
+import {
+  MEMBER_ENDPOINTS,
+  COMMENT_ENDPOINTS,
+  buildQueryString,
+} from '@/lib/constants/endpoints';
 import {
   GetMyPostsRequest,
   GetMyPostsResponseData,
   GetRecentPostsRequest,
   GetRecentPostsResponseData,
-} from "@/lib/types/post";
+} from '@/lib/types/post';
+import { ReportFormValues } from '@/components/mypage/report/ReportSection';
 
 /**
  * 회원 프로필 API
@@ -108,5 +113,34 @@ export const memberApi = {
     const endpoint = `${MEMBER_ENDPOINTS.MY_BOOKMARKED_POSTS}${queryString}`;
 
     return clientApiInstance.get<GetMyPostsResponseData>(endpoint);
+  },
+
+  /**
+   * 건의/버그 제보
+   * @param formData 폼 데이터
+   * @returns 응답
+   */
+  async postBugReport(formData: ReportFormValues): Promise<ApiResponse<void>> {
+    const form = new FormData();
+    form.append('title', formData.title);
+    form.append('content', formData.content);
+    if (formData.image) form.append('image', formData.image);
+
+    return clientApiInstance.post<void>(MEMBER_ENDPOINTS.MY_BUG_REPORTS, form);
+  },
+
+  /**
+   * 댓글 신고
+   * @param postUlid 게시글 ULID
+   * @param path 댓글 경로
+   * @returns 응답
+   */
+  async postCommentReport(
+    postUlid: string,
+    path: string
+  ): Promise<ApiResponse<void>> {
+    return clientApiInstance.post<void>(
+      COMMENT_ENDPOINTS.REPORT_COMMENTS(postUlid, path)
+    );
   },
 };

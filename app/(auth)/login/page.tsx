@@ -1,20 +1,26 @@
-import Link from "next/link";
-import Image from "next/image";
-import LoginForm from "@/components/auth/login/loginForm";
-import { cn } from "@/lib/utils/tailwindHelper";
-import { loginMetadata as metadata } from "@/lib/metadata/auth";
+import Link from 'next/link';
+import Image from 'next/image';
+import LoginForm from '@/components/auth/login/loginForm';
+import { cn } from '@/lib/utils/tailwindHelper';
+import { loginMetadata as metadata } from '@/lib/metadata/auth';
 
 export { metadata };
 
 export default function LoginPage() {
   return (
-    <div className="bg-surface-98 flex min-h-screen items-center justify-center p-4 md:p-6">
+    <div
+      className={cn(
+        'flex min-h-screen items-center justify-center bg-white/70 p-5',
+        'md:bg-surface-98 md:p-6'
+      )}
+    >
       {/* 로그인 카드 */}
       <div
         className={cn(
-          "border-surface-stroke border bg-white/70",
-          "rounded-[20px] md:rounded-[28px]",
-          "w-full max-w-120 p-8 md:p-12"
+          'bg-white/70',
+          'rounded-[20px] md:rounded-[28px]',
+          'w-full max-w-120',
+          'md:border-surface-stroke md:border md:p-12'
         )}
       >
         {/* 로고 영역 */}
@@ -25,7 +31,7 @@ export default function LoginPage() {
               alt="모두의식물"
               width={117}
               height={26}
-              className="h-6 w-auto md:h-7"
+              className="h-7.5 w-auto"
             />
           </Link>
         </div>

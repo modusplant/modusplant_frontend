@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * 이미지 프록시 API Route
@@ -7,11 +7,11 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const imageUrl = searchParams.get("url");
+    const imageUrl = searchParams.get('url');
 
     if (!imageUrl) {
       return NextResponse.json(
-        { error: "URL parameter is required" },
+        { error: 'URL parameter is required' },
         { status: 400 }
       );
     }
@@ -20,13 +20,13 @@ export async function GET(request: NextRequest) {
     const response = await fetch(imageUrl, {
       headers: {
         // User-Agent 등 필요한 헤더 추가
-        "User-Agent": "ModusPlant/1.0",
+        'User-Agent': 'ModusPlant/1.0',
       },
     });
 
     if (!response.ok) {
       console.error(
-        "Image fetch failed:",
+        'Image fetch failed:',
         response.status,
         response.statusText
       );
@@ -41,20 +41,20 @@ export async function GET(request: NextRequest) {
     const buffer = await blob.arrayBuffer();
 
     // Content-Type 헤더 설정
-    const contentType = response.headers.get("content-type") || "image/jpeg";
+    const contentType = response.headers.get('content-type') || 'image/jpeg';
 
     // 이미지 반환
     return new NextResponse(buffer, {
       status: 200,
       headers: {
-        "Content-Type": contentType,
-        "Cache-Control": "public, max-age=31536000, immutable",
+        'Content-Type': contentType,
+        'Cache-Control': 'public, max-age=31536000, immutable',
       },
     });
   } catch (error) {
-    console.error("Image proxy error:", error);
+    console.error('Image proxy error:', error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

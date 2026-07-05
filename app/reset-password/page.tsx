@@ -1,6 +1,6 @@
-import RequestEmailForm from "@/components/auth/resetPassword/requestEmailForm";
-import ResetPasswordForm from "@/components/auth/resetPassword/resetPasswordForm";
-import { resetPasswordMetadata as metadata } from "@/lib/metadata/auth";
+import RequestEmailForm from '@/components/auth/resetPassword/requestEmailForm';
+import ResetPasswordForm from '@/components/auth/resetPassword/resetPasswordForm';
+import { resetPasswordMetadata as metadata } from '@/lib/metadata/auth';
 
 export { metadata };
 

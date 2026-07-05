@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { cn } from "@/lib/utils/tailwindHelper";
-import { Input } from "@/components/_common/input";
-import { PasswordSectionProps } from "@/lib/types/auth";
+import { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils/tailwindHelper';
+import { Input } from '@/components/_common/input';
+import { PasswordSectionProps } from '@/lib/types/auth';
 
 export default function PasswordSection({
   register,
@@ -11,28 +11,28 @@ export default function PasswordSection({
   watch,
   className,
 }: PasswordSectionProps) {
-  const [passwordError, setPasswordError] = useState<string>("");
-  const [confirmError, setConfirmError] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<string>('');
+  const [confirmError, setConfirmError] = useState<string>('');
 
-  const password = watch?.("password") || "";
-  const passwordConfirm = watch?.("passwordConfirm") || "";
+  const password = watch?.('password') || '';
+  const passwordConfirm = watch?.('passwordConfirm') || '';
 
   // 비밀번호 확인 실시간 검증
   useEffect(() => {
     if (!passwordConfirm) {
-      setConfirmError("");
+      setConfirmError('');
       return;
     }
 
     if (password !== passwordConfirm) {
-      setConfirmError("비밀번호가 서로 일치하지 않습니다");
+      setConfirmError('비밀번호가 서로 일치하지 않습니다');
     } else {
-      setConfirmError("");
+      setConfirmError('');
     }
   }, [password, passwordConfirm]);
 
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn('space-y-2', className)}>
       <label className="text-neutral-20 block text-sm font-medium">
         비밀번호
       </label>
@@ -41,13 +41,13 @@ export default function PasswordSection({
         {/* 비밀번호 입력 */}
         <div>
           <Input
-            {...register("password")}
+            {...register('password')}
             type="password"
             placeholder="비밀번호를 입력해주세요"
             showPasswordToggle
             className={cn(
-              "w-full",
-              (errors.password || passwordError) && "border-system-alert"
+              'w-full',
+              (errors.password || passwordError) && 'border-system-alert'
             )}
           />
 
@@ -64,13 +64,13 @@ export default function PasswordSection({
         {/* 비밀번호 확인 입력 */}
         <div>
           <Input
-            {...register("passwordConfirm")}
+            {...register('passwordConfirm')}
             type="password"
             placeholder="비밀번호를 다시 한번 입력해주세요"
             showPasswordToggle
             className={cn(
-              "w-full",
-              (errors.passwordConfirm || confirmError) && "border-system-alert"
+              'w-full',
+              (errors.passwordConfirm || confirmError) && 'border-system-alert'
             )}
           />
           {confirmError && !errors.passwordConfirm && (

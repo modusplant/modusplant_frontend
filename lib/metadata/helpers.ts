@@ -1,14 +1,14 @@
-import { Metadata } from "next";
+import { Metadata } from 'next';
 
 /**
  * 사이트 기본 설정
  */
 export const SITE_CONFIG = {
-  name: "모두의식물",
-  domain: "https://modusplant.kr",
-  defaultImage: "/logo_favicon/og-image-v2.png",
+  name: '모두의식물',
+  domain: 'https://modusplant.kr',
+  defaultImage: '/logo_favicon/og-image-v2.png',
   description:
-    "식집사들의 식물 정보 공유 커뮤니티. 품종, 환경, 성장 기록을 함께 나눕니다.",
+    '식집사들의 식물 정보 공유 커뮤니티. 품종, 환경, 성장 기록을 함께 나눕니다.',
 } as const;
 
 /**
@@ -17,17 +17,17 @@ export const SITE_CONFIG = {
 export function createMetadata({
   title,
   description,
-  path = "",
+  path = '',
   images,
   keywords,
-  type = "website",
+  type = 'website',
 }: {
   title: string;
   description: string;
   path?: string;
   images?: string[];
   keywords?: string[];
-  type?: "website" | "article";
+  type?: 'website' | 'article';
 }): Metadata {
   const url = `${SITE_CONFIG.domain}${path}`;
   const ogImages = images || [SITE_CONFIG.defaultImage];
@@ -48,10 +48,10 @@ export function createMetadata({
         alt: title,
       })),
       type,
-      locale: "ko_KR",
+      locale: 'ko_KR',
     },
     twitter: {
-      card: "summary_large_image",
+      card: 'summary_large_image',
       title,
       description,
       images: ogImages,
@@ -62,9 +62,9 @@ export function createMetadata({
       googleBot: {
         index: true,
         follow: true,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
       },
     },
     alternates: {
@@ -77,7 +77,7 @@ export function createMetadata({
  * 텍스트를 메타데이터 설명으로 변환 (길이 제한)
  */
 export function createDescription(text: string, maxLength = 160): string {
-  const cleaned = text.replace(/\s+/g, " ").trim();
+  const cleaned = text.replace(/\s+/g, ' ').trim();
   return cleaned.length > maxLength
     ? `${cleaned.slice(0, maxLength)}...`
     : cleaned;

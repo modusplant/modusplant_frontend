@@ -1,11 +1,13 @@
-import React, { forwardRef } from "react";
-import { cn } from "@/lib/utils/tailwindHelper";
+import React, { forwardRef } from 'react';
+import { cn } from '@/lib/utils/tailwindHelper';
 
-export interface CheckboxProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> {
+export interface CheckboxProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'type'
+> {
   label?: string;
   helperText?: string;
-  variant?: "default" | "error";
+  variant?: 'default' | 'error';
 }
 
 const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
@@ -14,15 +16,15 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       className,
       label,
       helperText,
-      size = "md",
-      variant = "default",
+      size = 'md',
+      variant = 'default',
       checked,
       defaultChecked,
       ...props
     },
     ref
   ) => {
-    const isError = variant === "error";
+    const isError = variant === 'error';
     const isChecked = checked !== undefined ? checked : defaultChecked;
 
     return (
@@ -45,15 +47,15 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               {/* 체크박스 */}
               <div
                 className={cn(
-                  "flex h-4 w-4 items-center justify-center rounded border transition-all",
+                  'flex h-4 w-4 items-center justify-center rounded border transition-all',
                   isChecked
                     ? isError
-                      ? "border-system-alert bg-system-alert"
-                      : "border-primary-50 bg-primary-50"
+                      ? 'border-system-alert bg-system-alert'
+                      : 'border-primary-50 bg-primary-50'
                     : isError
-                      ? "border-system-alert bg-white"
-                      : "border-neutral-70 bg-white",
-                  "hover:border-primary-50",
+                      ? 'border-system-alert bg-white'
+                      : 'border-neutral-70 bg-white',
+                  'hover:border-primary-50',
                   className
                 )}
               >
@@ -74,10 +76,10 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               {label && (
                 <span
                   className={cn(
-                    "text-sm",
-                    isError ? "text-system-alert" : "text-neutral-60"
+                    'text-sm',
+                    isError ? 'text-system-alert' : 'text-neutral-60'
                   )}
-                  style={{ fontFamily: "Pretendard" }}
+                  style={{ fontFamily: 'Pretendard' }}
                 >
                   {label}
                 </span>
@@ -90,10 +92,10 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         {helperText && (
           <p
             className={cn(
-              "ml-6 text-xs",
-              isError ? "text-system-alert" : "text-neutral-60"
+              'ml-6 text-xs',
+              isError ? 'text-system-alert' : 'text-neutral-60'
             )}
-            style={{ fontFamily: "Pretendard" }}
+            style={{ fontFamily: 'Pretendard' }}
           >
             {helperText}
           </p>
@@ -103,6 +105,6 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   }
 );
 
-Checkbox.displayName = "Checkbox";
+Checkbox.displayName = 'Checkbox';
 
 export { Checkbox };

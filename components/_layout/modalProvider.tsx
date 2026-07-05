@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import useModalStore from "@/lib/store/modalStore";
-import { useSnackbarAnimation } from "../_common/modal/useSnackbarAnimation";
-import SnackbarModal from "../_common/modal/snackbarModal";
-import DialogModal from "../_common/modal/dialogModal";
+import useModalStore from '@/lib/store/modalStore';
+import { useSnackbarAnimation } from '../_common/modal/useSnackbarAnimation';
+import SnackbarModal from '../_common/modal/snackbarModal';
+import DialogModal from '../_common/modal/dialogModal';
 
 export default function ModalProvider() {
   const isVisible = useModalStore((state) => state.isVisible);
@@ -11,7 +11,7 @@ export default function ModalProvider() {
   const hideModal = useModalStore((state) => state.hideModal);
 
   const isAnimating = useSnackbarAnimation(
-    isVisible && type === "snackbar",
+    isVisible && type === 'snackbar',
     hideModal
   );
 
@@ -19,10 +19,17 @@ export default function ModalProvider() {
     return null;
   }
 
-  const { title, description, buttonText, onConfirm } =
-    useModalStore.getState();
+  const {
+    title,
+    description,
+    buttonText,
+    onConfirm,
+    onCancel,
+    align,
+    shouldUseLineBreak,
+  } = useModalStore.getState();
 
-  if (type === "snackbar") {
+  if (type === 'snackbar') {
     return (
       <SnackbarModal description={description} isAnimating={isAnimating} />
     );
@@ -30,12 +37,15 @@ export default function ModalProvider() {
 
   return (
     <DialogModal
-      title={title || ""}
+      title={title || ''}
       description={description}
       type={type}
       buttonText={buttonText}
       onConfirm={onConfirm}
+      onCancel={onCancel}
       hideModal={hideModal}
+      align={align}
+      shouldUseLineBreak={shouldUseLineBreak}
     />
   );
 }

@@ -1,11 +1,11 @@
-import { serverApiInstance } from "../instances/serverInstance";
-import { ApiResponse } from "@/lib/types/common";
+import { serverApiInstance } from '../instances/serverInstance';
+import { ApiResponse } from '@/lib/types/common';
 import {
   GetPostsRequest,
   GetPostsResponseData,
   PostDetail,
-} from "@/lib/types/post";
-import { POST_ENDPOINTS, buildQueryString } from "@/lib/constants/endpoints";
+} from '@/lib/types/post';
+import { POST_ENDPOINTS, buildQueryString } from '@/lib/constants/endpoints';
 
 /**
  * 서버 전용 게시글 API
