@@ -37,9 +37,7 @@ export function useProfileMutation() {
           });
         }
       },
-      onError: (error) => {
-        console.error('프로필 수정 실패:', error);
-      },
+      onError: (error) => {},
       retry: 0,
     }
   );

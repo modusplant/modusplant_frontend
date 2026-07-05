@@ -10,7 +10,9 @@ import { ApiResponse } from '@/lib/types/common';
 export function useProfileQuery() {
   return useQuery<ApiResponse<ProfileData>, Error>({
     queryKey: ['profile'],
-    queryFn: () => memberApi.getProfile(),
+    queryFn: () => {
+      return memberApi.getProfile();
+    },
     staleTime: 1000 * 60 * 60, // 1시간
     retry: 1,
   });
