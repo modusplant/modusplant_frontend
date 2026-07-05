@@ -97,7 +97,7 @@ export type TermsType = (typeof ALL_TERMS)[number];
  * 약관 버전
  */
 export const TERMS_VERSIONS = {
-  termsOfUse: 'v1.0.0',
-  privacyPolicy: 'v1.0.0',
-  communityPolicy: 'v1.0.0',
+  termsOfUse: 'v1.1.3',
+  privacyPolicy: 'v1.1.3',
+  communityPolicy: 'v2.0.7',
 } as const;
