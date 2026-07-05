@@ -25,9 +25,9 @@ async function refreshAccessToken(): Promise<string> {
       let errorBody = null;
       try {
         errorBody = await response.text();
-        console.error('[RefreshToken] 에러 응답 본문:', errorBody);
+        // console.error('[RefreshToken] 에러 응답 본문:', errorBody);
       } catch (e) {
-        console.error('[RefreshToken] 응답 본문 읽기 실패');
+        // console.error('[RefreshToken] 응답 본문 읽기 실패');
       }
 
       throw new ApiError(
@@ -49,7 +49,7 @@ async function refreshAccessToken(): Promise<string> {
 
     const newAccessToken = data.data.accessToken;
 
-    console.info('[RefreshToken] 새 액세스 토큰 발급 성공');
+    // console.info('[RefreshToken] 새 액세스 토큰 발급 성공');
 
     // 새 액세스 토큰 쿠키에 저장
     setCookie(ACCESS_TOKEN_COOKIE_NAME, newAccessToken, {
@@ -61,7 +61,7 @@ async function refreshAccessToken(): Promise<string> {
 
     return newAccessToken;
   } catch (error) {
-    console.error('[RefreshToken] 실패:', error);
+    // console.error('[RefreshToken] 실패:', error);
     throw error;
   }
 }

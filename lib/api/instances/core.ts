@@ -72,8 +72,8 @@ async function requestCore<T = any>(
 
     // 디버깅용 로그 (확인 후 제거)
     if (!response.ok) {
-      console.error('[API Error] status:', response.status);
-      console.error('[API Error body:', data);
+      // console.error('[API Error] status:', response.status);
+      // console.error('[API Error body:', data);
     }
 
     if (data.status === 401 && !skipAuth) {

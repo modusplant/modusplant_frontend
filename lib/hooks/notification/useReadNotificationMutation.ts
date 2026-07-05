@@ -28,7 +28,7 @@ export const useReadNotificationMutation = () => {
       return { previous };
     },
     onError: (_error, _notificationId, context) => {
-      console.error(_error);
+      // console.error(_error);
       queryClient.setQueryData(['notifications'], context?.previous);
     },
 

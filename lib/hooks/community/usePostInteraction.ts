@@ -74,7 +74,7 @@ export function usePostInteraction({
       // 에러 시 롤백
       setLikeCount((prev) => prev + (currentIsLiked ? 1 : -1));
       setIsLiked(currentIsLiked);
-      console.error('좋아요 처리 실패:', error);
+      // console.error('좋아요 처리 실패:', error);
       showModal({
         type: 'snackbar',
         description: error.message,
@@ -107,7 +107,7 @@ export function usePostInteraction({
     onError: (error: Error, currentIsBookmarked) => {
       // 에러 시 롤백
       setIsBookmarked(currentIsBookmarked);
-      console.error('북마크 처리 실패:', error);
+      // console.error('북마크 처리 실패:', error);
       showModal({
         type: 'snackbar',
         description: error.message,

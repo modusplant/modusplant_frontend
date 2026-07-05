@@ -54,7 +54,7 @@ export async function buildPostFormData(
 
       return file;
     } catch (error) {
-      console.error(`이미지 URL 처리 실패: ${url}`, error);
+      // console.error(`이미지 URL 처리 실패: ${url}`, error);
       return null;
     }
   };

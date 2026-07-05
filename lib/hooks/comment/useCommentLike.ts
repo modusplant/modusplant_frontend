@@ -76,7 +76,7 @@ export function useCommentLike({
           context.previousComments
         );
       }
-      console.error('댓글 좋아요 처리 실패:', error);
+      // console.error('댓글 좋아요 처리 실패:', error);
       showModal({
         type: 'snackbar',
         description: error.message,

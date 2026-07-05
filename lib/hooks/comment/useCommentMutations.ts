@@ -82,7 +82,7 @@ export function useCommentMutations({
       onSuccess?.();
     },
     onError: (error: Error) => {
-      console.error('댓글 작성 실패:', error);
+      // console.error('댓글 작성 실패:', error);
       showModal({
         type: 'snackbar',
         description: error.message,
@@ -152,7 +152,7 @@ export function useCommentMutations({
     },
     onError: (error: Error) => {
       if (error.message !== '취소됨') {
-        console.error('댓글 삭제 실패:', error);
+        // console.error('댓글 삭제 실패:', error);
         showModal({
           type: 'snackbar',
           description: error.message,

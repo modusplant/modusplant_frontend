@@ -99,7 +99,7 @@ export default function SignupForm() {
         }
       }
     } catch (error: any) {
-      console.error('회원가입 오류:', error);
+      // console.error('회원가입 오류:', error);
       showModal({
         type: 'snackbar',
         description: error.message || '회원가입 중 오류가 발생했습니다.',
