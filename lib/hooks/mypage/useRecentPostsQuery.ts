@@ -9,7 +9,11 @@ import { GetRecentPostsResponseData } from '@/lib/types/post';
  * @param page 페이지 번호 (1부터 시작)
  * @param size 페이지 크기
  */
-export function useRecentPostsQuery(page: number, size: number = 8) {
+export function useRecentPostsQuery(
+  page: number,
+  size: number = 8,
+  enabled: boolean = true
+) {
   return useQuery<GetRecentPostsResponseData>({
     queryKey: ['recentPosts', page, size],
     queryFn: async () => {
@@ -21,6 +25,7 @@ export function useRecentPostsQuery(page: number, size: number = 8) {
       }
       return response.data;
     },
+    enabled,
     gcTime: 1000 * 60 * 5, // 5분
   });
 }
