@@ -14,6 +14,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { SignoutFormValues } from './SignoutForm';
 import { useSignout } from '@/lib/hooks/auth/useSignout';
 import { showModal } from '@/lib/store/modalStore';
+import FixedBottomButton from '@/components/_common/fixedBottomButton';
 
 /**
  * 계정 설정 섹션
@@ -110,7 +111,7 @@ export default function AccountSection() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col lg:gap-6">
       {emailModalVisible && (
         <ChangeEmailModal
           userId={user!.id}
@@ -124,19 +125,25 @@ export default function AccountSection() {
         onChangeEmail={() => setEmailModalVisible(true)}
         disabled={isSocialMember}
       />
+      <div className="bg-surface-98 -mx-5 h-2.5 lg:hidden" />
       <SocialLinkSection
         authProvider={authInfo.authProvider}
         onSignout={open}
       />
+      <div className="bg-surface-98 -mx-5 h-2.5 lg:hidden" />
       <PasswordSection disabled={isSocialMember} />
-      <div className="flex justify-end">
-        <button
-          className="typo-regular14 text-neutral-40 text-[15px] underline underline-offset-4"
-          onClick={openSignoutModal}
-        >
-          회원 탈퇴
-        </button>
-      </div>
+
+      <FixedBottomButton className="bg-surface-98 lg:bg-transparent">
+        <div className="flex items-end justify-end">
+          <button
+            className="typo-regular14 text-neutral-40 text-[15px] underline underline-offset-4"
+            onClick={openSignoutModal}
+          >
+            회원 탈퇴
+          </button>
+        </div>
+      </FixedBottomButton>
+
       {isSignoutModalOpen && (
         <SignoutModal
           handleSignout={handleSignout}

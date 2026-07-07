@@ -22,8 +22,8 @@ export default function EmailInfoSection({
   disabled,
 }: EmailInfoSectionProps) {
   return (
-    <div className="border-surface-98 flex flex-col gap-5 rounded-xl border bg-white p-10">
-      <h2 className="text-neutral-5 text-[18px] leading-[1.2] font-semibold tracking-[-0.01em]">
+    <div className="border-surface-98 flex flex-col gap-5 rounded-xl bg-white pb-6 lg:border lg:p-10">
+      <h2 className="text-neutral-5 text-[17px] leading-[1.2] font-semibold tracking-[-0.01em] lg:text-[18px]">
         이메일 정보
       </h2>
 

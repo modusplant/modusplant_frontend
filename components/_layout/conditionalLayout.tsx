@@ -36,6 +36,13 @@ const NO_FOOTER_PATHS = [
   '/reset-password',
 ];
 
+// FixedBottomButton이 있는 페이지 — Footer가 가려지지 않도록 버튼 높이만큼 하단 padding 지정
+// (값은 각 페이지 FixedBottomButton 콘텐츠의 실측 높이 기준, 브라우저에서 확인 후 조정)
+const FOOTER_BOTTOM_PADDING_BY_PATH: Record<string, string> = {
+  '/mypage/profile': 'pb-21 md:pb-0', // Button(size md) 포함
+  '/mypage/account': 'pb-12.5 md:pb-0', // 텍스트 링크만 포함, 버튼보다 낮음
+};
+
 export default function ConditionalLayout({
   children,
   initialUser,
@@ -68,7 +75,9 @@ export default function ConditionalLayout({
       {!shouldHideHeader && <HeaderWrapper initialUser={initialUser} />}
       {showMobileSubHeader && <MobileSubHeader title={pageTitle} />}
       <main className="flex-1">{children}</main>
-      {!shouldHideFooter && <Footer />}
+      {!shouldHideFooter && (
+        <Footer className={FOOTER_BOTTOM_PADDING_BY_PATH[pathname]} />
+      )}
     </div>
   );
 }
