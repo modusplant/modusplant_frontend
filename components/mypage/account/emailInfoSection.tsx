@@ -1,11 +1,11 @@
 import { Input } from '@/components/_common/input';
 import { Button } from '@/components/_common/button';
 import { formatDate } from '@/lib/utils/formatTime';
+import Link from 'next/link';
 
 interface EmailInfoSectionProps {
   email: string;
   createdAt?: string;
-  onChangeEmail?: () => void;
   disabled?: boolean;
 }
 
@@ -18,7 +18,6 @@ interface EmailInfoSectionProps {
 export default function EmailInfoSection({
   email,
   createdAt,
-  onChangeEmail,
   disabled,
 }: EmailInfoSectionProps) {
   return (
@@ -37,16 +36,25 @@ export default function EmailInfoSection({
           <p className="text-neutral-60 text-sm leading-normal">
             가입일: {createdAt ? formatDate(createdAt) : '-'}
           </p>
-          <div>
+          {disabled ? (
             <Button
-              variant={disabled ? 'deactivate' : 'point2'}
+              variant="deactivate"
               size="md"
-              onClick={onChangeEmail}
               className="h-10.5 text-[15px] font-medium"
             >
               이메일 변경하기
             </Button>
-          </div>
+          ) : (
+            <Link href="/reset-email">
+              <Button
+                variant="point2"
+                size="md"
+                className="h-10.5 text-[15px] font-medium"
+              >
+                이메일 변경하기
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
     </div>
