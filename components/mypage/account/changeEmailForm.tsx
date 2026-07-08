@@ -15,6 +15,7 @@ import { showModal } from '@/lib/store/modalStore';
 import { authApi } from '@/lib/api/client/auth';
 import { useAuthStore } from '@/lib/store/authStore';
 import ResetPageLayout from '@/components/auth/resetPageLayout';
+import FixedBottomButton from '@/components/_common/fixedBottomButton';
 
 // 이메일 변경 폼 스키마 - 공통 스키마 재사용
 const changeEmailSchema = z.object({
@@ -119,12 +120,16 @@ export default function ChangeEmailForm() {
     <ResetPageLayout title="이메일 변경">
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
-          <p className="text-neutral-20">현재 이메일</p>
+          <p className="text-neutral-20 text-[14px] leading-normal font-medium tracking-[-0.01em]">
+            현재 이메일
+          </p>
           <Input type="email" value={email} readOnly />
         </div>
 
         <div className="flex flex-col gap-2">
-          <p className="text-neutral-20">새 이메일</p>
+          <p className="text-neutral-20 text-[14px] leading-normal font-medium tracking-[-0.01em]">
+            새 이메일
+          </p>
           <Input
             {...register('newEmail')}
             type="email"
@@ -168,21 +173,23 @@ export default function ChangeEmailForm() {
           </div>
         )}
 
-        <Button
-          variant="point"
-          size="lg"
-          className="rounded-lg"
-          onClick={handleButtonClick}
-          disabled={isSubmitting}
-        >
-          {isVerified
-            ? '이메일 변경하기'
-            : canResend
-              ? '인증 코드 재발송'
-              : isCodeSent
-                ? '확인'
-                : '인증 코드 발송'}
-        </Button>
+        <FixedBottomButton className="bg-surface-98">
+          <Button
+            variant="point"
+            size="lg"
+            className="w-full rounded-lg"
+            onClick={handleButtonClick}
+            disabled={isSubmitting}
+          >
+            {isVerified
+              ? '이메일 변경하기'
+              : canResend
+                ? '인증 코드 재발송'
+                : isCodeSent
+                  ? '확인'
+                  : '인증 코드 발송'}
+          </Button>
+        </FixedBottomButton>
       </div>
     </ResetPageLayout>
   );

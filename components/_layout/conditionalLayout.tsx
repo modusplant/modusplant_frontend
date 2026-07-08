@@ -41,6 +41,7 @@ const NO_FOOTER_PATHS = [
 const FOOTER_BOTTOM_PADDING_BY_PATH: Record<string, string> = {
   '/mypage/profile': 'pb-21 md:pb-0', // Button(size md) 포함
   '/mypage/account': 'pb-12.5 md:pb-0', // 텍스트 링크만 포함, 버튼보다 낮음
+  '/mypage/report': 'pb-21 md:pb-0',
 };
 
 export default function ConditionalLayout({
