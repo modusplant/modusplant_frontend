@@ -11,7 +11,8 @@ import { GetMyCommentsResponseData } from '@/lib/types/comment';
 export default function useMyCommentsQuery(
   page: number,
   size: number = 8,
-  userId?: string
+  userId?: string,
+  enabled: boolean = true
 ) {
   return useQuery<GetMyCommentsResponseData>({
     queryKey: ['myComments', page, size, userId],
@@ -26,6 +27,6 @@ export default function useMyCommentsQuery(
       }
       return response.data;
     },
-    enabled: !!userId,
+    enabled: !!userId && enabled,
   });
 }

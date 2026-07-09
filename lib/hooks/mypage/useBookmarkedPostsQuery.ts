@@ -16,7 +16,11 @@ import { GetMyPostsResponseData } from '@/lib/types/post';
  * const { data, isLoading, error } = useBookmarkedPostsQuery(1, 9);
  * ```
  */
-export function useBookmarkedPostsQuery(page: number = 1, size: number = 9) {
+export function useBookmarkedPostsQuery(
+  page: number = 1,
+  size: number = 9,
+  enabled: boolean = true
+) {
   return useQuery<GetMyPostsResponseData | undefined>({
     queryKey: ['bookmarkedPosts', page, size],
     queryFn: async () => {
@@ -31,5 +35,6 @@ export function useBookmarkedPostsQuery(page: number = 1, size: number = 9) {
       return response.data;
     },
     retry: 1,
+    enabled,
   });
 }
