@@ -86,7 +86,7 @@ const ReportSection = () => {
               {...register('title')}
               maxLength={60}
               showCount
-              placeholder="건의사항이나 버그에 대해 간단한 제목을 입력해주세요."
+              placeholder="제목을 입력해주세요."
               className="text-neutral-40 typo-regular14"
             />
           </div>
@@ -95,7 +95,7 @@ const ReportSection = () => {
             <p className="typo-medium text-neutral-40">내용</p>
             <textarea
               {...register('content')}
-              className="border-surface-stroke-2 text-neutral-40 typo-regular14 placeholder:text-neutral-70 focus:border-primary-50 h-[180px] w-full resize-none rounded-[10px] border bg-transparent p-4 transition-colors outline-none"
+              className="border-surface-stroke-2 text-neutral-40 typo-regular14 placeholder:text-neutral-70 focus:border-primary-50 h-[180px] w-full resize-none rounded-[10px] border bg-transparent p-4 break-keep transition-colors outline-none"
               placeholder="자세한 내용을 입력해주세요. 버그 제보의 경우 발생 상황과 재현 방법을 구체적으로 설명해주시면 더욱 도움이 됩니다."
             />
           </div>
