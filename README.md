@@ -178,8 +178,6 @@ modusplant/
 │   │
 │   └── mypage/                   # 마이페이지 컴포넌트
 │       ├── sidebar.tsx           # 사이드바
-│       ├── sidebarDesktop.tsx    # 데스크톱 사이드바
-│       ├── sidebarMobile.tsx     # 모바일 사이드바
 │       ├── account/              # 계정 설정 컴포넌트
 │       ├── bookmarks/            # 북마크 컴포넌트
 │       ├── comments/             # 댓글 컴포넌트
@@ -331,4 +329,3 @@ modusplant/
 - **캐싱**: React Query 기반 스마트 캐싱
 
 ---
-

@@ -13,7 +13,7 @@ interface PasswordSectionProps {
 
 export default function PasswordSection({ disabled }: PasswordSectionProps) {
   return (
-    <div className="lg:border-surface-98 rounded-xl bg-white py-6 lg:border lg:p-10">
+    <div className="lg:border-surface-98 rounded-xl bg-white lg:border lg:p-10">
       <div className="flex flex-col gap-5">
         <label className="text-neutral-5 text-[17px] leading-normal font-semibold tracking-[-0.02em] lg:text-[18px]">
           비밀번호

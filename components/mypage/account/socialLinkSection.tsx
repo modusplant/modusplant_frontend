@@ -67,7 +67,7 @@ export default function SocialLinkSection({
   };
 
   return (
-    <div className="lg:border-surface-98 rounded-xl py-6 lg:border lg:bg-white lg:p-10">
+    <div className="lg:border-surface-98 rounded-xl lg:border lg:bg-white lg:p-10">
       <div className="flex flex-col">
         <label className="text-neutral-5 mb-5 text-[17px] leading-normal font-semibold tracking-[-0.02em] lg:text-[18px]">
           소셜 연동 관리
