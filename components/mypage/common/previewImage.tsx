@@ -20,17 +20,22 @@ const PreviewImage = ({
   className,
 }: PreviewImageProps) => {
   return (
-    <div className={cn('relative h-[140px] w-[140px] shrink-0', className)}>
+    <div
+      className={cn(
+        'relative h-[100px] w-[100px] shrink-0 md:h-[140px] md:w-[140px]',
+        className
+      )}
+    >
       <Image
         width={140}
         height={140}
         src={previewUrl}
         alt="이미지 미리보기"
-        className="border-surface-stroke-2 h-full w-full rounded-[7px] border object-cover"
+        className="border-surface-stroke-2 h-100 h-140 h-full w-100 w-full rounded-[7px] border object-cover md:w-140"
       />
       <button
         onClick={onRemove}
-        className="bg-neutral-70 hover:bg-neutral-80 absolute -top-2 -right-2 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full text-white transition-colors"
+        className="bg-neutral-70 hover:bg-neutral-80 absolute -top-2 -right-2 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full text-white transition-colors"
         type="button"
         aria-label="첨부 이미지 삭제"
       >

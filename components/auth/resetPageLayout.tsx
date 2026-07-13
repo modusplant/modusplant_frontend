@@ -22,7 +22,7 @@ export default function ResetPageLayout({
   const router = useRouter();
 
   return (
-    <div className="mx-auto max-w-120 p-5">
+    <div className="mx-auto max-w-120 px-5 py-6 lg:p-5">
       {/* 뒤로가기 버튼 */}
       <div className="hidden md:block">
         <button
@@ -35,8 +35,8 @@ export default function ResetPageLayout({
       </div>
 
       {/* 페이지 제목 */}
-      <div className="mt-6 mb-10 flex flex-col gap-6 text-center">
-        <h1 className="hidden text-2xl font-bold md:block">{title}</h1>
+      <div className="mt-6 mb-10 flex hidden flex-col gap-6 text-center md:block">
+        <h1 className="text-2xl font-bold">{title}</h1>
 
         {description && (
           <h2 className="text-neutral-20 text-[15px]">{description}</h2>

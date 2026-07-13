@@ -89,7 +89,9 @@ export default function RequestEmailForm() {
         className="flex flex-col gap-10"
       >
         <div className="space-y-2">
-          <p>이메일</p>
+          <p className="text-neutral-20 text-[14px] leading-normal font-medium tracking-[-0.01em]">
+            이메일
+          </p>
           <Input
             type="email"
             {...register('email')}
