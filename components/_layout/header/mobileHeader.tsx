@@ -20,7 +20,6 @@ export default function MobileHeader({
   const { data: unreadNotificationsCount } = useGetNotificationCountQuery();
 
   // TODO: 검색결과 페이지 추가 시 해당 경로도 추가 필요
-  // TODO: 모바일 헤더용 마이페이지 메뉴도 페이지 추가 필요(임의로 /mypage/menu로 설정. 해당 path는 현재 존재하지 않음)
   const MOBILE_HEADER_PATHS = ['/', '/mypage/menu'];
   const showMobileHeader = MOBILE_HEADER_PATHS.some((path) => {
     if (path === '/') return pathname === '/';
