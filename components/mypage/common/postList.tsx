@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, ReactNode } from 'react';
+import { useMemo, useRef, useState, ReactNode } from 'react';
 import { InfiniteData } from '@tanstack/react-query';
 import PostListItem from './postListItem';
 import Pagination from './pagination';
 import { PostData } from '@/lib/types/post';
 import { useMediaQuery } from '@/lib/hooks/common/useMediaQuery';
+import { useInfiniteScrollObserver } from '@/lib/hooks/common/useInfiniteScrollObserver';
 
 interface PostListProps<T> {
   /**
@@ -23,6 +24,7 @@ interface PostListProps<T> {
   /**
    * React Query 훅 (모바일 무한 스크롤) — 전달 시에만 모바일 분기 활성화
    */
+
   useInfiniteQueryHook?: (
     size: number,
     enabled: boolean
@@ -34,6 +36,7 @@ interface PostListProps<T> {
     hasNextPage: boolean;
     isFetchingNextPage: boolean;
   };
+
   /**
    * 빈 상태 컴포넌트
    */
@@ -76,31 +79,15 @@ export default function PostList<
 
   // 무한 스크롤을 위한 관찰 대상 ref
   const observerTarget = useRef<HTMLDivElement>(null);
+  const { fetchNextPage, hasNextPage, isFetchingNextPage } =
+    infiniteResult ?? {};
 
-  useEffect(() => {
-    if (!infiniteResult || isMobile !== true) return;
-
-    const { fetchNextPage, hasNextPage, isFetchingNextPage } = infiniteResult;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    const currentTarget = observerTarget.current;
-    if (currentTarget) {
-      observer.observe(currentTarget);
-    }
-
-    return () => {
-      if (currentTarget) {
-        observer.unobserve(currentTarget);
-      }
-    };
-  }, [infiniteResult, isMobile]);
+  useInfiniteScrollObserver(observerTarget, {
+    hasNextPage: hasNextPage ?? false,
+    isFetchingNextPage: isFetchingNextPage ?? false,
+    fetchNextPage: fetchNextPage ?? (() => {}),
+    enabled: isMobile === true,
+  });
 
   const infinitePosts = useMemo(
     () => infiniteResult?.data?.pages.flatMap((page) => page.posts) ?? [],
@@ -111,7 +98,8 @@ export default function PostList<
   const isLoading =
     isMobile === null ||
     (isMobile ? (infiniteResult?.isLoading ?? false) : isPageLoading);
-  const error = isMobile === false ? pageError : (infiniteResult?.error ?? null);
+  const error =
+    isMobile === false ? pageError : (infiniteResult?.error ?? null);
 
   // 로딩 상태
   if (isLoading) {
