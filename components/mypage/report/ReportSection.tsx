@@ -69,7 +69,7 @@ const ReportSection = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex w-full flex-col gap-6">
           <h1 className="typo-bold20 text-neutral-5 sr-only leading-[1.2] md:not-sr-only">
-            건의/버그제보
+            건의/버그 제보
           </h1>
 
           <div className="bg-surface-99 rounded-lg px-[18px] py-[14px]">
