@@ -67,17 +67,21 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
   };
 
   useEffect(() => {
+    if (!isOpen) return;
+
     const prevOverflow = document.body.style.overflow;
     const prevUserSelect = document.body.style.userSelect;
 
     if (isOpen) {
       document.body.style.overflow = 'hidden';
       document.body.style.userSelect = 'none';
+      document.body.classList.add('overlay-open');
     }
 
     return () => {
       document.body.style.overflow = prevOverflow;
       document.body.style.userSelect = prevUserSelect;
+      document.body.classList.remove('overlay-open');
     };
   }, [isOpen]);
 
