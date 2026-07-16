@@ -13,8 +13,8 @@ interface AuthGuardProps {
  * 전역 인증 가드 컴포넌트
  *
  * @description
- * - 특정 경로(메인, 로그인, 회원가입, 게시글 상세, 비밀번호 재설정)는 인증 없이 접근 가능
- * - 나머지 경로는 인증 필요
+ * - 인증이 필요한 보호 경로(마이페이지, 게시글 작성/수정, 알림, 이메일 변경)만 명시
+ * - 그 외 경로(존재하지 않는 경로 포함)는 인증 없이 접근 가능
  * - 미인증 상태에서 보호된 경로 접근 시 로그인 안내 페이지 표시
  *
  * @example
@@ -29,27 +29,28 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   const pathname = usePathname();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-  // 인증이 필요없는 공개 경로 목록
-  const publicPaths = [
-    '/', // 메인페이지
-    '/login', // 로그인
-    '/signup', // 회원가입
-    '/signup/social', // 소셜 회원가입
-    '/reset-password', // 비밀번호 재설정
-    '/reset-password/sent', // 비밀번호 재설정 메일 발송 완료
-    '/oauth/kakao/callback', // 카카오 인가 페이지
-    '/oauth/google/callback', // 구글 인가 페이지
-    '/search', // 검색 페이지
+  // 인증이 필요한 보호 경로 목록
+  const protectedPaths = [
+    '/mypage',
+    '/mypage/profile',
+    '/mypage/account',
+    '/mypage/posts',
+    '/mypage/likes',
+    '/mypage/bookmarks',
+    '/mypage/comments',
+    '/mypage/recent',
+    '/mypage/report',
+    '/mypage/menu',
+    '/notifications',
+    '/reset-email',
   ];
 
-  // 현재 경로가 공개 경로인지 확인
-  const isPublicPath =
-    publicPaths.includes(pathname) ||
-    (pathname.startsWith('/community/') &&
-      !pathname.startsWith('/community/write')); // 게시글 상세만 허용
+  const isProtectedPath =
+    protectedPaths.includes(pathname) ||
+    pathname.startsWith('/community/write');
 
-  // 공개 경로거나 인증된 경우 children 렌더링
-  if (isPublicPath || isAuthenticated) {
+  // 인징이 필요한 경로가 아닌 경우 children 렌더링
+  if (!isProtectedPath || isAuthenticated) {
     return <>{children}</>;
   }
 
