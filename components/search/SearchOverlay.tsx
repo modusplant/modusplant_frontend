@@ -116,7 +116,7 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
           </button>
         </div>
         <div className="flex gap-1 md:block">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
             <SearchBar
               placeholder="검색어를 입력해 주세요"
               autoFocus
