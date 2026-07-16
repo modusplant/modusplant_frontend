@@ -40,7 +40,7 @@ export default function BlurOverlay({
               {lines.map((line, idx) => (
                 <span key={idx}>
                   {line}
-                  {idx === 0 && <br className="hidden sm:block" />}
+                  {idx === 0 && <br />}
                 </span>
               ))}
             </p>
