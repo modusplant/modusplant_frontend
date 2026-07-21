@@ -37,7 +37,7 @@ export default function ScrollToTop() {
       {isVisible && (
         <button
           onClick={scrollToTop}
-          className="bg-primary-50 hover:bg-primary-70 fixed right-8 bottom-8 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all duration-300 hover:shadow-xl active:scale-95 md:right-10 md:bottom-10 lg:right-12 lg:bottom-12"
+          className="bg-primary-50 hover:bg-primary-70 fixed right-8 bottom-8 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all duration-300 hover:shadow-xl active:scale-95 md:right-10 md:bottom-10 lg:right-12 lg:bottom-12 [body.overlay-open_&]:hidden"
           aria-label="맨 위로 이동"
         >
           <ArrowUp className="h-6 w-6 text-white" strokeWidth={2.5} />
