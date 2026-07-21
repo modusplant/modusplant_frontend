@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 import Button from '@/components/_common/button';
 import { Input } from '@/components/_common/input';
 import { useEmailVerification } from '@/lib/hooks/auth/useEmailVerification';
@@ -43,7 +42,6 @@ export default function ChangeEmailForm() {
   } = useForm<ChangeEmailFormValues>({
     resolver: zodResolver(changeEmailSchema),
   });
-  const router = useRouter();
   const queryClient = useQueryClient();
   const watchedNewEmail = watch('newEmail');
 
@@ -107,10 +105,8 @@ export default function ChangeEmailForm() {
         description: '변경된 이메일로 다시 로그인 해주세요.',
         buttonText: '로그인 하기',
         onConfirm: () => {
-          router.push('/login');
-          setTimeout(() => {
-            logout();
-          }, 1000);
+          logout();
+          window.location.href = '/login';
         },
       });
     }

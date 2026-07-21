@@ -19,10 +19,8 @@ export default function Sidebar() {
       description: '메인페이지로 이동합니다.',
       buttonText: '로그아웃',
       onConfirm: () => {
+        logout();
         window.location.href = '/';
-        setTimeout(() => {
-          logout();
-        }, 0);
       },
     });
   };
