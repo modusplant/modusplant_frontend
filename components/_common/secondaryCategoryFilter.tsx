@@ -181,7 +181,8 @@ export default function SecondaryCategoryFilter({
             'border-surface-stroke absolute z-50 border bg-neutral-100 shadow-lg',
             {
               // filter 스타일 (칩 형태)
-              'mt-2 w-sm rounded-lg p-4': !isSelector,
+              'right-0 mt-2 w-[min(24rem,calc(100vw-2.5rem))] rounded-lg p-4 md:right-auto md:left-0 md:w-sm':
+                !isSelector,
               // selector 스타일 (리스트 형태)
               'top-12 left-0 w-full rounded-lg md:w-60': isSelector,
             }

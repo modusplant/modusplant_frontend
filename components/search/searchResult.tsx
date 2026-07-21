@@ -10,6 +10,8 @@ import { cn } from '@/lib/utils/tailwindHelper';
 import SearchCategoryFilter from './searchCategoryFilter';
 import SearchOptionTabs from './searchOptionTabs';
 import SearchBar from './searchbar';
+import { useMediaQuery } from '@/lib/hooks/common/useMediaQuery';
+import PostListItem from '../mypage/common/postListItem';
 
 interface SearchResultProps {
   keyword: string;
@@ -47,6 +49,7 @@ const SearchResult = ({
     secondaryCategoryIds
       .filter((categoryId) => categoryId !== 'all')
       .join(',') || undefined;
+  const detectedIsMobile = useMediaQuery('(max-width: 767px)');
 
   const {
     data,
@@ -205,11 +208,24 @@ const SearchResult = ({
 
     return (
       <>
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-x-8 md:gap-y-12 lg:grid-cols-3 lg:gap-x-5 lg:gap-y-16">
-          {searchPosts.map((post) => (
-            <PostCard key={post.postId} post={post} />
-          ))}
-        </div>
+        {detectedIsMobile ? (
+          <div className="flex flex-col gap-6 pt-4">
+            {searchPosts.map((post, index) => (
+              <div key={post.postId}>
+                <PostListItem post={post} />
+                {index < searchPosts.length - 1 && (
+                  <div className="mt-6 h-px w-full bg-[#EFEFEF]" />
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-10 pt-4 md:grid-cols-2 md:gap-x-8 md:gap-y-12 md:pt-0 lg:grid-cols-3 lg:gap-x-5 lg:gap-y-16">
+            {searchPosts.map((post) => (
+              <PostCard key={post.postId} post={post} />
+            ))}
+          </div>
+        )}
 
         <div ref={observerTarget} className="h-px" />
 
@@ -229,8 +245,8 @@ const SearchResult = ({
   };
 
   return (
-    <div className="flex w-full max-w-[1320px] flex-col gap-8">
-      <div className="flex flex-col gap-6">
+    <div className="flex w-full max-w-[1320px] flex-col gap-2 md:gap-8">
+      <div className="flex flex-col gap-2.5 md:gap-6">
         <form
           className="mx-auto w-full max-w-[780px]"
           onSubmit={handleSearchSubmit}
@@ -246,7 +262,7 @@ const SearchResult = ({
           selectedOption={target}
           onChange={handleOptionChange}
         />
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <SearchCategoryFilter
             primaryCategoryId={primaryCategoryId}
             secondaryCategoryIds={secondaryCategoryIds}
@@ -255,7 +271,7 @@ const SearchResult = ({
           />
 
           <div
-            className="flex shrink-0 items-center gap-[10px] self-end text-[16px] leading-[1.2] font-semibold tracking-[-0.01em]"
+            className="flex shrink-0 items-center self-end text-[16px] leading-[1.2] font-semibold tracking-[-0.01em] md:gap-[10px]"
             aria-label="검색 결과 정렬"
           >
             {SEARCH_SORT_OPTIONS.map((sortOption) => {
@@ -266,7 +282,7 @@ const SearchResult = ({
                   key={sortOption.value}
                   type="button"
                   className={cn(
-                    'text-neutral-80 cursor-pointer p-[14px] transition-colors focus-visible:outline-none',
+                    'text-neutral-80 cursor-pointer px-[7px] py-1.5 transition-colors focus-visible:outline-none md:p-[14px]',
                     isSelected && 'text-neutral-20'
                   )}
                   aria-pressed={isSelected}

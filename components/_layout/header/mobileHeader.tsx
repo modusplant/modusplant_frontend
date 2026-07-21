@@ -20,12 +20,8 @@ export default function MobileHeader({
 
   const { data: unreadNotificationsCount } = useGetNotificationCountQuery();
 
-  // TODO: 검색결과 페이지 추가 시 해당 경로도 추가 필요
-  const MOBILE_HEADER_PATHS = ['/', '/mypage/menu'];
-  const showMobileHeader = MOBILE_HEADER_PATHS.some((path) => {
-    if (path === '/') return pathname === '/';
-    return pathname === path;
-  });
+  const MOBILE_HEADER_PATHS = ['/', '/mypage/menu', '/search'];
+  const showMobileHeader = MOBILE_HEADER_PATHS.includes(pathname);
 
   if (!showMobileHeader) return null;
 
