@@ -75,7 +75,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
   );
 
   return (
-    <main className="mx-auto flex w-full max-w-[1320px] flex-col gap-8 px-5 py-10">
+    <main className="mx-auto flex w-full max-w-[1320px] flex-col gap-8 px-5 py-4 md:py-10">
       {keyword ? (
         <SearchResult
           keyword={keyword}
