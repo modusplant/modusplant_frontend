@@ -7,10 +7,10 @@ const SEARCH_OPTION_TABS: Array<{
   value: SearchOption;
   label: string;
 }> = [
+  { value: 'title_content_comment', label: '전체' },
   { value: 'title', label: '제목' },
   { value: 'content', label: '본문' },
   { value: 'title_content', label: '제목+본문' },
-  { value: 'title_content_comment', label: '제목+본문+댓글' },
 ];
 
 interface SearchOptionTabsProps {
