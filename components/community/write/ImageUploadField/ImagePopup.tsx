@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import Image from 'next/image';
 
 import { WriteImageData } from '@/lib/schemas/writeForm';
@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils/tailwindHelper';
 
 interface ImagePopupProps {
   image: WriteImageData;
+  src: string;
   handleClose: () => void;
   handleThumbnailImage: (id: string) => void;
 }
@@ -13,21 +14,11 @@ interface ImagePopupProps {
 // TODO: Improve reusability by creating a generic Popup component
 const ImagePopup = ({
   image,
+  src,
   handleClose,
   handleThumbnailImage,
 }: ImagePopupProps) => {
-  const { id, content, isThumbnail } = image;
-
-  const src = useMemo(() => {
-    return typeof content === 'string' ? content : URL.createObjectURL(content);
-  }, [content]);
-
-  useEffect(() => {
-    if (typeof content === 'string') return;
-    return () => {
-      URL.revokeObjectURL(src);
-    };
-  }, [content, src]);
+  const { id, isThumbnail } = image;
 
   useEffect(() => {
     const prevOverflow = document.body.style.overflow;
