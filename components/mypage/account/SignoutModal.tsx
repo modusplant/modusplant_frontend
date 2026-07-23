@@ -40,7 +40,7 @@ export default function SignoutModal({
       onClick={onClose}
     >
       <div
-        className="relative rounded-2xl bg-neutral-100 py-4 shadow-lg"
+        className="relative max-h-[90vh] overflow-y-auto rounded-2xl bg-neutral-100 py-4 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
         <Button
