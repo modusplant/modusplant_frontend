@@ -1,12 +1,27 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useSyncExternalStore } from 'react';
+import { User } from '@/lib/types/auth';
 import { usePathname } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
 import StateMessage from '@/components/_common/stateMessage';
 
 interface AuthGuardProps {
   children: ReactNode;
+  initialUser: User | null;
+}
+
+function subscribe() {
+  return () => {};
+}
+
+function useHasMounted() {
+  // 서버/첫 클라이언트 렌더에서는 false, 이후 클라이언트에서는 true를 반환
+  return useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false
+  );
 }
 
 /**
@@ -25,9 +40,11 @@ interface AuthGuardProps {
  * </AuthGuard>
  * ```
  */
-export default function AuthGuard({ children }: AuthGuardProps) {
-  const pathname = usePathname();
+export default function AuthGuard({ children, initialUser }: AuthGuardProps) {
+  const hasMounted = useHasMounted();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isAuthed = hasMounted ? isAuthenticated : !!initialUser;
+  const pathname = usePathname();
 
   // 인증이 필요한 보호 경로 목록
   const protectedPaths = [
@@ -50,7 +67,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     pathname.startsWith('/community/write');
 
   // 인징이 필요한 경로가 아닌 경우 children 렌더링
-  if (!isProtectedPath || isAuthenticated) {
+  if (!isProtectedPath || isAuthed) {
     return <>{children}</>;
   }
 
