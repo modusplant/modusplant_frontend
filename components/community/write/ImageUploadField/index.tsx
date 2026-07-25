@@ -78,16 +78,11 @@ const ImageUploadField = () => {
       });
   };
 
-  // 업로드 실패한 이미지 재시도. 기존 게시글에서 불러온 이미지(파일 바이트가 없음)는
-  // 재업로드가 불가능하므로 삭제 후 재등록을 안내한다.
+  // 업로드 실패한 이미지 재시도
   const retryUpload = (id: string) => {
     const target = getValues('images').find((image) => image.id === id);
-    if (!target) return;
-
-    if (!(target.content instanceof File) || !target.filename) {
-      showErrorModal(ERROR_MSGS['LEGACY_IMAGE_UNSUPPORTED']);
+    if (!target || !(target.content instanceof File) || !target.filename)
       return;
-    }
 
     startUpload(target.id, target.content, target.filename);
   };

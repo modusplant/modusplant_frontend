@@ -80,9 +80,7 @@ const PostWritePage = () => {
               isThumbnail,
               filename: item.filename,
               fileKey: item.fileKey,
-              // 편집 조회 API가 fileKey를 못 내려준 레거시 이미지는 재사용이 불가능하므로 에러로 표시
-              status: item.fileKey ? ('done' as const) : ('error' as const),
-              isExisting: true,
+              status: 'done' as const,
             };
           }),
       });
@@ -143,17 +141,6 @@ const PostWritePage = () => {
       showModal({
         type: 'snackbar',
         description: ERROR_MSGS.UPLOAD_IN_PROGRESS,
-      });
-      return false;
-    }
-
-    const legacyImage = images.find(
-      (image) => image.status === 'error' && image.isExisting
-    );
-    if (legacyImage) {
-      showModal({
-        type: 'snackbar',
-        description: ERROR_MSGS.LEGACY_IMAGE_UNSUPPORTED,
       });
       return false;
     }
