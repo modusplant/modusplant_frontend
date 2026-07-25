@@ -54,6 +54,33 @@ const ImageUploadField = () => {
     );
   };
 
+  // 발급 + S3 PUT을 수행하고 결과를 해당 이미지에 반영 (최초 업로드/재시도 공용)
+  const startUpload = (id: string, file: File, filename: string) => {
+    patchImage(id, { status: 'uploading' });
+    uploadImageFile(file, filename)
+      .then(({ fileKey }) => patchImage(id, { fileKey, status: 'done' }))
+      .catch(() => {
+        patchImage(id, { status: 'error' });
+        showErrorModal(ERROR_MSGS['UPLOAD_FAILED']);
+      });
+  };
+
+  // 업로드 실패한 이미지 재시도. 기존 게시글에서 불러온 이미지(파일 바이트가 없음)는
+  // 재업로드가 불가능하므로 삭제 후 재등록을 안내한다.
+  const retryUpload = (id: string) => {
+    const target = (control._formValues.images as WriteImageData[]).find(
+      (image) => image.id === id
+    );
+    if (!target) return;
+
+    if (!(target.content instanceof File) || !target.filename) {
+      showErrorModal(ERROR_MSGS['LEGACY_IMAGE_UNSUPPORTED']);
+      return;
+    }
+
+    startUpload(target.id, target.content, target.filename);
+  };
+
   const uploadFiles = (files: FileList) => {
     const validatedFiles = Array.from(files).filter((file) => {
       if (!ALLOWED_MIME_TYPES.includes(file.type))
@@ -91,15 +118,8 @@ const ImageUploadField = () => {
     handleImages(nextImages);
 
     // 파일별로 즉시 업로드 시작 (선택 즉시 업로드 방식)
-    newImages.forEach(async (img) => {
-      const file = img.content as File;
-      try {
-        const { fileKey } = await uploadImageFile(file, img.filename!);
-        patchImage(img.id, { fileKey, status: 'done' });
-      } catch {
-        patchImage(img.id, { status: 'error' });
-        showErrorModal(ERROR_MSGS['UPLOAD_FAILED']);
-      }
+    newImages.forEach((img) => {
+      startUpload(img.id, img.content as File, img.filename!);
     });
   };
 
@@ -158,6 +178,7 @@ const ImageUploadField = () => {
                     image={image}
                     handleClickImage={() => setPopupImageId(image.id)}
                     handleDelete={removeImage}
+                    handleRetry={retryUpload}
                   />
                 ))}
               </div>
