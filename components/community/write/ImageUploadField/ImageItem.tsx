@@ -1,6 +1,6 @@
 import { WriteImageData } from '@/lib/schemas/writeForm';
 import { cn } from '@/lib/utils/tailwindHelper';
-import { Loader2, X, AlertCircle } from 'lucide-react';
+import { Loader2, RotateCw, X } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect } from 'react';
 
@@ -8,12 +8,14 @@ interface ImageItemProps {
   image: WriteImageData;
   handleDelete: (id: string) => void;
   handleClickImage: () => void;
+  handleRetry: (id: string) => void;
 }
 
 const ImageItem = ({
   image,
   handleDelete,
   handleClickImage,
+  handleRetry,
 }: ImageItemProps) => {
   const { id, content, status } = image;
   const src =
@@ -45,9 +47,19 @@ const ImageItem = ({
         </div>
       )}
       {status === 'error' && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-black/40">
-          <AlertCircle className="h-6 w-6 text-white" />
-        </div>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleRetry(id);
+          }}
+          className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-1 rounded-lg bg-black/40"
+          aria-label="이미지 재업로드"
+        >
+          <RotateCw className="h-5 w-5 text-white" />
+          <span className="text-[10px] text-white">다시 시도</span>
+        </button>
       )}
       {image.isThumbnail && (
         <span

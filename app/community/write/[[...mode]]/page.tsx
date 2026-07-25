@@ -18,11 +18,15 @@ import {
   type WriteFormData,
   WriteFormSchema,
 } from '@/lib/schemas/writeForm';
-import { ContentFilePayload, ContentPart, PostEditData } from '@/lib/types/post';
+import {
+  ContentFilePayload,
+  ContentPart,
+  PostEditData,
+} from '@/lib/types/post';
 import { createUuid } from '@/lib/utils/uuid';
 import { showModal } from '@/lib/store/modalStore';
 import { useDraftListQuery } from '@/lib/hooks/community/useDraftListQuery';
-import { DRAFT_INVALID_MESSAGE } from '@/lib/constants/write';
+import { DRAFT_INVALID_MESSAGE, ERROR_MSGS } from '@/lib/constants/write';
 import { usePostQuery } from '@/lib/hooks/community/usePostQuery';
 import { DraftListPopup } from '@/components/community/write/DraftListPopup';
 
@@ -76,7 +80,8 @@ const PostWritePage = () => {
               isThumbnail,
               filename: item.filename,
               fileKey: item.fileKey,
-              status: 'done' as const,
+              // 편집 조회 API가 fileKey를 못 내려준 레거시 이미지는 재사용이 불가능하므로 에러로 표시
+              status: item.fileKey ? ('done' as const) : ('error' as const),
               isExisting: true,
             };
           }),
@@ -132,7 +137,38 @@ const PostWritePage = () => {
     };
   };
 
+  // 이미지 업로드 상태 검증 (진행 중/실패한 이미지가 있으면 제출 차단)
+  const validateImagesForSubmit = (images: WriteFormData['images']) => {
+    if (images.some((image) => image.status === 'uploading')) {
+      showModal({
+        type: 'snackbar',
+        description: ERROR_MSGS.UPLOAD_IN_PROGRESS,
+      });
+      return false;
+    }
+
+    const legacyImage = images.find(
+      (image) => image.status === 'error' && image.isExisting
+    );
+    if (legacyImage) {
+      showModal({
+        type: 'snackbar',
+        description: ERROR_MSGS.LEGACY_IMAGE_UNSUPPORTED,
+      });
+      return false;
+    }
+
+    if (images.some((image) => image.status === 'error')) {
+      showModal({ type: 'snackbar', description: ERROR_MSGS.UPLOAD_FAILED });
+      return false;
+    }
+
+    return true;
+  };
+
   const onValid = (data: WriteFormData) => {
+    if (!validateImagesForSubmit(data.images)) return;
+
     const payload = buildWritePayload({ data, isPublished: true });
 
     // 수정 모드 여부에 따라 적절한 Mutation 호출
@@ -152,6 +188,8 @@ const PostWritePage = () => {
       });
       return;
     }
+
+    if (!validateImagesForSubmit(parseResult.data.images)) return;
 
     const payload = buildWritePayload({
       data: parseResult.data,
