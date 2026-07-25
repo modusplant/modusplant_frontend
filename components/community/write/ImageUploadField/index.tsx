@@ -15,16 +15,19 @@ import {
 } from '@/lib/constants/write';
 import { useDnD } from '@/lib/hooks/community/useDnD';
 import ImageItem from './ImageItem';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ImagePopup from './ImagePopup';
 import { createUuid } from '@/lib/utils/uuid';
 import { uploadImageFile } from '@/lib/api/client/upload';
 
 const ImageUploadField = () => {
-  const { control, setValue } = useFormContext<WriteFormData>();
+  const { control, setValue, getValues } = useFormContext<WriteFormData>();
   const images = useWatch({ control, name: 'images' });
 
   const [popupImageId, setPopupImageId] = useState<string | null>(null);
+  // 이미지 id별 진행 중인 업로드의 AbortController (삭제 시 취소용)
+  const uploadControllersRef = useRef(new Map<string, AbortController>());
+
   const handleImages = (values: WriteImageData[]) =>
     setValue('images', values, { shouldDirty: true, shouldValidate: true });
 
@@ -34,6 +37,9 @@ const ImageUploadField = () => {
   };
 
   const removeImage = (id: string) => {
+    uploadControllersRef.current.get(id)?.abort();
+    uploadControllersRef.current.delete(id);
+
     const newImages = images.filter((item) => item.id !== id);
     const hasThumbnail = newImages.some(({ isThumbnail }) => isThumbnail);
     if (newImages.length > 0 && !hasThumbnail) newImages[0].isThumbnail = true;
@@ -45,9 +51,8 @@ const ImageUploadField = () => {
   const patchImage = (id: string, patch: Partial<WriteImageData>) => {
     setValue(
       'images',
-      // useWatch로 받은 images는 stale일 수 있어 getValues 대신
-      // form 내부 최신 값을 함수형으로 갱신
-      (control._formValues.images as WriteImageData[]).map((img) =>
+      // useWatch로 받은 images는 stale일 수 있어 form 내부 최신 값을 함수형으로 갱신
+      getValues('images').map((img) =>
         img.id === id ? { ...img, ...patch } : img
       ),
       { shouldDirty: true, shouldValidate: true }
@@ -56,21 +61,27 @@ const ImageUploadField = () => {
 
   // 발급 + S3 PUT을 수행하고 결과를 해당 이미지에 반영 (최초 업로드/재시도 공용)
   const startUpload = (id: string, file: File, filename: string) => {
+    const controller = new AbortController();
+    uploadControllersRef.current.set(id, controller);
+
     patchImage(id, { status: 'uploading' });
-    uploadImageFile(file, filename)
+    uploadImageFile(file, filename, controller.signal)
       .then(({ fileKey }) => patchImage(id, { fileKey, status: 'done' }))
       .catch(() => {
+        // 사용자가 이미 이미지를 삭제해서 취소된 업로드는 조용히 무시
+        if (controller.signal.aborted) return;
         patchImage(id, { status: 'error' });
         showErrorModal(ERROR_MSGS['UPLOAD_FAILED']);
+      })
+      .finally(() => {
+        uploadControllersRef.current.delete(id);
       });
   };
 
   // 업로드 실패한 이미지 재시도. 기존 게시글에서 불러온 이미지(파일 바이트가 없음)는
   // 재업로드가 불가능하므로 삭제 후 재등록을 안내한다.
   const retryUpload = (id: string) => {
-    const target = (control._formValues.images as WriteImageData[]).find(
-      (image) => image.id === id
-    );
+    const target = getValues('images').find((image) => image.id === id);
     if (!target) return;
 
     if (!(target.content instanceof File) || !target.filename) {
@@ -92,7 +103,7 @@ const ImageUploadField = () => {
       return true;
     });
 
-    const currentImages = control._formValues.images as WriteImageData[];
+    const currentImages = getValues('images');
     const nextCount = currentImages.length + validatedFiles.length;
     if (nextCount > MAXIMUM_FILE_COUNT) {
       showErrorModal(ERROR_MSGS['MAX_COUNT']);
