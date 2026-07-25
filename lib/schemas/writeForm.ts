@@ -9,7 +9,6 @@ export const WriteImageSchema = z.object({
   fileKey: z.string().optional(), // S3 업로드 완료 후 채워짐
   filename: z.string().optional(), // API 규칙에 맞는 파일명 (image_0.jpg)
   status: z.enum(['idle', 'uploading', 'done', 'error']).optional(),
-  isExisting: z.boolean().optional(), // 기존 게시글/임시저장에서 불러온 이미지인지 여부
 });
 
 export const WriteFormSchema = z.object({
