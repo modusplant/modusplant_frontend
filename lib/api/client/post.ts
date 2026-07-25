@@ -10,10 +10,6 @@ import {
   PostWritePayload,
 } from '@/lib/types/post';
 import { POST_ENDPOINTS, buildQueryString } from '@/lib/constants/endpoints';
-import {
-  buildPostFormData,
-  buildPostQueryParams,
-} from '../../utils/postFormData';
 
 /**
  * 게시글 관련 API
@@ -119,12 +115,12 @@ export const postApi = {
    * @param payload 게시글 작성 데이터
    */
   async createPost(payload: PostWritePayload) {
-    const formData = await buildPostFormData(payload);
-    const queryParams = buildPostQueryParams(payload);
-
+    const query = new URLSearchParams({
+      isPublished: String(payload.isPublished),
+    });
     return clientApiInstance.post<void>(
-      `${POST_ENDPOINTS.POSTS}?${queryParams}`,
-      formData
+      `${POST_ENDPOINTS.POSTS}?${query.toString()}`,
+      payload
     );
   },
 
@@ -148,13 +144,13 @@ export const postApi = {
    * @param postId 게시글 ID (ULID)
    * @param payload 게시글 수정 데이터
    */
-  async updatePost(postId: string, payload: PostWritePayload) {
-    const formData = await buildPostFormData(payload);
-    const queryParams = buildPostQueryParams(payload);
-
+ async updatePost(postId: string, payload: PostWritePayload) {
+    const query = new URLSearchParams({
+      isPublished: String(payload.isPublished),
+    });
     return clientApiInstance.put<void>(
-      `${POST_ENDPOINTS.POST_DETAIL(postId)}?${queryParams}`,
-      formData
+      `${POST_ENDPOINTS.POST_DETAIL(postId)}?${query.toString()}`,
+      payload
     );
   },
 };

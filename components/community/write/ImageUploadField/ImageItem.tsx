@@ -1,6 +1,6 @@
 import { WriteImageData } from '@/lib/schemas/writeForm';
 import { cn } from '@/lib/utils/tailwindHelper';
-import { X } from 'lucide-react';
+import { Loader2, X, AlertCircle } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect } from 'react';
 
@@ -15,7 +15,7 @@ const ImageItem = ({
   handleDelete,
   handleClickImage,
 }: ImageItemProps) => {
-  const { id, content } = image;
+  const { id, content, status } = image;
   const src =
     typeof content === 'string' ? content : URL.createObjectURL(content);
 
@@ -33,9 +33,22 @@ const ImageItem = ({
         onClick={handleClickImage}
         src={src}
         alt={`업로드 이미지 ${id}`}
-        className="rounded-lg object-cover"
+        className={cn(
+          'rounded-lg object-cover',
+          status === 'uploading' && 'opacity-50'
+        )}
         fill
       />
+      {status === 'uploading' && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center">
+          <Loader2 className="h-6 w-6 animate-spin text-white" />
+        </div>
+      )}
+      {status === 'error' && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-black/40">
+          <AlertCircle className="h-6 w-6 text-white" />
+        </div>
+      )}
       {image.isThumbnail && (
         <span
           className={cn(
