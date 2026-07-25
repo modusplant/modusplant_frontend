@@ -11,12 +11,14 @@ import {
   ALLOWED_MIME_TYPES,
   MAXIMUM_FILE_COUNT,
   MAXIMUM_FILE_SIZE,
+  buildImageApiFilename,
 } from '@/lib/constants/write';
 import { useDnD } from '@/lib/hooks/community/useDnD';
 import ImageItem from './ImageItem';
 import { useEffect, useState } from 'react';
 import ImagePopup from './ImagePopup';
 import { createUuid } from '@/lib/utils/uuid';
+import { uploadImageFile } from '@/lib/api/client/upload';
 
 const ImageUploadField = () => {
   const { control, setValue } = useFormContext<WriteFormData>();
@@ -26,12 +28,30 @@ const ImageUploadField = () => {
   const handleImages = (values: WriteImageData[]) =>
     setValue('images', values, { shouldDirty: true, shouldValidate: true });
 
+  const showErrorModal = (msg: string) => {
+    showModal({ type: 'snackbar', description: msg });
+    return false;
+  };
+
   const removeImage = (id: string) => {
     const newImages = images.filter((item) => item.id !== id);
     const hasThumbnail = newImages.some(({ isThumbnail }) => isThumbnail);
     if (newImages.length > 0 && !hasThumbnail) newImages[0].isThumbnail = true;
 
     handleImages(newImages);
+  };
+
+  // 개별 이미지 상태만 업데이트 (id로 특정)
+  const patchImage = (id: string, patch: Partial<WriteImageData>) => {
+    setValue(
+      'images',
+      // useWatch로 받은 images는 stale일 수 있어 getValues 대신
+      // form 내부 최신 값을 함수형으로 갱신
+      (control._formValues.images as WriteImageData[]).map((img) =>
+        img.id === id ? { ...img, ...patch } : img
+      ),
+      { shouldDirty: true, shouldValidate: true }
+    );
   };
 
   const uploadFiles = (files: FileList) => {
@@ -45,29 +65,47 @@ const ImageUploadField = () => {
       return true;
     });
 
-    const newImages = validatedFiles.map((content) => {
-      const id = createUuid();
-      return { id, content, isThumbnail: false };
-    });
-
-    const nextImages = [...images, ...newImages];
-    if (nextImages.length > MAXIMUM_FILE_COUNT) {
+    const currentImages = control._formValues.images as WriteImageData[];
+    const nextCount = currentImages.length + validatedFiles.length;
+    if (nextCount > MAXIMUM_FILE_COUNT) {
       showErrorModal(ERROR_MSGS['MAX_COUNT']);
       return;
     }
 
-    if (images.length == 0) nextImages[0].isThumbnail = true;
+    const newImages: WriteImageData[] = validatedFiles.map((file, i) => {
+      const id = createUuid();
+      const filename = buildImageApiFilename(currentImages.length + i, file);
+      return {
+        id,
+        content: file,
+        isThumbnail: false,
+        status: 'uploading',
+        filename,
+      };
+    });
+
+    const nextImages = [...currentImages, ...newImages];
+    if (currentImages.length === 0 && nextImages.length > 0) {
+      nextImages[0].isThumbnail = true;
+    }
     handleImages(nextImages);
+
+    // 파일별로 즉시 업로드 시작 (선택 즉시 업로드 방식)
+    newImages.forEach(async (img) => {
+      const file = img.content as File;
+      try {
+        const { fileKey } = await uploadImageFile(file, img.filename!);
+        patchImage(img.id, { fileKey, status: 'done' });
+      } catch {
+        patchImage(img.id, { status: 'error' });
+        showErrorModal(ERROR_MSGS['UPLOAD_FAILED']);
+      }
+    });
   };
 
   const { isDragging, handleDragLeave, handleDrop, handleDragOver } = useDnD({
     onDropFiles: uploadFiles,
   });
-
-  const showErrorModal = (msg: string) => {
-    showModal({ type: 'snackbar', description: msg });
-    return false;
-  };
 
   // keyboard event handlers for image popup
   useEffect(() => {

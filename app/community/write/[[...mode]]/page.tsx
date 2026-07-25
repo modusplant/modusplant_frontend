@@ -18,7 +18,7 @@ import {
   type WriteFormData,
   WriteFormSchema,
 } from '@/lib/schemas/writeForm';
-import { ContentPart, PostEditData } from '@/lib/types/post';
+import { ContentFilePayload, ContentPart, PostEditData } from '@/lib/types/post';
 import { createUuid } from '@/lib/utils/uuid';
 import { showModal } from '@/lib/store/modalStore';
 import { useDraftListQuery } from '@/lib/hooks/community/useDraftListQuery';
@@ -67,10 +67,18 @@ const PostWritePage = () => {
         textContent: getTextContent(post.content ?? []),
         images: getImageContent(post.content ?? [])
           .filter((item): item is ContentPart & { src: string } => !!item.src)
-          .map(({ src: content, filename }) => {
+          .map((item) => {
             const id = createUuid();
-            const isThumbnail = filename === post.thumbnailFilename;
-            return { id, content, isThumbnail };
+            const isThumbnail = item.filename === post.thumbnailFilename;
+            return {
+              id,
+              content: item.src,
+              isThumbnail,
+              filename: item.filename,
+              fileKey: item.fileKey,
+              status: 'done' as const,
+              isExisting: true,
+            };
           }),
       });
     },
@@ -95,24 +103,30 @@ const PostWritePage = () => {
     data: WriteFormData;
     isPublished: boolean;
   }) => {
-    const images = data.images.map(({ content, isThumbnail }) => {
-      return { content, isThumbnail };
-    });
+    // 업로드가 완료되어 fileKey/filename을 모두 가진 이미지만 제출 대상
+    const uploadedImages = data.images.filter(
+      (image): image is typeof image & { filename: string; fileKey: string } =>
+        !!image.filename && !!image.fileKey
+    );
 
-    const thumbnail = images.find(({ isThumbnail }) => isThumbnail)?.content;
-    const thumbnailFilename =
-      thumbnail instanceof File
-        ? thumbnail.name
-        : typeof thumbnail === 'string'
-          ? thumbnail.split('/').pop()?.split('?')[0] || 'image'
-          : undefined;
+    const contentFiles: ContentFilePayload[] = uploadedImages.map(
+      (image, index) => ({
+        order: index + 1,
+        filename: image.filename,
+        fileKey: image.fileKey,
+      })
+    );
+
+    const thumbnailFilename = uploadedImages.find(
+      ({ isThumbnail }) => isThumbnail
+    )?.filename;
 
     return {
       primaryCategoryId: data.primaryCategoryId,
       secondaryCategoryId: data.secondaryCategoryId,
       title: data.title,
-      textContent: data.textContent,
-      images: images.map(({ content }) => content),
+      contentText: data.textContent,
+      contentFiles,
       thumbnailFilename,
       isPublished,
     };
