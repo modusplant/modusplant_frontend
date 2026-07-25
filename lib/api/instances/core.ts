@@ -10,6 +10,7 @@ export interface ApiRequestOptions {
   skipAuth?: boolean;
   enableCache?: boolean;
   headers?: Record<string, string>;
+  signal?: AbortSignal;
 }
 
 interface CreateApiOptions {
