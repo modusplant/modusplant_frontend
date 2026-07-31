@@ -48,4 +48,31 @@ describe('assignNewImageFilenames', () => {
     const survivorFilenames = survivors.map((image) => image.filename);
     expect(survivorFilenames).not.toContain(newFilename);
   });
+
+  it('여러 장을 한 번에 추가할 때도 서로 중복되지 않는 filename을 받는다', () => {
+    const survivors = [{ filename: 'image_0.jpg' }, { filename: 'image_2.jpg' }];
+    const files = [
+      new File(['d'], 'd.jpg', { type: 'image/jpeg' }),
+      new File(['e'], 'e.jpg', { type: 'image/jpeg' }),
+    ];
+
+    const newFilenames = assignNewImageFilenames(survivors, files);
+
+    expect(new Set(newFilenames).size).toBe(newFilenames.length);
+    newFilenames.forEach((filename) => {
+      expect(survivors.map((image) => image.filename)).not.toContain(filename);
+    });
+  });
+
+  it('겹치는 이미지가 없으면 0번부터 순서대로 채운다', () => {
+    const files = [
+      new File(['a'], 'a.jpg', { type: 'image/jpeg' }),
+      new File(['b'], 'b.jpg', { type: 'image/jpeg' }),
+    ];
+
+    expect(assignNewImageFilenames([], files)).toEqual([
+      'image_0.jpg',
+      'image_1.jpg',
+    ]);
+  });
 });

@@ -28,15 +28,31 @@ export function buildImageApiFilename(index: number, file: File): string {
   return `image_${index}.${ext}`;
 }
 
+function extractImageFilenameIndex(filename: string): number | null {
+  const match = filename.match(/^image_(\d+)\./);
+  return match ? Number(match[1]) : null;
+}
+
 /**
  * 신규로 추가되는 파일들에 API 규칙에 맞는 파일명을 부여한다.
- * 인덱스는 현재 남아있는 이미지 개수를 기준으로 이어붙인다.
+ * 남아있는 이미지들의 filename에서 이미 쓰인 인덱스를 파악해 겹치지 않는
+ * 가장 작은 인덱스부터 채운다 (삭제 후 재추가 시 인덱스 재사용으로 인한
+ * filename 충돌 방지).
  */
 export function assignNewImageFilenames(
   currentImages: { filename?: string }[],
   files: File[]
 ): string[] {
-  return files.map((file, i) =>
-    buildImageApiFilename(currentImages.length + i, file)
+  const usedIndices = new Set(
+    currentImages
+      .map((image) => (image.filename ? extractImageFilenameIndex(image.filename) : null))
+      .filter((index): index is number => index !== null)
   );
+
+  let nextIndex = 0;
+  return files.map((file) => {
+    while (usedIndices.has(nextIndex)) nextIndex++;
+    usedIndices.add(nextIndex);
+    return buildImageApiFilename(nextIndex++, file);
+  });
 }
