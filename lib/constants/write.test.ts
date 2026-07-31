@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { buildImageApiFilename } from '@/lib/constants/write';
+import {
+  assignNewImageFilenames,
+  buildImageApiFilename,
+} from '@/lib/constants/write';
 
 describe('buildImageApiFilename', () => {
   it('파일 확장자를 소문자로 변환해 붙인다', () => {
@@ -17,5 +20,32 @@ describe('buildImageApiFilename', () => {
   it('index를 그대로 파일명에 반영한다', () => {
     const file = new File(['content'], 'a.png', { type: 'image/png' });
     expect(buildImageApiFilename(7, file)).toBe('image_7.png');
+  });
+});
+
+describe('assignNewImageFilenames', () => {
+  // 버그 재현: 삭제 후 재추가 시 인덱스가 재사용되어 filename이 중복된다.
+  // (image_2.jpg가 있는 상태에서 삭제/추가를 반복하면 새 이미지도 image_2.jpg를 받게 됨)
+  it('이미지를 삭제하고 재추가해도 남아있는 이미지와 파일명이 중복되지 않아야 한다', () => {
+    // 1) 이미지 3장 업로드: image_0.jpg, image_1.jpg, image_2.jpg
+    const initialFiles = [
+      new File(['a'], 'a.jpg', { type: 'image/jpeg' }),
+      new File(['b'], 'b.jpg', { type: 'image/jpeg' }),
+      new File(['c'], 'c.jpg', { type: 'image/jpeg' }),
+    ];
+    const initialFilenames = assignNewImageFilenames([], initialFiles);
+
+    // 2) 2번째(image_1.jpg) 삭제 → image_0.jpg, image_2.jpg만 남음
+    const survivors = [
+      { filename: initialFilenames[0] },
+      { filename: initialFilenames[2] },
+    ];
+
+    // 3) 새 이미지 1장 추가
+    const newFile = new File(['d'], 'd.jpg', { type: 'image/jpeg' });
+    const [newFilename] = assignNewImageFilenames(survivors, [newFile]);
+
+    const survivorFilenames = survivors.map((image) => image.filename);
+    expect(survivorFilenames).not.toContain(newFilename);
   });
 });
