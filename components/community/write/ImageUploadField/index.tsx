@@ -11,7 +11,7 @@ import {
   ALLOWED_MIME_TYPES,
   MAXIMUM_FILE_COUNT,
   MAXIMUM_FILE_SIZE,
-  buildImageApiFilename,
+  assignNewImageFilenames,
 } from '@/lib/constants/write';
 import { useDnD } from '@/lib/hooks/community/useDnD';
 import ImageItem from './ImageItem';
@@ -105,17 +105,14 @@ const ImageUploadField = () => {
       return;
     }
 
-    const newImages: WriteImageData[] = validatedFiles.map((file, i) => {
-      const id = createUuid();
-      const filename = buildImageApiFilename(currentImages.length + i, file);
-      return {
-        id,
-        content: file,
-        isThumbnail: false,
-        status: 'uploading',
-        filename,
-      };
-    });
+    const filenames = assignNewImageFilenames(currentImages, validatedFiles);
+    const newImages: WriteImageData[] = validatedFiles.map((file, i) => ({
+      id: createUuid(),
+      content: file,
+      isThumbnail: false,
+      status: 'uploading',
+      filename: filenames[i],
+    }));
 
     const nextImages = [...currentImages, ...newImages];
     if (currentImages.length === 0 && nextImages.length > 0) {

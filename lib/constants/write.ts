@@ -27,3 +27,16 @@ export function buildImageApiFilename(index: number, file: File): string {
   const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
   return `image_${index}.${ext}`;
 }
+
+/**
+ * 신규로 추가되는 파일들에 API 규칙에 맞는 파일명을 부여한다.
+ * 인덱스는 현재 남아있는 이미지 개수를 기준으로 이어붙인다.
+ */
+export function assignNewImageFilenames(
+  currentImages: { filename?: string }[],
+  files: File[]
+): string[] {
+  return files.map((file, i) =>
+    buildImageApiFilename(currentImages.length + i, file)
+  );
+}
