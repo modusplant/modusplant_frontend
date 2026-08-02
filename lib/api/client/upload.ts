@@ -52,27 +52,40 @@ export async function uploadFileToS3(
 
 /**
  * 파일 하나를 발급 + S3 PUT까지 한 번에 수행
- * 발급/PUT 실패 시 가이드 문서 정책에 따라 발급부터 1회 재시도
+ * 발급/PUT 실패 시 가이드 문서 정책에 따라 1회 재시도
  * (단, 사용자가 이미지를 삭제해 취소된 경우는 재시도하지 않음)
+ *
+ * 발급과 PUT의 재시도는 서로 독립적으로 처리한다: PUT만 실패했을 때 발급부터
+ * 다시 하면 새 fileKey가 나오는데, 만약 첫 PUT이 실제로는 S3에 성공적으로
+ * 저장됐지만 응답만 못 받은 경우(네트워크 단절 등) 첫 fileKey의 오브젝트가
+ * 아무도 참조하지 않는 orphan으로 남는다. 그래서 PUT 실패 시에는 이미 발급받은
+ * 같은 presigned URL로만 재시도한다.
  */
 export async function uploadImageFile(
   file: File,
   filename: string,
   signal?: AbortSignal
 ): Promise<{ fileKey: string; filename: string }> {
-  const attempt = async () => {
-    const [issued] = await issuePresignedUrls(
+  const issue = () =>
+    issuePresignedUrls(
       [{ filename, contentType: file.type }],
       signal
-    );
-    await uploadFileToS3(issued.uploadUrl, file, signal);
-    return { fileKey: issued.fileKey, filename: issued.filename };
-  };
+    ).then(([issued]) => issued);
 
+  let issued;
   try {
-    return await attempt();
+    issued = await issue();
   } catch (error) {
     if (signal?.aborted) throw error;
-    return await attempt();
+    issued = await issue();
   }
+
+  try {
+    await uploadFileToS3(issued.uploadUrl, file, signal);
+  } catch (error) {
+    if (signal?.aborted) throw error;
+    await uploadFileToS3(issued.uploadUrl, file, signal);
+  }
+
+  return { fileKey: issued.fileKey, filename: issued.filename };
 }
