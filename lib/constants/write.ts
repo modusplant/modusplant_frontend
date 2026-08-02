@@ -1,3 +1,6 @@
+import { ContentFilePayload, PostWritePayload } from '@/lib/types/post';
+import { WriteFormData } from '@/lib/schemas/writeForm';
+
 export const MAX_TITLE_LENGTH = 60;
 
 export const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
@@ -55,4 +58,43 @@ export function assignNewImageFilenames(
     usedIndices.add(nextIndex);
     return buildImageApiFilename(nextIndex++, file);
   });
+}
+
+/**
+ * WriteFormData를 게시글 작성/수정 요청 payload로 변환한다.
+ */
+export function buildWritePayload({
+  data,
+  isPublished,
+}: {
+  data: WriteFormData;
+  isPublished: boolean;
+}): PostWritePayload {
+  // 업로드가 완료되어 fileKey/filename을 모두 가진 이미지만 제출 대상
+  const uploadedImages = data.images.filter(
+    (image): image is typeof image & { filename: string; fileKey: string } =>
+      !!image.filename && !!image.fileKey
+  );
+
+  const contentFiles: ContentFilePayload[] = uploadedImages.map(
+    (image, index) => ({
+      order: index + 1,
+      filename: image.filename,
+      fileKey: image.fileKey,
+    })
+  );
+
+  const thumbnailFilename = uploadedImages.find(
+    ({ isThumbnail }) => isThumbnail
+  )?.filename;
+
+  return {
+    primaryCategoryId: data.primaryCategoryId,
+    secondaryCategoryId: data.secondaryCategoryId,
+    title: data.title,
+    contentText: data.textContent,
+    contentFiles,
+    thumbnailFilename,
+    isPublished,
+  };
 }
