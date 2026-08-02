@@ -75,11 +75,11 @@ export const clientApiInstance = createApi({
   onUnauthorized: async () => {
     try {
       await refreshAccessToken();
-      return 'retry' as const;
+      return { action: 'retry' } as const;
     } catch (e) {
       deleteCookie(ACCESS_TOKEN_COOKIE_NAME, { path: '/' });
       deleteCookie('rememberMe', { path: '/' });
-      return 'fail' as const;
+      return { action: 'fail' } as const;
     }
   },
 });
