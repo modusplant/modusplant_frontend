@@ -13,6 +13,8 @@ export const ERROR_MSGS = {
   MAX_COUNT: `최대 10장 등록 가능합니다. 선택된 사진을 삭제 후 재시도 해주세요.`,
   UPLOAD_FAILED: '이미지 업로드에 실패했습니다. 다시 시도해주세요.',
   UPLOAD_IN_PROGRESS: '이미지 업로드가 완료된 후 게시할 수 있습니다.',
+  LEGACY_IMAGE_UNSUPPORTED:
+    '기존 이미지를 처리할 수 없습니다. 이미지를 삭제 후 다시 등록해주세요.',
 };
 export type ErrorType = keyof typeof ERROR_MSGS;
 
@@ -114,6 +116,16 @@ export function validateImagesForSubmit(images: WriteImageData[]): boolean {
 
   if (images.some((image) => image.status === 'error')) {
     showModal({ type: 'snackbar', description: ERROR_MSGS.UPLOAD_FAILED });
+    return false;
+  }
+
+  // 편집 조회 API가 fileKey를 내려주지 못한 레거시 이미지 등 done 상태인데
+  // fileKey가 없는 이미지는 buildWritePayload에서 조용히 누락되므로 차단한다.
+  if (images.some((image) => image.status === 'done' && !image.fileKey)) {
+    showModal({
+      type: 'snackbar',
+      description: ERROR_MSGS.LEGACY_IMAGE_UNSUPPORTED,
+    });
     return false;
   }
 
