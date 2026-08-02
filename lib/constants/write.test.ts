@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 import {
   assignNewImageFilenames,
   buildImageApiFilename,
-  buildWritePayload,
+  validateImagesForSubmit,
 } from '@/lib/constants/write';
-import { WriteFormData } from '@/lib/schemas/writeForm';
+import { WriteImageData } from '@/lib/schemas/writeForm';
 
 describe('buildImageApiFilename', () => {
   it('파일 확장자를 소문자로 변환해 붙인다', () => {
@@ -79,37 +79,35 @@ describe('assignNewImageFilenames', () => {
   });
 });
 
-describe('buildWritePayload', () => {
-  const baseData: WriteFormData = {
-    primaryCategoryId: 'primary-1',
-    secondaryCategoryId: 'secondary-1',
-    title: '제목',
-    textContent: '본문',
-    images: [],
-  };
-
+describe('validateImagesForSubmit', () => {
   // 버그 재현: 수정 모드에서 GET 응답에 fileKey가 없는 기존(레거시) 이미지는
-  // status가 'done'이고 화면에도 표시되지만, fileKey가 없다는 이유만으로
-  // contentFiles에서 조용히 빠져 결국 게시글에서 이미지가 유실된다.
-  it('fileKey가 없는 기존 이미지도 화면에 표시되고 있다면 contentFiles에 포함되어야 한다', () => {
-    const legacyImage = {
+  // status가 'done'이고 화면에도 표시되지만, buildWritePayload가 fileKey
+  // 기준으로 필터링하기 때문에 아무 경고 없이 제출이 진행되어 결국 게시글에서
+  // 이미지가 조용히 유실된다. status가 done이어도 fileKey가 없으면 제출을
+  // 막아야 한다.
+  it('status가 done이지만 fileKey가 없는 이미지가 있으면 제출을 막아야 한다', () => {
+    const legacyImage: WriteImageData = {
       id: 'legacy-image-id',
       content: 'https://cdn.example.com/legacy.jpg',
       isThumbnail: true,
       filename: 'legacy.jpg',
       fileKey: undefined,
-      status: 'done' as const,
+      status: 'done',
     };
 
-    const data: WriteFormData = {
-      ...baseData,
-      images: [legacyImage],
+    expect(validateImagesForSubmit([legacyImage])).toBe(false);
+  });
+
+  it('모든 이미지가 fileKey를 가진 done 상태라면 제출을 허용한다', () => {
+    const uploadedImage: WriteImageData = {
+      id: 'uploaded-image-id',
+      content: 'https://cdn.example.com/uploaded.jpg',
+      isThumbnail: true,
+      filename: 'image_0.jpg',
+      fileKey: 'file-key-1',
+      status: 'done',
     };
 
-    const payload = buildWritePayload({ data, isPublished: true });
-
-    expect(payload.contentFiles.map((file) => file.filename)).toContain(
-      'legacy.jpg'
-    );
+    expect(validateImagesForSubmit([uploadedImage])).toBe(true);
   });
 });
