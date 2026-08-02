@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 import {
   assignNewImageFilenames,
   buildImageApiFilename,
+  buildWritePayload,
 } from '@/lib/constants/write';
+import { WriteFormData } from '@/lib/schemas/writeForm';
 
 describe('buildImageApiFilename', () => {
   it('파일 확장자를 소문자로 변환해 붙인다', () => {
@@ -74,5 +76,40 @@ describe('assignNewImageFilenames', () => {
       'image_0.jpg',
       'image_1.jpg',
     ]);
+  });
+});
+
+describe('buildWritePayload', () => {
+  const baseData: WriteFormData = {
+    primaryCategoryId: 'primary-1',
+    secondaryCategoryId: 'secondary-1',
+    title: '제목',
+    textContent: '본문',
+    images: [],
+  };
+
+  // 버그 재현: 수정 모드에서 GET 응답에 fileKey가 없는 기존(레거시) 이미지는
+  // status가 'done'이고 화면에도 표시되지만, fileKey가 없다는 이유만으로
+  // contentFiles에서 조용히 빠져 결국 게시글에서 이미지가 유실된다.
+  it('fileKey가 없는 기존 이미지도 화면에 표시되고 있다면 contentFiles에 포함되어야 한다', () => {
+    const legacyImage = {
+      id: 'legacy-image-id',
+      content: 'https://cdn.example.com/legacy.jpg',
+      isThumbnail: true,
+      filename: 'legacy.jpg',
+      fileKey: undefined,
+      status: 'done' as const,
+    };
+
+    const data: WriteFormData = {
+      ...baseData,
+      images: [legacyImage],
+    };
+
+    const payload = buildWritePayload({ data, isPublished: true });
+
+    expect(payload.contentFiles.map((file) => file.filename)).toContain(
+      'legacy.jpg'
+    );
   });
 });
