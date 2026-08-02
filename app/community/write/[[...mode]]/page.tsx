@@ -25,7 +25,7 @@ import { useDraftListQuery } from '@/lib/hooks/community/useDraftListQuery';
 import {
   buildWritePayload,
   DRAFT_INVALID_MESSAGE,
-  ERROR_MSGS,
+  validateImagesForSubmit,
 } from '@/lib/constants/write';
 import { usePostQuery } from '@/lib/hooks/community/usePostQuery';
 import { DraftListPopup } from '@/components/community/write/DraftListPopup';
@@ -98,24 +98,6 @@ const PostWritePage = () => {
     if (!draftPost) return;
     resetForm(draftPost);
   }, [draftPost, resetForm]);
-
-  // 이미지 업로드 상태 검증 (진행 중/실패한 이미지가 있으면 제출 차단)
-  const validateImagesForSubmit = (images: WriteFormData['images']) => {
-    if (images.some((image) => image.status === 'uploading')) {
-      showModal({
-        type: 'snackbar',
-        description: ERROR_MSGS.UPLOAD_IN_PROGRESS,
-      });
-      return false;
-    }
-
-    if (images.some((image) => image.status === 'error')) {
-      showModal({ type: 'snackbar', description: ERROR_MSGS.UPLOAD_FAILED });
-      return false;
-    }
-
-    return true;
-  };
 
   const onValid = (data: WriteFormData) => {
     if (!validateImagesForSubmit(data.images)) return;
