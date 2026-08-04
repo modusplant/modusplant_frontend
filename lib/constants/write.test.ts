@@ -1,7 +1,8 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   assignNewImageFilenames,
   buildImageApiFilename,
+  ERROR_MSGS,
   validateImagesForSubmit,
 } from '@/lib/constants/write';
 import { WriteImageData } from '@/lib/schemas/writeForm';
@@ -95,7 +96,9 @@ describe('validateImagesForSubmit', () => {
       status: 'done',
     };
 
-    expect(validateImagesForSubmit([legacyImage])).toBe(false);
+    const onError = vi.fn();
+    expect(validateImagesForSubmit([legacyImage], onError)).toBe(false);
+    expect(onError).toHaveBeenCalledWith(ERROR_MSGS.LEGACY_IMAGE_UNSUPPORTED);
   });
 
   it('모든 이미지가 fileKey를 가진 done 상태라면 제출을 허용한다', () => {
@@ -108,6 +111,8 @@ describe('validateImagesForSubmit', () => {
       status: 'done',
     };
 
-    expect(validateImagesForSubmit([uploadedImage])).toBe(true);
+    const onError = vi.fn();
+    expect(validateImagesForSubmit([uploadedImage], onError)).toBe(true);
+    expect(onError).not.toHaveBeenCalled();
   });
 });

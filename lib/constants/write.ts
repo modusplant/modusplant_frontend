@@ -1,6 +1,5 @@
 import { ContentFilePayload, PostWritePayload } from '@/lib/types/post';
 import { WriteFormData, WriteImageData } from '@/lib/schemas/writeForm';
-import { showModal } from '@/lib/store/modalStore';
 
 export const MAX_TITLE_LENGTH = 60;
 
@@ -105,27 +104,24 @@ export function buildWritePayload({
 /**
  * 이미지 업로드 상태 검증 (진행 중/실패한 이미지가 있으면 제출 차단)
  */
-export function validateImagesForSubmit(images: WriteImageData[]): boolean {
+export function validateImagesForSubmit(
+  images: WriteImageData[],
+  onError: (description: string) => void
+): boolean {
   if (images.some((image) => image.status === 'uploading')) {
-    showModal({
-      type: 'snackbar',
-      description: ERROR_MSGS.UPLOAD_IN_PROGRESS,
-    });
+    onError(ERROR_MSGS.UPLOAD_IN_PROGRESS);
     return false;
   }
 
   if (images.some((image) => image.status === 'error')) {
-    showModal({ type: 'snackbar', description: ERROR_MSGS.UPLOAD_FAILED });
+    onError(ERROR_MSGS.UPLOAD_FAILED);
     return false;
   }
 
   // 편집 조회 API가 fileKey를 내려주지 못한 레거시 이미지 등 done 상태인데
   // fileKey가 없는 이미지는 buildWritePayload에서 조용히 누락되므로 차단한다.
   if (images.some((image) => image.status === 'done' && !image.fileKey)) {
-    showModal({
-      type: 'snackbar',
-      description: ERROR_MSGS.LEGACY_IMAGE_UNSUPPORTED,
-    });
+    onError(ERROR_MSGS.LEGACY_IMAGE_UNSUPPORTED);
     return false;
   }
 

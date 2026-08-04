@@ -100,7 +100,12 @@ const PostWritePage = () => {
   }, [draftPost, resetForm]);
 
   const onValid = (data: WriteFormData) => {
-    if (!validateImagesForSubmit(data.images)) return;
+    if (
+      !validateImagesForSubmit(data.images, (description) =>
+        showModal({ type: 'snackbar', description })
+      )
+    )
+      return;
 
     const payload = buildWritePayload({ data, isPublished: true });
 
@@ -122,7 +127,12 @@ const PostWritePage = () => {
       return;
     }
 
-    if (!validateImagesForSubmit(parseResult.data.images)) return;
+    if (
+      !validateImagesForSubmit(parseResult.data.images, (description) =>
+        showModal({ type: 'snackbar', description })
+      )
+    )
+      return;
 
     const payload = buildWritePayload({
       data: parseResult.data,
