@@ -40,8 +40,8 @@ export default defineConfig({
         test: {
           name: 'unit',
           environment: 'node',
-          include: ['**/*.test.ts', '**/*.test.tsx'],
-          exclude: ['node_modules/**', '.storybook/**', 'stories/**'],
+          include: ['lib/**/*.test.ts', 'lib/**/*.test.tsx'],
+          exclude: ['node_modules/**'],
         },
       },
     ],
