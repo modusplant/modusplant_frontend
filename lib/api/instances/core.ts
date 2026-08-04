@@ -1,4 +1,6 @@
+import { ApiResponseSchema } from '@/lib/schemas/apiResponse';
 import { ApiResponse, ApiError } from '../../types/common';
+import z from 'zod';
 
 interface RequestConfig extends RequestInit {
   skipAuth?: boolean;
@@ -69,19 +71,22 @@ async function requestCore<T = any>(
 
     let data: ApiResponse<T>;
     try {
-      data = await response.json();
-    } catch {
+      const rawJson = await response.json();
+      data = ApiResponseSchema.parse(rawJson) as ApiResponse<T>;
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        console.error('[API] 응답 envelope 검증 실패:', err.issues);
+        throw new ApiError(
+          response.status,
+          'invalid_response',
+          `서버 응답 형식이 올바르지 않습니다 (${response.status})`
+        );
+      }
       throw new ApiError(
         response.status,
         'invalid_response',
         `서버 응답을 처리할 수 없습니다 (${response.status})`
       );
-    }
-
-    // 디버깅용 로그 (확인 후 제거)
-    if (!response.ok) {
-      // console.error('[API Error] status:', response.status);
-      // console.error('[API Error body:', data);
     }
 
     if (data.status === 401 && !skipAuth) {

@@ -7,6 +7,7 @@ import { BASE_URL } from '@/lib/constants/apiInstance';
 import { AUTH_ENDPOINTS } from '@/lib/constants/endpoints';
 import { ApiResponse, ApiError } from '@/lib/types/common';
 import { createApi } from './core';
+import { TokenRefreshResponseSchema } from '@/lib/schemas/apiResponse';
 
 /**
  * 서버 전용: 리프레시 토큰으로 새 액세스 토큰 발급
@@ -45,6 +46,11 @@ async function refreshAccessToken(): Promise<string> {
     }
 
     const data: ApiResponse<{ accessToken: string }> = await response.json();
+    const parsed = TokenRefreshResponseSchema.safeParse(data);
+
+    if (!parsed.success) {
+      console.warn('[RefreshToken] 응답 스키마 불일치:', parsed.error.issues);
+    }
 
     if (!data.data || !data.data.accessToken) {
       throw new ApiError(
