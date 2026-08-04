@@ -31,6 +31,27 @@ export async function issuePresignedUrls(
 }
 
 /**
+ * S3(Wasabi) PUT 실패 시 상태 코드를 담아 던지는 에러.
+ * 서명 만료로 보이는 실패(403)를 다른 실패와 구분하는 데 사용한다.
+ */
+export class S3UploadError extends Error {
+  constructor(public readonly status: number) {
+    super(`S3 업로드 실패 (status: ${status})`);
+    this.name = 'S3UploadError';
+  }
+}
+
+// S3(Wasabi)가 presigned URL 서명 만료/불일치 시 응답하는 상태 코드.
+// 이 상태일 때만 presigned URL을 재발급받아 재시도한다.
+const S3_SIGNATURE_ERROR_STATUS = 403;
+
+function isLikelyExpiredSignatureError(error: unknown): boolean {
+  return (
+    error instanceof S3UploadError && error.status === S3_SIGNATURE_ERROR_STATUS
+  );
+}
+
+/**
  * S3(Wasabi)에 파일 직접 PUT 업로드
  */
 export async function uploadFileToS3(
@@ -46,7 +67,7 @@ export async function uploadFileToS3(
   });
 
   if (!response.ok) {
-    throw new Error(`S3 업로드 실패 (status: ${response.status})`);
+    throw new S3UploadError(response.status);
   }
 }
 
@@ -58,8 +79,9 @@ export async function uploadFileToS3(
  * 발급과 PUT의 재시도는 서로 독립적으로 처리한다: PUT만 실패했을 때 발급부터
  * 다시 하면 새 fileKey가 나오는데, 만약 첫 PUT이 실제로는 S3에 성공적으로
  * 저장됐지만 응답만 못 받은 경우(네트워크 단절 등) 첫 fileKey의 오브젝트가
- * 아무도 참조하지 않는 orphan으로 남는다. 그래서 PUT 실패 시에는 이미 발급받은
- * 같은 presigned URL로만 재시도한다.
+ * 아무도 참조하지 않는 orphan으로 남는다. 그래서 PUT 실패 시에는 우선 이미
+ * 발급받은 같은 presigned URL로 재시도하고, 그마저 서명 만료로 보이는 에러
+ * (403)로 실패한 경우에만 마지막으로 presigned URL을 재발급받아 재시도한다.
  */
 export async function uploadImageFile(
   file: File,
@@ -72,6 +94,8 @@ export async function uploadImageFile(
       signal
     ).then(([issued]) => issued);
 
+  const put = (uploadUrl: string) => uploadFileToS3(uploadUrl, file, signal);
+
   let issued;
   try {
     issued = await issue();
@@ -81,11 +105,23 @@ export async function uploadImageFile(
   }
 
   try {
-    await uploadFileToS3(issued.uploadUrl, file, signal);
+    await put(issued.uploadUrl);
+    return { fileKey: issued.fileKey, filename: issued.filename };
   } catch (error) {
     if (signal?.aborted) throw error;
-    await uploadFileToS3(issued.uploadUrl, file, signal);
   }
 
+  try {
+    await put(issued.uploadUrl);
+    return { fileKey: issued.fileKey, filename: issued.filename };
+  } catch (error) {
+    if (signal?.aborted) throw error;
+    if (!isLikelyExpiredSignatureError(error)) throw error;
+  }
+
+  // 같은 presigned URL로 재시도까지 실패했고 서명 만료로 보이는 경우에만
+  // 재발급받아 마지막으로 재시도한다.
+  issued = await issue();
+  await put(issued.uploadUrl);
   return { fileKey: issued.fileKey, filename: issued.filename };
 }
