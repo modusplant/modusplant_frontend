@@ -1,3 +1,6 @@
+import { ContentFilePayload, PostWritePayload } from '@/lib/types/post';
+import { WriteFormData, WriteImageData } from '@/lib/schemas/writeForm';
+
 export const MAX_TITLE_LENGTH = 60;
 
 export const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
@@ -9,6 +12,8 @@ export const ERROR_MSGS = {
   MAX_COUNT: `최대 10장 등록 가능합니다. 선택된 사진을 삭제 후 재시도 해주세요.`,
   UPLOAD_FAILED: '이미지 업로드에 실패했습니다. 다시 시도해주세요.',
   UPLOAD_IN_PROGRESS: '이미지 업로드가 완료된 후 게시할 수 있습니다.',
+  LEGACY_IMAGE_UNSUPPORTED:
+    '기존 이미지를 처리할 수 없습니다. 이미지를 삭제 후 다시 등록해주세요.',
 };
 export type ErrorType = keyof typeof ERROR_MSGS;
 
@@ -26,4 +31,99 @@ export const DRAFT_CATEGORY_WARNING_MESSAGE =
 export function buildImageApiFilename(index: number, file: File): string {
   const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
   return `image_${index}.${ext}`;
+}
+
+function extractImageFilenameIndex(filename: string): number | null {
+  const match = filename.match(/^image_(\d+)\./);
+  return match ? Number(match[1]) : null;
+}
+
+/**
+ * 신규로 추가되는 파일들에 API 규칙에 맞는 파일명을 부여한다.
+ * 남아있는 이미지들의 filename에서 이미 쓰인 인덱스를 파악해 겹치지 않는
+ * 가장 작은 인덱스부터 채운다 (삭제 후 재추가 시 인덱스 재사용으로 인한
+ * filename 충돌 방지).
+ */
+export function assignNewImageFilenames(
+  currentImages: { filename?: string }[],
+  files: File[]
+): string[] {
+  const usedIndices = new Set(
+    currentImages
+      .map((image) => (image.filename ? extractImageFilenameIndex(image.filename) : null))
+      .filter((index): index is number => index !== null)
+  );
+
+  let nextIndex = 0;
+  return files.map((file) => {
+    while (usedIndices.has(nextIndex)) nextIndex++;
+    usedIndices.add(nextIndex);
+    return buildImageApiFilename(nextIndex++, file);
+  });
+}
+
+/**
+ * WriteFormData를 게시글 작성/수정 요청 payload로 변환한다.
+ */
+export function buildWritePayload({
+  data,
+  isPublished,
+}: {
+  data: WriteFormData;
+  isPublished: boolean;
+}): PostWritePayload {
+  // 업로드가 완료되어 fileKey/filename을 모두 가진 이미지만 제출 대상
+  const uploadedImages = data.images.filter(
+    (image): image is typeof image & { filename: string; fileKey: string } =>
+      !!image.filename && !!image.fileKey
+  );
+
+  const contentFiles: ContentFilePayload[] = uploadedImages.map(
+    (image, index) => ({
+      order: index + 1,
+      filename: image.filename,
+      fileKey: image.fileKey,
+    })
+  );
+
+  const thumbnailFilename = uploadedImages.find(
+    ({ isThumbnail }) => isThumbnail
+  )?.filename;
+
+  return {
+    primaryCategoryId: data.primaryCategoryId,
+    secondaryCategoryId: data.secondaryCategoryId,
+    title: data.title,
+    contentText: data.textContent,
+    contentFiles,
+    thumbnailFilename,
+    isPublished,
+  };
+}
+
+/**
+ * 이미지 업로드 상태 검증 (진행 중/실패한 이미지가 있으면 제출 차단)
+ */
+export function validateImagesForSubmit(
+  images: WriteImageData[],
+  onError: (description: string) => void
+): boolean {
+  if (images.some((image) => image.status === 'uploading')) {
+    onError(ERROR_MSGS.UPLOAD_IN_PROGRESS);
+    return false;
+  }
+
+  if (images.some((image) => image.status === 'error')) {
+    onError(ERROR_MSGS.UPLOAD_FAILED);
+    return false;
+  }
+
+  // 편집 조회 API가 fileKey를 내려주지 못한 레거시 이미지 등 done 상태인데
+  // fileKey가 없는 이미지는 buildWritePayload에서 조용히 누락되므로 차단한다.
+  if (images.some((image) => image.status === 'done' && !image.fileKey)) {
+    onError(ERROR_MSGS.LEGACY_IMAGE_UNSUPPORTED);
+    return false;
+  }
+
+  return true;
 }

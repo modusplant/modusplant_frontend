@@ -18,15 +18,15 @@ import {
   type WriteFormData,
   WriteFormSchema,
 } from '@/lib/schemas/writeForm';
-import {
-  ContentFilePayload,
-  ContentPart,
-  PostEditData,
-} from '@/lib/types/post';
+import { ContentPart, PostEditData } from '@/lib/types/post';
 import { createUuid } from '@/lib/utils/uuid';
 import { showModal } from '@/lib/store/modalStore';
 import { useDraftListQuery } from '@/lib/hooks/community/useDraftListQuery';
-import { DRAFT_INVALID_MESSAGE, ERROR_MSGS } from '@/lib/constants/write';
+import {
+  buildWritePayload,
+  DRAFT_INVALID_MESSAGE,
+  validateImagesForSubmit,
+} from '@/lib/constants/write';
 import { usePostQuery } from '@/lib/hooks/community/usePostQuery';
 import { DraftListPopup } from '@/components/community/write/DraftListPopup';
 
@@ -99,62 +99,13 @@ const PostWritePage = () => {
     resetForm(draftPost);
   }, [draftPost, resetForm]);
 
-  const buildWritePayload = ({
-    data,
-    isPublished,
-  }: {
-    data: WriteFormData;
-    isPublished: boolean;
-  }) => {
-    // 업로드가 완료되어 fileKey/filename을 모두 가진 이미지만 제출 대상
-    const uploadedImages = data.images.filter(
-      (image): image is typeof image & { filename: string; fileKey: string } =>
-        !!image.filename && !!image.fileKey
-    );
-
-    const contentFiles: ContentFilePayload[] = uploadedImages.map(
-      (image, index) => ({
-        order: index + 1,
-        filename: image.filename,
-        fileKey: image.fileKey,
-      })
-    );
-
-    const thumbnailFilename = uploadedImages.find(
-      ({ isThumbnail }) => isThumbnail
-    )?.filename;
-
-    return {
-      primaryCategoryId: data.primaryCategoryId,
-      secondaryCategoryId: data.secondaryCategoryId,
-      title: data.title,
-      contentText: data.textContent,
-      contentFiles,
-      thumbnailFilename,
-      isPublished,
-    };
-  };
-
-  // 이미지 업로드 상태 검증 (진행 중/실패한 이미지가 있으면 제출 차단)
-  const validateImagesForSubmit = (images: WriteFormData['images']) => {
-    if (images.some((image) => image.status === 'uploading')) {
-      showModal({
-        type: 'snackbar',
-        description: ERROR_MSGS.UPLOAD_IN_PROGRESS,
-      });
-      return false;
-    }
-
-    if (images.some((image) => image.status === 'error')) {
-      showModal({ type: 'snackbar', description: ERROR_MSGS.UPLOAD_FAILED });
-      return false;
-    }
-
-    return true;
-  };
-
   const onValid = (data: WriteFormData) => {
-    if (!validateImagesForSubmit(data.images)) return;
+    if (
+      !validateImagesForSubmit(data.images, (description) =>
+        showModal({ type: 'snackbar', description })
+      )
+    )
+      return;
 
     const payload = buildWritePayload({ data, isPublished: true });
 
@@ -176,7 +127,12 @@ const PostWritePage = () => {
       return;
     }
 
-    if (!validateImagesForSubmit(parseResult.data.images)) return;
+    if (
+      !validateImagesForSubmit(parseResult.data.images, (description) =>
+        showModal({ type: 'snackbar', description })
+      )
+    )
+      return;
 
     const payload = buildWritePayload({
       data: parseResult.data,
