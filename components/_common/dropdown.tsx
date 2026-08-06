@@ -1,7 +1,15 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, {
+  useRef,
+  useEffect,
+  useId,
+  isValidElement,
+  cloneElement,
+} from 'react';
 import { cn } from '@/lib/utils/tailwindHelper';
+import { useEscapeKey } from '@/lib/hooks/common/useEscapeKey';
+import { useFocusTrap } from '@/lib/hooks/common/useFocusTrap';
 
 interface DropdownItem {
   label: string;
@@ -34,6 +42,8 @@ export default function Dropdown({
   className,
 }: DropdownProps) {
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuId = useId();
 
   // 드롭다운 외부 클릭 시 닫기
   useEffect(() => {
@@ -55,18 +65,62 @@ export default function Dropdown({
     };
   }, [isOpen, onClose]);
 
+  useEscapeKey(onClose, isOpen);
+  useFocusTrap(menuRef, {
+    isActive: isOpen,
+    autoFocus: !!items?.length,
+    restoreFocus: true,
+    trapTab: false,
+  });
+
   const positionClass = {
     right: 'right-0',
     left: 'left-0',
     center: 'left-1/2 -translate-x-1/2',
   }[position];
 
+  const triggerElement = isValidElement<React.AriaAttributes>(trigger)
+    ? cloneElement(trigger, {
+        'aria-haspopup': items ? 'menu' : 'true',
+        'aria-expanded': isOpen,
+        'aria-controls': menuId,
+      })
+    : trigger;
+
+  const handleMenuKeyDown = (e: React.KeyboardEvent) => {
+    if (!items) return;
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    e.preventDefault();
+
+    const menuItems = Array.from(
+      menuRef.current?.querySelectorAll<HTMLButtonElement>(
+        '[role="menuitem"]:not(:disabled)'
+      ) ?? []
+    );
+    if (menuItems.length === 0) return;
+
+    const currentIndex = menuItems.indexOf(
+      document.activeElement as HTMLButtonElement
+    );
+    const nextIndex =
+      e.key === 'ArrowDown'
+        ? (currentIndex + 1) % menuItems.length
+        : (currentIndex - 1 + menuItems.length) % menuItems.length;
+    menuItems[nextIndex]?.focus();
+  };
+
   return (
     <div className="relative" ref={dropdownRef}>
-      {trigger}
+      {triggerElement}
 
       {isOpen && (
         <div
+          ref={menuRef}
+          id={menuId}
+          role={items ? 'menu' : undefined}
+          aria-orientation={items ? 'vertical' : undefined}
+          tabIndex={-1}
+          onKeyDown={handleMenuKeyDown}
           className={cn(
             'absolute top-12 z-50',
             'border-surface-99 rounded-[10px] border bg-neutral-100 shadow-sm',
@@ -81,6 +135,7 @@ export default function Dropdown({
             items?.map((item, index) => (
               <button
                 key={index}
+                role="menuitem"
                 onClick={() => {
                   item.onClick();
                   onClose();
