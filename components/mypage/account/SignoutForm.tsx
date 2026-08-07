@@ -114,6 +114,7 @@ export const SignoutForm = ({
             isOpen={isOpen}
             trigger={
               <Button
+                type="button"
                 onClick={(e) => {
                   e.preventDefault();
                   toggle();

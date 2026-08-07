@@ -1,8 +1,10 @@
-import { HTMLAttributes, useEffect } from 'react';
+import { HTMLAttributes, useEffect, useRef } from 'react';
 import { SignoutForm, SignoutFormValues } from './SignoutForm';
 import { cn } from '@/lib/utils/tailwindHelper';
 import Button from '@/components/_common/button';
 import { X } from 'lucide-react';
+import { useEscapeKey } from '@/lib/hooks/common/useEscapeKey';
+import { useFocusTrap } from '@/lib/hooks/common/useFocusTrap';
 
 interface DialogModalProps extends HTMLAttributes<HTMLDivElement> {
   onClose: () => void;
@@ -16,6 +18,16 @@ export default function SignoutModal({
   onClose,
   className,
 }: DialogModalProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEscapeKey(onClose, true);
+  useFocusTrap(dialogRef, {
+    isActive: true,
+    autoFocus: true,
+    restoreFocus: true,
+    trapTab: true,
+  });
+
   // 오버레이 영역 스크롤 방지
   useEffect(() => {
     const prev = {
@@ -40,10 +52,16 @@ export default function SignoutModal({
       onClick={onClose}
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="회원 탈퇴"
+        tabIndex={-1}
         className="relative max-h-[90vh] overflow-y-auto rounded-2xl bg-neutral-100 py-4 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
         <Button
+          aria-label="닫기"
           onClick={onClose}
           className="absolute top-3 right-3 border-none p-2"
         >

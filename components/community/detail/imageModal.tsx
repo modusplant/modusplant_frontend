@@ -1,8 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { X } from 'lucide-react';
+import { useEscapeKey } from '@/lib/hooks/common/useEscapeKey';
+import { useFocusTrap } from '@/lib/hooks/common/useFocusTrap';
 
 interface ImageModalProps {
   imageData: string;
@@ -10,17 +12,15 @@ interface ImageModalProps {
 }
 
 export default function ImageModal({ imageData, onClose }: ImageModalProps) {
-  // ESC 키로 닫기
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
+  const dialogRef = useRef<HTMLDivElement>(null);
 
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
-  }, [onClose]);
+  useEscapeKey(onClose, true);
+  useFocusTrap(dialogRef, {
+    isActive: true,
+    autoFocus: true,
+    restoreFocus: true,
+    trapTab: true,
+  });
 
   // body 스크롤 방지
   useEffect(() => {
@@ -32,6 +32,11 @@ export default function ImageModal({ imageData, onClose }: ImageModalProps) {
 
   return (
     <div
+      ref={dialogRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label="확대된 이미지"
+      tabIndex={-1}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
       onClick={onClose}
     >

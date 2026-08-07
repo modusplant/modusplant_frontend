@@ -1,8 +1,10 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import Image from 'next/image';
 
 import { WriteImageData } from '@/lib/schemas/writeForm';
 import { cn } from '@/lib/utils/tailwindHelper';
+import { useEscapeKey } from '@/lib/hooks/common/useEscapeKey';
+import { useFocusTrap } from '@/lib/hooks/common/useFocusTrap';
 
 interface ImagePopupProps {
   image: WriteImageData;
@@ -16,11 +18,20 @@ const ImagePopup = ({
   handleClose,
   handleThumbnailImage,
 }: ImagePopupProps) => {
+  const dialogRef = useRef<HTMLDivElement>(null);
   const { id, content, isThumbnail } = image;
 
   const src = useMemo(() => {
     return typeof content === 'string' ? content : URL.createObjectURL(content);
   }, [content]);
+
+  useEscapeKey(handleClose, true);
+  useFocusTrap(dialogRef, {
+    isActive: true,
+    autoFocus: true,
+    restoreFocus: true,
+    trapTab: true,
+  });
 
   useEffect(() => {
     if (typeof content === 'string') return;
@@ -50,6 +61,11 @@ const ImagePopup = ({
     >
       <div className="flex h-full w-full items-center justify-center p-6">
         <div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="이미지 확대 보기"
+          tabIndex={-1}
           className="relative w-[800px] max-w-[90vw]"
           onClick={(e) => e.stopPropagation()}
         >

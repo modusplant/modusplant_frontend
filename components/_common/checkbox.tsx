@@ -35,14 +35,14 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               type="checkbox"
               checked={checked}
               defaultChecked={defaultChecked}
-              className="sr-only"
+              className="peer sr-only"
               ref={ref}
               {...props}
             />
 
             <label
               htmlFor={props.id}
-              className="flex cursor-pointer items-center gap-2"
+              className="peer-focus-visible:ring-primary-50 flex cursor-pointer items-center gap-2 peer-focus-visible:ring-2 peer-focus-visible:ring-offset-1"
             >
               {/* 체크박스 */}
               <div
