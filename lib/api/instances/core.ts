@@ -98,6 +98,8 @@ async function requestCore<T = any>(
     return data;
   } catch (error) {
     if (error instanceof ApiError) throw error;
+    if (error instanceof DOMException && error.name === 'AbortError')
+      throw error;
     throw new ApiError(500, 'network_error', '네트워크 오류가 발생했습니다');
   }
 }
