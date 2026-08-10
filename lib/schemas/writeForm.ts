@@ -5,6 +5,10 @@ export const WriteImageSchema = z.object({
   id: z.uuidv4(),
   content: z.union([z.instanceof(File), z.string()]),
   isThumbnail: z.boolean(),
+  // --- Presigned URL 방식 추가 필드 ---
+  fileKey: z.string().optional(), // S3 업로드 완료 후 채워짐
+  filename: z.string().optional(), // API 규칙에 맞는 파일명 (image_0.jpg)
+  status: z.enum(['idle', 'uploading', 'done', 'error']).optional(),
 });
 
 export const WriteFormSchema = z.object({

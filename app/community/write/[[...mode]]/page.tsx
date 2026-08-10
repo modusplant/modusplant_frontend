@@ -22,7 +22,11 @@ import { ContentPart, PostEditData } from '@/lib/types/post';
 import { createUuid } from '@/lib/utils/uuid';
 import { showModal } from '@/lib/store/modalStore';
 import { useDraftListQuery } from '@/lib/hooks/community/useDraftListQuery';
-import { DRAFT_INVALID_MESSAGE } from '@/lib/constants/write';
+import {
+  buildWritePayload,
+  DRAFT_INVALID_MESSAGE,
+  validateImagesForSubmit,
+} from '@/lib/constants/write';
 import { usePostQuery } from '@/lib/hooks/community/usePostQuery';
 import { DraftListPopup } from '@/components/community/write/DraftListPopup';
 
@@ -67,10 +71,17 @@ const PostWritePage = () => {
         textContent: getTextContent(post.content ?? []),
         images: getImageContent(post.content ?? [])
           .filter((item): item is ContentPart & { src: string } => !!item.src)
-          .map(({ src: content, filename }) => {
+          .map((item) => {
             const id = createUuid();
-            const isThumbnail = filename === post.thumbnailFilename;
-            return { id, content, isThumbnail };
+            const isThumbnail = item.filename === post.thumbnailFilename;
+            return {
+              id,
+              content: item.src,
+              isThumbnail,
+              filename: item.filename,
+              fileKey: item.fileKey,
+              status: 'done' as const,
+            };
           }),
       });
     },
@@ -88,37 +99,14 @@ const PostWritePage = () => {
     resetForm(draftPost);
   }, [draftPost, resetForm]);
 
-  const buildWritePayload = ({
-    data,
-    isPublished,
-  }: {
-    data: WriteFormData;
-    isPublished: boolean;
-  }) => {
-    const images = data.images.map(({ content, isThumbnail }) => {
-      return { content, isThumbnail };
-    });
-
-    const thumbnail = images.find(({ isThumbnail }) => isThumbnail)?.content;
-    const thumbnailFilename =
-      thumbnail instanceof File
-        ? thumbnail.name
-        : typeof thumbnail === 'string'
-          ? thumbnail.split('/').pop()?.split('?')[0] || 'image'
-          : undefined;
-
-    return {
-      primaryCategoryId: data.primaryCategoryId,
-      secondaryCategoryId: data.secondaryCategoryId,
-      title: data.title,
-      textContent: data.textContent,
-      images: images.map(({ content }) => content),
-      thumbnailFilename,
-      isPublished,
-    };
-  };
-
   const onValid = (data: WriteFormData) => {
+    if (
+      !validateImagesForSubmit(data.images, (description) =>
+        showModal({ type: 'snackbar', description })
+      )
+    )
+      return;
+
     const payload = buildWritePayload({ data, isPublished: true });
 
     // 수정 모드 여부에 따라 적절한 Mutation 호출
@@ -138,6 +126,13 @@ const PostWritePage = () => {
       });
       return;
     }
+
+    if (
+      !validateImagesForSubmit(parseResult.data.images, (description) =>
+        showModal({ type: 'snackbar', description })
+      )
+    )
+      return;
 
     const payload = buildWritePayload({
       data: parseResult.data,

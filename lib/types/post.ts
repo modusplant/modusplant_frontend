@@ -7,6 +7,16 @@ export interface ContentPart {
   filename: string;
   data?: string; // 텍스트인 경우만 존재
   src?: string; // 이미지/비디오/오디오/파일 미리보기 URL
+  fileKey?: string; // Presigned URL 업로드 시 발급받은 파일 식별자 (image/video만 존재)
+}
+
+/**
+ * 게시글 작성/수정 요청 바디의 파일 항목 (Presigned URL 방식)
+ */
+export interface ContentFilePayload {
+  order: number;
+  filename: string;
+  fileKey: string;
 }
 
 /**
@@ -79,12 +89,13 @@ export interface PostEditData extends Omit<
 /**
  * 게시글 작성/수정 요청 타입
  */
+
 export interface PostWritePayload {
   primaryCategoryId: string; // UUID
   secondaryCategoryId: string; // UUID
   title: string; // 최대 60자
-  textContent: string; // 본문 텍스트
-  images: (File | string)[]; // 이미지 파일들 또는 URL (최대 10개, 각 10MB)
+  contentText: string; // 본문 텍스트
+  contentFiles: ContentFilePayload[]; // 이미지 파일들 또는 URL (최대 10개, 각 10MB)
   thumbnailFilename?: string;
   isPublished: boolean; // true: 게시글 저장, false: 임시저장
 }
