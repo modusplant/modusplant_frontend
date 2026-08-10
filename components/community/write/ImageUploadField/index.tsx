@@ -11,30 +11,83 @@ import {
   ALLOWED_MIME_TYPES,
   MAXIMUM_FILE_COUNT,
   MAXIMUM_FILE_SIZE,
+  assignNewImageFilenames,
 } from '@/lib/constants/write';
 import { useDnD } from '@/lib/hooks/community/useDnD';
 import ImageItem from './ImageItem';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ImagePopup from './ImagePopup';
 import { createUuid } from '@/lib/utils/uuid';
 import { useImagePreviewUrls } from '@/lib/hooks/community/useImagePreviewUrls';
+import { uploadImageFile } from '@/lib/api/client/upload';
 
 const ImageUploadField = () => {
-  const { control, setValue } = useFormContext<WriteFormData>();
+  const { control, setValue, getValues } = useFormContext<WriteFormData>();
   const images = useWatch({ control, name: 'images' });
 
   const { getPreviewUrl } = useImagePreviewUrls(images);
 
   const [popupImageId, setPopupImageId] = useState<string | null>(null);
+  // 이미지 id별 진행 중인 업로드의 AbortController (삭제 시 취소용)
+  const uploadControllersRef = useRef(new Map<string, AbortController>());
+
   const handleImages = (values: WriteImageData[]) =>
     setValue('images', values, { shouldDirty: true, shouldValidate: true });
 
+  const showErrorModal = (msg: string) => {
+    showModal({ type: 'snackbar', description: msg });
+    return false;
+  };
+
   const removeImage = (id: string) => {
+    uploadControllersRef.current.get(id)?.abort();
+    uploadControllersRef.current.delete(id);
+
     const newImages = images.filter((item) => item.id !== id);
     const hasThumbnail = newImages.some(({ isThumbnail }) => isThumbnail);
     if (newImages.length > 0 && !hasThumbnail) newImages[0].isThumbnail = true;
 
     handleImages(newImages);
+  };
+
+  // 개별 이미지 상태만 업데이트 (id로 특정)
+  const patchImage = (id: string, patch: Partial<WriteImageData>) => {
+    setValue(
+      'images',
+      // useWatch로 받은 images는 stale일 수 있어 form 내부 최신 값을 함수형으로 갱신
+      getValues('images').map((img) =>
+        img.id === id ? { ...img, ...patch } : img
+      ),
+      { shouldDirty: true, shouldValidate: true }
+    );
+  };
+
+  // 발급 + S3 PUT을 수행하고 결과를 해당 이미지에 반영 (최초 업로드/재시도 공용)
+  const startUpload = (id: string, file: File, filename: string) => {
+    const controller = new AbortController();
+    uploadControllersRef.current.set(id, controller);
+
+    patchImage(id, { status: 'uploading' });
+    uploadImageFile(file, filename, controller.signal)
+      .then(({ fileKey }) => patchImage(id, { fileKey, status: 'done' }))
+      .catch(() => {
+        // 사용자가 이미 이미지를 삭제해서 취소된 업로드는 조용히 무시
+        if (controller.signal.aborted) return;
+        patchImage(id, { status: 'error' });
+        showErrorModal(ERROR_MSGS['UPLOAD_FAILED']);
+      })
+      .finally(() => {
+        uploadControllersRef.current.delete(id);
+      });
+  };
+
+  // 업로드 실패한 이미지 재시도
+  const retryUpload = (id: string) => {
+    const target = getValues('images').find((image) => image.id === id);
+    if (!target || !(target.content instanceof File) || !target.filename)
+      return;
+
+    startUpload(target.id, target.content, target.filename);
   };
 
   const uploadFiles = (files: FileList) => {
@@ -46,29 +99,37 @@ const ImageUploadField = () => {
       return true;
     });
 
-    const newImages = validatedFiles.map((content) => {
-      const id = createUuid();
-      return { id, content, isThumbnail: false };
-    });
-
-    const nextImages = [...images, ...newImages];
-    if (nextImages.length > MAXIMUM_FILE_COUNT) {
+    const currentImages = getValues('images');
+    const nextCount = currentImages.length + validatedFiles.length;
+    if (nextCount > MAXIMUM_FILE_COUNT) {
       showErrorModal(ERROR_MSGS['MAX_COUNT']);
       return;
     }
 
-    if (images.length == 0) nextImages[0].isThumbnail = true;
+    const filenames = assignNewImageFilenames(currentImages, validatedFiles);
+    const newImages: WriteImageData[] = validatedFiles.map((file, i) => ({
+      id: createUuid(),
+      content: file,
+      isThumbnail: false,
+      status: 'uploading',
+      filename: filenames[i],
+    }));
+
+    const nextImages = [...currentImages, ...newImages];
+    if (currentImages.length === 0 && nextImages.length > 0) {
+      nextImages[0].isThumbnail = true;
+    }
     handleImages(nextImages);
+
+    // 파일별로 즉시 업로드 시작 (선택 즉시 업로드 방식)
+    newImages.forEach((img) => {
+      startUpload(img.id, img.content as File, img.filename!);
+    });
   };
 
   const { isDragging, handleDragLeave, handleDrop, handleDragOver } = useDnD({
     onDropFiles: uploadFiles,
   });
-
-  const showErrorModal = (msg: string) => {
-    showModal({ type: 'snackbar', description: msg });
-    return false;
-  };
 
   // keyboard event handlers for image popup
   useEffect(() => {
@@ -122,6 +183,7 @@ const ImageUploadField = () => {
                     src={getPreviewUrl(image)}
                     handleClickImage={() => setPopupImageId(image.id)}
                     handleDelete={removeImage}
+                    handleRetry={retryUpload}
                   />
                 ))}
               </div>
