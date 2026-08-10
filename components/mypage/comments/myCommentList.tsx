@@ -17,7 +17,8 @@ interface MyCommentListProps<T> {
   useQueryHook: (
     page: number,
     size: number,
-    userId?: string
+    userId?: string,
+    enabled?: boolean
   ) => {
     data: T | undefined;
     isLoading: boolean;
@@ -70,7 +71,7 @@ export default function MyCommentList<
     data,
     isLoading: isPageLoading,
     error: pageError,
-  } = useQueryHook(currentPage, pageSize, user?.id);
+  } = useQueryHook(currentPage, pageSize, user?.id, isMobile === false);
 
   const infiniteResult = useInfiniteQueryHook?.(
     pageSize,
