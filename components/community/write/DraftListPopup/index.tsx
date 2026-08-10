@@ -1,10 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useRef } from 'react';
 import { DraftPostData } from '@/lib/types/post';
 import { DraftListItem } from './DraftListItem';
 import DraftListPopupHeader from './DraftListPopupHeader';
 import { useDeleteDraftMutation } from '@/lib/hooks/community/useDeleteDraftMutation';
+import { useEscapeKey } from '@/lib/hooks/common/useEscapeKey';
+import { useFocusTrap } from '@/lib/hooks/common/useFocusTrap';
 
 interface DraftListPopupProps {
   isOpen: boolean;
@@ -19,20 +21,16 @@ export const DraftListPopup = ({
   onClose,
   onSelectDraft,
 }: DraftListPopupProps) => {
+  const dialogRef = useRef<HTMLDivElement>(null);
   const { mutate: deleteDraft } = useDeleteDraftMutation();
 
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleEsc = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleEsc);
-
-    return () => {
-      window.removeEventListener('keydown', handleEsc);
-    };
-  }, [isOpen, onClose]);
+  useEscapeKey(onClose, isOpen);
+  useFocusTrap(dialogRef, {
+    isActive: true,
+    autoFocus: true,
+    restoreFocus: true,
+    trapTab: true,
+  });
 
   if (!isOpen) return null;
 
@@ -48,6 +46,11 @@ export const DraftListPopup = ({
       onClick={onClose}
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="임시저장 글 목록"
+        tabIndex={-1}
         className="border-surface-stroke w-full max-w-2xl rounded-2xl border bg-neutral-100"
         onClick={(e) => e.stopPropagation()}
       >
