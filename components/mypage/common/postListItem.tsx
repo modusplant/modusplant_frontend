@@ -17,6 +17,8 @@ export interface PostListItemProps {
  * - 하단: PostListItemMetadata (카테고리, 좋아요, 댓글, 북마크, 날짜)
  */
 export default function PostListItem({ post }: PostListItemProps) {
+  'use memo';
+
   return (
     <Link
       href={`/community/${post.postId}`}
