@@ -1,6 +1,8 @@
 import Button from '@/components/_common/button';
+import { useEscapeKey } from '@/lib/hooks/common/useEscapeKey';
+import { useFocusTrap } from '@/lib/hooks/common/useFocusTrap';
 import { cn } from '@/lib/utils/tailwindHelper';
-import { useEffect } from 'react';
+import { useEffect, useId, useRef } from 'react';
 
 interface DialogModalProps {
   title: string;
@@ -25,6 +27,10 @@ export default function DialogModal({
   align,
   shouldUseLineBreak,
 }: DialogModalProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const dialogId = useId();
+  const descriptionId = useId();
+
   // 오버레이 영역 스크롤 방지
   useEffect(() => {
     const prev = {
@@ -40,6 +46,18 @@ export default function DialogModal({
       document.body.style.userSelect = prev.userSelect;
     };
   }, []);
+
+  useEscapeKey(() => {
+    onCancel?.();
+    hideModal();
+  }, true);
+  useFocusTrap(dialogRef, {
+    isActive: true,
+    autoFocus: true,
+    restoreFocus: true,
+    trapTab: true,
+  });
+
   return (
     <div
       className="fixed inset-0 z-99 flex items-center justify-center bg-black/20 select-none"
@@ -50,11 +68,18 @@ export default function DialogModal({
       onDragStart={(e) => e.preventDefault()}
     >
       <div
+        ref={dialogRef}
         className="mx-5 w-85 rounded-2xl bg-neutral-100 py-4 shadow-lg"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={dialogId}
+        aria-describedby={descriptionId}
+        tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col items-center gap-1 py-10">
           <h2
+            id={dialogId}
             className={cn(
               'text-neutral-10 text-xl text-[17px] font-semibold',
               align === 'center' && 'text-center',
@@ -64,6 +89,7 @@ export default function DialogModal({
             {title}
           </h2>
           <p
+            id={descriptionId}
             className={cn(
               'text-neutral-30 text-[16px]',
               align === 'center' && 'text-center',
