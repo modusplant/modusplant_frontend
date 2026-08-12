@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { X } from 'lucide-react';
@@ -9,6 +9,8 @@ import SearchHistory from './searchHistory';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useGetSearchHistory } from '@/lib/hooks/search/useGetSearchHistory';
 import { useDeleteSearchHistory } from '@/lib/hooks/search/useDeleteSearchHistory';
+import { useEscapeKey } from '@/lib/hooks/common/useEscapeKey';
+import { useFocusTrap } from '@/lib/hooks/common/useFocusTrap';
 
 interface SearchOverlayProps {
   isOpen: boolean;
@@ -35,6 +37,7 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
   );
   const { mutate: deleteSearchHistory, isPending: isDeletingSearchHistory } =
     useDeleteSearchHistory();
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   const handleSearch = (keyword: string) => {
     if (pendingSearchUrl) return;
@@ -66,6 +69,33 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
     onClose();
   };
 
+  useEscapeKey(handleClose, isOpen);
+  useFocusTrap(dialogRef, {
+    isActive: isOpen,
+    autoFocus: false,
+    restoreFocus: true,
+    trapTab: true,
+  });
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const prevOverflow = document.body.style.overflow;
+    const prevUserSelect = document.body.style.userSelect;
+
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.userSelect = 'none';
+      document.body.classList.add('overlay-open');
+    }
+
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.body.style.userSelect = prevUserSelect;
+      document.body.classList.remove('overlay-open');
+    };
+  }, [isOpen]);
+
   useEffect(() => {
     if (!pendingSearchUrl) return;
 
@@ -83,9 +113,15 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-100 flex min-h-screen justify-center bg-white">
-      <div className="flex w-full max-w-[780px] flex-col gap-5 px-5 py-8">
-        <div className="px-4">
+    <div
+      className="fixed inset-0 z-100 flex min-h-screen justify-center bg-white"
+      ref={dialogRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label="검색"
+    >
+      <div className="flex w-full max-w-[780px] flex-col gap-5 p-5 px-5 md:py-8">
+        <div className="hidden px-4 md:block">
           <button
             type="button"
             className="text-neutral-20 ml-auto flex h-6 w-6 items-center justify-center"
@@ -96,14 +132,25 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
             <X className="text-neutral-80 h-8 w-8 shrink-0" />
           </button>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <SearchBar
-            placeholder="검색어를 입력해 주세요"
-            autoFocus
+        <div className="flex gap-1 md:block">
+          <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
+            <SearchBar
+              placeholder="검색어를 입력해 주세요"
+              autoFocus
+              disabled={!!pendingSearchUrl}
+              {...register('keyword')}
+            />
+          </form>
+          <button
+            type="button"
+            className="leading-1.2 text-neutral-20 flex w-[37px] items-center justify-center text-sm font-semibold -tracking-[0.01em] md:hidden"
+            onClick={handleClose}
             disabled={!!pendingSearchUrl}
-            {...register('keyword')}
-          />
-        </form>
+            aria-label="검색 오버레이 닫기"
+          >
+            취소
+          </button>
+        </div>
 
         {/* 로그인 한 사용자에게만 검색 기록 표출 */}
         {isAuthenticated && (

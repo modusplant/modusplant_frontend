@@ -11,6 +11,8 @@ export default function SnackbarModal({
 }: SnackbarModalProps) {
   return (
     <div
+      role="status"
+      aria-live="polite"
       className={cn(
         'fixed bottom-10 left-1/2 z-99 -translate-x-1/2 transform',
         'rounded-[15px] bg-neutral-100 px-16 py-7 shadow-lg lg:h-17',

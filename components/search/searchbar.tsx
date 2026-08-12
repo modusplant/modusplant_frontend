@@ -42,7 +42,7 @@ const SearchBar = ({
   return (
     <label
       className={cn(
-        'border-surface-stroke focus-within:border-primary-50 flex h-[49px] w-full min-w-[240px] items-center justify-between rounded-[50px] border px-4 py-[15px]',
+        'border-surface-stroke focus-within:border-primary-50 flex h-[42px] w-full items-center justify-between rounded-[50px] border py-[11.5px] pr-2.5 pl-4 md:h-[49px] md:px-4 md:py-[15px]',
         width,
         className
       )}

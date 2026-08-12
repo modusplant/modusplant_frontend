@@ -18,7 +18,7 @@ const SearchCategoryFilter = ({
 }: SearchCategoryFilterProps) => {
   // 검색 화면에서는 게시글 작성 폼 컨텍스트 없이 카테고리 필터 UI만 재사용한다.
   return (
-    <div className="flex flex-col gap-2.5 md:flex-row md:items-center">
+    <div className="mt-1.5 flex w-min gap-2.5 md:mt-0 md:flex-row md:items-center">
       <PrimaryCategoryFilter
         selectedCategoryId={primaryCategoryId}
         onCategoryChange={onPrimaryCategoryChange}

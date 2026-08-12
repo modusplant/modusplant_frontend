@@ -5,6 +5,8 @@ import {
   ACCESS_TOKEN_MAX_AGE,
 } from '@/lib/constants/auth';
 import { AUTH_ENDPOINTS } from '@/lib/constants/endpoints';
+import { createApi } from './core';
+import { TokenRefreshResponseSchema } from '@/lib/schemas/apiResponse';
 
 const BASE_URL = ''; // 클라이언트는 상대 경로 사용 (rewrites 적용)
 
@@ -39,6 +41,12 @@ async function refreshAccessToken(): Promise<string> {
 
     const data: ApiResponse<{ accessToken: string }> = await response.json();
 
+    const parsed = TokenRefreshResponseSchema.safeParse(data);
+
+    if (!parsed.success) {
+      console.warn('[RefreshToken] 응답 스키마 불일치:', parsed.error.issues);
+    }
+
     if (!data.data || !data.data.accessToken) {
       throw new ApiError(
         500,
@@ -66,8 +74,6 @@ async function refreshAccessToken(): Promise<string> {
   }
 }
 
-import { createApi } from './core';
-
 export const clientApiInstance = createApi({
   baseUrl: BASE_URL,
   includeCredentials: true,
@@ -75,11 +81,11 @@ export const clientApiInstance = createApi({
   onUnauthorized: async () => {
     try {
       await refreshAccessToken();
-      return 'retry' as const;
+      return { action: 'retry' } as const;
     } catch (e) {
       deleteCookie(ACCESS_TOKEN_COOKIE_NAME, { path: '/' });
       deleteCookie('rememberMe', { path: '/' });
-      return 'fail' as const;
+      return { action: 'fail' } as const;
     }
   },
 });

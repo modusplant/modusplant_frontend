@@ -1,6 +1,7 @@
 'use client';
 
 import { useMyPostsQuery } from '@/lib/hooks/mypage/useMyPostsQuery';
+import { useMyPostsInfiniteQuery } from '@/lib/hooks/mypage/useMyPostsInfiniteQuery';
 import EmptyMyPosts from './emptyMyPosts';
 import PostList from '@/components/mypage/common/postList';
 
@@ -11,6 +12,7 @@ export default function MyPostList() {
   return (
     <PostList
       useQueryHook={useMyPostsQuery}
+      useInfiniteQueryHook={useMyPostsInfiniteQuery}
       emptyComponent={<EmptyMyPosts />}
     />
   );

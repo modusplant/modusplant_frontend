@@ -22,6 +22,8 @@ export interface PostCardProps {
  * - 2차 카테고리, 본문 일부(말줄임표), 업로드 일자, 닉네임
  */
 export default function PostCard({ post, className }: PostCardProps) {
+  'use memo';
+
   const {
     postId,
     isLiked: initialIsLiked,

@@ -1,0 +1,10 @@
+export function getFocusableElements(container: HTMLElement): HTMLElement[] {
+  const selector =
+    'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  return Array.from(container.querySelectorAll<HTMLElement>(selector)).filter(
+    (el) =>
+      el.offsetWidth > 0 ||
+      el.offsetHeight > 0 ||
+      el.getClientRects().length > 0
+  );
+}

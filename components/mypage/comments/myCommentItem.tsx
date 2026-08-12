@@ -14,12 +14,16 @@ export default function MyCommentItem({ comment }: MyCommentItemProps) {
     <Link href={`/community/${postId}`} className="block bg-neutral-100">
       <div className="flex flex-col gap-1.5">
         {/* 댓글 내용 */}
-        <p className="text-neutral-20 line-clamp-2 font-medium">{content}</p>
+        <p className="text-neutral-20 line-clamp-2 text-[15px] leading-normal font-medium tracking-[-0.01em]">
+          {content}
+        </p>
 
-        <span className="text-neutral-60">{formatRelativeTime(createdAt)}</span>
+        <span className="text-neutral-60 text-xs">
+          {formatRelativeTime(createdAt)}
+        </span>
 
         {/* 게시글 제목 */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 text-sm tracking-[-0.03em]">
           <span className="text-neutral-40 font-regular truncate">
             {postTitle}
           </span>

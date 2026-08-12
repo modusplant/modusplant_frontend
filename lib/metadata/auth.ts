@@ -32,3 +32,13 @@ export const resetPasswordMetadata: Metadata = createMetadata({
   path: '/reset-password',
   keywords: ['비밀번호 재설정', '모두의식물', '계정 복구'],
 });
+
+/**
+ * 이메일 변경 페이지 메타데이터
+ */
+export const changeEmailMetadata: Metadata = createMetadata({
+  title: '이메일 변경 | 모두의식물',
+  description: '모두의식물 계정의 이메일을 변경합니다.',
+  path: '/reset-email',
+  keywords: ['이메일 변경', '모두의식물', '계정 설정'],
+});

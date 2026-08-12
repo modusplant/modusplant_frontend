@@ -73,7 +73,7 @@ export default async function RootLayout({
           <AuthInitializer initialUser={initialUser} />
           <RootErrorBoundary>
             <ConditionalLayout initialUser={initialUser}>
-              <AuthGuard>
+              <AuthGuard initialUser={initialUser}>
                 {children}
                 <Analytics />
               </AuthGuard>

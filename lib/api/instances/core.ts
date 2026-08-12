@@ -1,9 +1,12 @@
+import { ApiResponseSchema } from '@/lib/schemas/apiResponse';
 import { ApiResponse, ApiError } from '../../types/common';
+import z from 'zod';
 
 interface RequestConfig extends RequestInit {
   skipAuth?: boolean;
   isRetry?: boolean;
   enableCache?: boolean;
+  overrideToken?: string;
 }
 
 export interface ApiRequestOptions {
@@ -13,14 +16,20 @@ export interface ApiRequestOptions {
   signal?: AbortSignal;
 }
 
+export type UnauthorizedResult =
+  | { action: 'retry'; token?: string }
+  | { action: 'fail' };
+
 interface CreateApiOptions {
   baseUrl: string;
   includeCredentials?: boolean;
   getAccessToken?: () => string | null | Promise<string | null>;
   /**
    * 401 처리 훅. "retry"를 반환하면 한 번 재시도합니다.
+   * token을 함께 반환하면 재시도 요청에 해당 토큰을 직접 사용합니다
+   * (쿠키를 다시 읽지 않음 — 쿠키 쓰기가 불가능한 컨텍스트에서 갱신된 경우 대응).
    */
-  onUnauthorized?: () => Promise<'retry' | 'fail'> | 'retry' | 'fail';
+  onUnauthorized?: () => Promise<UnauthorizedResult> | UnauthorizedResult;
 }
 
 async function requestCore<T = any>(
@@ -32,6 +41,7 @@ async function requestCore<T = any>(
     skipAuth = false,
     isRetry = false,
     enableCache = false,
+    overrideToken,
     ...fetchConfig
   } = config || {};
 
@@ -49,7 +59,7 @@ async function requestCore<T = any>(
   };
 
   if (!skipAuth && opts.getAccessToken) {
-    const token = await opts.getAccessToken();
+    const token = overrideToken ?? (await opts.getAccessToken());
     if (token) headers['Authorization'] = `Bearer ${token}`;
   }
 
@@ -62,8 +72,17 @@ async function requestCore<T = any>(
 
     let data: ApiResponse<T>;
     try {
-      data = await response.json();
-    } catch {
+      const rawJson = await response.json();
+      data = ApiResponseSchema.parse(rawJson) as ApiResponse<T>;
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        console.error('[API] 응답 envelope 검증 실패:', err.issues);
+        throw new ApiError(
+          response.status,
+          'invalid_response',
+          `서버 응답 형식이 올바르지 않습니다 (${response.status})`
+        );
+      }
       throw new ApiError(
         response.status,
         'invalid_response',
@@ -71,17 +90,15 @@ async function requestCore<T = any>(
       );
     }
 
-    // 디버깅용 로그 (확인 후 제거)
-    if (!response.ok) {
-      // console.error('[API Error] status:', response.status);
-      // console.error('[API Error body:', data);
-    }
-
     if (data.status === 401 && !skipAuth) {
       if (!isRetry && opts.onUnauthorized) {
-        const action = await opts.onUnauthorized();
-        if (action === 'retry') {
-          return requestCore<T>(endpoint, { ...config, isRetry: true }, opts);
+        const result = await opts.onUnauthorized();
+        if (result.action === 'retry') {
+          return requestCore<T>(
+            endpoint,
+            { ...config, isRetry: true, overrideToken: result.token },
+            opts
+          );
         }
       }
       throw new ApiError(401, 'authentication_required', '다시 로그인해주세요');

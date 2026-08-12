@@ -1,7 +1,6 @@
 'use client';
 
 import { Input } from '@/components/_common/input';
-import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
 import Button from '@/components/_common/button';
@@ -13,6 +12,7 @@ import { emailSchema } from '@/lib/constants/schema';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FixedBottomButton from '@/components/_common/fixedBottomButton';
+import ResetPageLayout from '@/components/auth/resetPageLayout';
 
 const requestEmailSchema = z.object({
   email: emailSchema,
@@ -73,28 +73,15 @@ export default function RequestEmailForm() {
   };
 
   return (
-    <div className="mx-auto max-w-120 p-5">
-      {/* 뒤로가기 버튼 */}
-      <div className="hidden md:block">
-        <button
-          onClick={() => router.back()}
-          className="border-neutral-90 hover:bg-surface-98 mb-4 rounded-full border p-2 transition-colors"
-          aria-label="뒤로가기"
-        >
-          <ArrowLeft className="text-neutral-20 h-4 w-4" />
-        </button>
-      </div>
-
-      {/* 페이지 제목 */}
-      <div className="mt-6 mb-10 flex flex-col gap-6 text-center">
-        <h1 className="hidden text-2xl font-bold md:block">비밀번호 재설정</h1>
-
-        <h2 className="text-neutral-20 text-[15px]">
+    <ResetPageLayout
+      title="비밀번호 재설정"
+      description={
+        <>
           가입 시 등록했던 이메일로 <br /> 비밀번호를 변경할 수 있는 메일을
           보내드릴게요.
-        </h2>
-      </div>
-
+        </>
+      }
+    >
       {/* 이메일 요청 폼 */}
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -102,7 +89,9 @@ export default function RequestEmailForm() {
         className="flex flex-col gap-10"
       >
         <div className="space-y-2">
-          <p>이메일</p>
+          <p className="text-neutral-20 text-[14px] leading-normal font-medium tracking-[-0.01em]">
+            이메일
+          </p>
           <Input
             type="email"
             {...register('email')}
@@ -127,6 +116,6 @@ export default function RequestEmailForm() {
           </Button>
         </FixedBottomButton>
       </form>
-    </div>
+    </ResetPageLayout>
   );
 }

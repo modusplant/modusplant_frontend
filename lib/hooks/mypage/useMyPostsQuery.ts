@@ -16,7 +16,11 @@ import { GetMyPostsResponseData } from '@/lib/types/post';
  * const { data, isLoading, error } = useMyPostsQuery(1, 8);
  * ```
  */
-export function useMyPostsQuery(page: number = 1, size: number = 8) {
+export function useMyPostsQuery(
+  page: number = 1,
+  size: number = 8,
+  enabled: boolean = true
+) {
   return useQuery<GetMyPostsResponseData | undefined>({
     queryKey: ['myPosts', page, size],
     queryFn: async () => {
@@ -29,5 +33,6 @@ export function useMyPostsQuery(page: number = 1, size: number = 8) {
       return response.data;
     },
     retry: 1,
+    enabled,
   });
 }

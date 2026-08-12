@@ -18,11 +18,14 @@ import ImageItem from './ImageItem';
 import { useEffect, useRef, useState } from 'react';
 import ImagePopup from './ImagePopup';
 import { createUuid } from '@/lib/utils/uuid';
+import { useImagePreviewUrls } from '@/lib/hooks/community/useImagePreviewUrls';
 import { uploadImageFile } from '@/lib/api/client/upload';
 
 const ImageUploadField = () => {
   const { control, setValue, getValues } = useFormContext<WriteFormData>();
   const images = useWatch({ control, name: 'images' });
+
+  const { getPreviewUrl } = useImagePreviewUrls(images);
 
   const [popupImageId, setPopupImageId] = useState<string | null>(null);
   // 이미지 id별 진행 중인 업로드의 AbortController (삭제 시 취소용)
@@ -91,10 +94,8 @@ const ImageUploadField = () => {
     const validatedFiles = Array.from(files).filter((file) => {
       if (!ALLOWED_MIME_TYPES.includes(file.type))
         return showErrorModal(ERROR_MSGS['INVALID_TYPE']);
-
       if (file.size > MAXIMUM_FILE_SIZE)
         return showErrorModal(ERROR_MSGS['MAX_SIZE']);
-
       return true;
     });
 
@@ -179,6 +180,7 @@ const ImageUploadField = () => {
                   <ImageItem
                     key={image.id}
                     image={image}
+                    src={getPreviewUrl(image)}
                     handleClickImage={() => setPopupImageId(image.id)}
                     handleDelete={removeImage}
                     handleRetry={retryUpload}
@@ -200,6 +202,7 @@ const ImageUploadField = () => {
         <ImagePopup
           handleClose={() => setPopupImageId(null)}
           image={popupImage}
+          src={getPreviewUrl(popupImage)}
           handleThumbnailImage={(id) => {
             const newImages = images
               .map((item) => ({ ...item, isThumbnail: false }))

@@ -15,10 +15,9 @@ const PAGE_TITLES: Record<string, string> = {
   '/signup': '회원가입',
   '/reset-password': '비밀번호 재설정',
   '/reset-password/sent': '비밀번호 재설정',
+  '/reset-email': '이메일 변경',
   '/mypage/profile': '프로필 설정',
   '/mypage/account': '계정 설정',
-  // '/mypage/account/change-email': '이메일 변경', // 추후 모바일용 이메일 변경 페이지 추가 시 활성화
-  // '/mypage/account/change-password': '비밀번호 변경',  // 추후 모바일용 비밀번호 변경 페이지 추가 시 활성화
   '/mypage/recent': '최근에 본 글',
   '/mypage/posts': '내가 쓴 글',
   '/mypage/comments': '내 댓글',
@@ -34,7 +33,16 @@ const NO_FOOTER_PATHS = [
   '/notifications',
   '/signup',
   '/reset-password',
+  '/reset-email',
 ];
+
+// FixedBottomButton이 있는 페이지 — Footer가 가려지지 않도록 버튼 높이만큼 하단 padding 지정
+// (값은 각 페이지 FixedBottomButton 콘텐츠의 실측 높이 기준, 브라우저에서 확인 후 조정)
+const FOOTER_BOTTOM_PADDING_BY_PATH: Record<string, string> = {
+  '/mypage/profile': 'pb-21 md:pb-0', // Button(size md) 포함
+  '/mypage/account': 'pb-12.5 md:pb-0', // 텍스트 링크만 포함, 버튼보다 낮음
+  '/mypage/report': 'pb-21 md:pb-0',
+};
 
 export default function ConditionalLayout({
   children,
@@ -68,7 +76,9 @@ export default function ConditionalLayout({
       {!shouldHideHeader && <HeaderWrapper initialUser={initialUser} />}
       {showMobileSubHeader && <MobileSubHeader title={pageTitle} />}
       <main className="flex-1">{children}</main>
-      {!shouldHideFooter && <Footer />}
+      {!shouldHideFooter && (
+        <Footer className={FOOTER_BOTTOM_PADDING_BY_PATH[pathname]} />
+      )}
     </div>
   );
 }
