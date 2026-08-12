@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 
 import { WriteImageData } from '@/lib/schemas/writeForm';
@@ -8,6 +8,7 @@ import { useFocusTrap } from '@/lib/hooks/common/useFocusTrap';
 
 interface ImagePopupProps {
   image: WriteImageData;
+  src: string;
   handleClose: () => void;
   handleThumbnailImage: (id: string) => void;
 }
@@ -15,15 +16,12 @@ interface ImagePopupProps {
 // TODO: Improve reusability by creating a generic Popup component
 const ImagePopup = ({
   image,
+  src,
   handleClose,
   handleThumbnailImage,
 }: ImagePopupProps) => {
   const dialogRef = useRef<HTMLDivElement>(null);
-  const { id, content, isThumbnail } = image;
-
-  const src = useMemo(() => {
-    return typeof content === 'string' ? content : URL.createObjectURL(content);
-  }, [content]);
+  const { id, isThumbnail } = image;
 
   useEscapeKey(handleClose, true);
   useFocusTrap(dialogRef, {
@@ -32,13 +30,6 @@ const ImagePopup = ({
     restoreFocus: true,
     trapTab: true,
   });
-
-  useEffect(() => {
-    if (typeof content === 'string') return;
-    return () => {
-      URL.revokeObjectURL(src);
-    };
-  }, [content, src]);
 
   useEffect(() => {
     const prevOverflow = document.body.style.overflow;

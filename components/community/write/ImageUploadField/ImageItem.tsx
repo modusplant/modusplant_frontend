@@ -2,10 +2,10 @@ import { WriteImageData } from '@/lib/schemas/writeForm';
 import { cn } from '@/lib/utils/tailwindHelper';
 import { Loader2, RotateCw, X } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect } from 'react';
 
 interface ImageItemProps {
   image: WriteImageData;
+  src: string;
   handleDelete: (id: string) => void;
   handleClickImage: () => void;
   handleRetry: (id: string) => void;
@@ -13,21 +13,12 @@ interface ImageItemProps {
 
 const ImageItem = ({
   image,
+  src,
   handleDelete,
   handleClickImage,
   handleRetry,
 }: ImageItemProps) => {
-  const { id, content, status } = image;
-  const src =
-    typeof content === 'string' ? content : URL.createObjectURL(content);
-
-  useEffect(() => {
-    // revokeObjectURL when the component unmounts to prevent memory leaks
-    return () => {
-      if (typeof content === 'string') return;
-      URL.revokeObjectURL(src);
-    };
-  }, [content, src]);
+  const { id, status } = image;
 
   return (
     <div className="group relative h-30 w-30 shrink-0">
