@@ -4,6 +4,7 @@ import { AuthProviderParam } from './oauth';
  * API 베이스 경로
  */
 const API_V1 = '/api/v1';
+const API_V2 = '/api/v2';
 
 /**
  * 인증 관련 엔드포인트
@@ -47,7 +48,7 @@ export const AUTH_ENDPOINTS = {
  * 회원 관련 엔드포인트
  */
 export const MEMBER_ENDPOINTS = {
-  PROFILE: () => `${API_V1}/members/profile`,
+  PROFILE: () => `${API_V1}/member/profile`,
   AUTH_INFO: (userId: string) => `${API_V1}/members/${userId}/auth-info`,
 
   // 마이페이지
@@ -55,7 +56,8 @@ export const MEMBER_ENDPOINTS = {
   MY_POSTS: `${API_V1}/communication/posts/me`,
   MY_LIKED_POSTS: `${API_V1}/communication/posts/me/likes`,
   MY_BOOKMARKED_POSTS: `${API_V1}/communication/posts/me/bookmarks`,
-  MY_BUG_REPORTS: `${API_V1}/report/proposal-or-bug`,
+  MY_BUG_REPORTS: `${API_V2}/report/proposal-or-bug`,
+  ISSUE_BUG_REPORT_FILE_KEY: `${API_V2}/report/proposal-or-bug/issue-file-key`,
 } as const;
 
 /**
@@ -146,14 +148,20 @@ export const SEARCH_ENDPOINTS = {
  * 타입 안전한 쿼리 파라미터 빌더
  */
 export function buildQueryString(
-  params: Record<string, string | number | boolean | undefined | null>
+  params: Record<
+    string,
+    string | number | boolean | string[] | undefined | null
+  >
 ): string {
   const queryParams = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== '') {
-      queryParams.append(key, String(value));
+    if (value === undefined || value === null || value === '') return;
+    if (Array.isArray(value)) {
+      value.forEach((item) => queryParams.append(key, item));
+      return;
     }
+    queryParams.append(key, String(value));
   });
 
   const queryString = queryParams.toString();

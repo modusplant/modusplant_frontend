@@ -12,7 +12,6 @@ import {
   GetRecentPostsRequest,
   GetRecentPostsResponseData,
 } from '@/lib/types/post';
-import { ReportFormValues } from '@/components/mypage/report/ReportSection';
 
 /**
  * 회원 프로필 API
@@ -117,16 +116,23 @@ export const memberApi = {
 
   /**
    * 건의/버그 제보
-   * @param formData 폼 데이터
+   * @param payload 제목/내용/첨부 이미지 fileKey 목록
    * @returns 응답
    */
-  async postBugReport(formData: ReportFormValues): Promise<ApiResponse<void>> {
-    const form = new FormData();
-    form.append('title', formData.title);
-    form.append('content', formData.content);
-    if (formData.image) form.append('image', formData.image);
+  async postBugReport(payload: {
+    title: string;
+    content: string;
+    fileKeys: string[];
+  }): Promise<ApiResponse<void>> {
+    const queryString = buildQueryString({
+      title: payload.title,
+      content: payload.content,
+      fileKeys: payload.fileKeys,
+    });
 
-    return clientApiInstance.post<void>(MEMBER_ENDPOINTS.MY_BUG_REPORTS, form);
+    return clientApiInstance.post<void>(
+      `${MEMBER_ENDPOINTS.MY_BUG_REPORTS}${queryString}`
+    );
   },
 
   /**
