@@ -28,10 +28,19 @@ export const memberApi = {
    * 프로필 수정 (덮어쓰기)
    * Content-Type: multipart/form-data
    */
-  async updateProfile(formData: FormData): Promise<ApiResponse<ProfileData>> {
+  async updateProfile(payload: {
+    nickname: string;
+    introduction: string;
+    fileKey?: string;
+  }): Promise<ApiResponse<ProfileData>> {
+    const queryString = buildQueryString({
+      nickname: payload.nickname,
+      introduction: payload.introduction,
+      fileKey: payload.fileKey,
+    });
+
     return clientApiInstance.put<ProfileData>(
-      MEMBER_ENDPOINTS.PROFILE(),
-      formData
+      `${MEMBER_ENDPOINTS.UPDATE_PROFILE()}${queryString}`
     );
   },
 

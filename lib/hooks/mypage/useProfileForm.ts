@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { ProfileFormData } from '@/lib/types/member';
 import { useAuthStore } from '@/lib/store/authStore';
 
@@ -10,6 +10,7 @@ import { useAuthStore } from '@/lib/store/authStore';
  */
 export function useProfileForm() {
   const { user } = useAuthStore();
+  const [prevUserId, setPrevUserId] = useState(user?.id);
   const [formData, setFormData] = useState<ProfileFormData>({
     nickname: user?.nickname || '',
     introduction: user?.introduction || '',
@@ -17,16 +18,18 @@ export function useProfileForm() {
     imagePreview: user?.image || null,
     shouldDeleteImage: false,
   });
+  const [initialNickname, setInitialNickname] = useState(user?.nickname || '');
 
-  // 사용자 정보가 변경될 때 폼 데이터 초기화
-  useEffect(() => {
+  if (user?.id !== prevUserId) {
+    setPrevUserId(user?.id);
     setFormData((prev) => ({
       ...prev,
       nickname: user?.nickname || '',
       introduction: user?.introduction || '',
       imagePreview: user?.image || null,
     }));
-  }, [user]);
+    setInitialNickname(user?.nickname || '');
+  }
 
   const [hasChanges, setHasChanges] = useState(false);
 
@@ -65,36 +68,19 @@ export function useProfileForm() {
     setHasChanges(true);
   }, []);
 
-  // FormData 생성 (API 요청용)
-  const createFormData = useCallback((): FormData => {
-    const data = new FormData();
-
-    // 닉네임 추가
-    data.append('nickname', formData.nickname);
-
-    // 소개글 추가
-    data.append('introduction', formData.introduction);
-
-    // 이미지 처리
-    if (formData.shouldDeleteImage) {
-      // 이미지 삭제 시 null 전송
-      data.append('image', 'null');
-    } else if (formData.imageFile) {
-      // 새 이미지 업로드
-      data.append('image', formData.imageFile);
-    }
-    // 변경사항 없으면 image 필드를 포함하지 않음
-
-    return data;
-  }, [formData]);
+  const commitSaved = useCallback(() => {
+    setInitialNickname(formData.nickname);
+    setHasChanges(false);
+  }, [formData.nickname]);
 
   return {
+    initialNickname,
     formData,
     hasChanges,
     handleNicknameChange,
     handleIntroductionChange,
     handleImageSelect,
     handleImageDelete,
-    createFormData,
+    commitSaved,
   };
 }

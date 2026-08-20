@@ -5,6 +5,7 @@ import { AuthProviderParam } from './oauth';
  */
 const API_V1 = '/api/v1';
 const API_V2 = '/api/v2';
+const API_V3 = '/api/v3';
 
 /**
  * 인증 관련 엔드포인트
@@ -48,7 +49,8 @@ export const AUTH_ENDPOINTS = {
  * 회원 관련 엔드포인트
  */
 export const MEMBER_ENDPOINTS = {
-  PROFILE: () => `${API_V1}/member/profile`,
+  PROFILE: () => `${API_V1}/members/profile`, // 조회(GET) — v1
+  UPDATE_PROFILE: () => `${API_V3}/members/profile`, // 덮어쓰기(PUT) — v3
   AUTH_INFO: (userId: string) => `${API_V1}/members/${userId}/auth-info`,
 
   // 마이페이지
@@ -58,6 +60,7 @@ export const MEMBER_ENDPOINTS = {
   MY_BOOKMARKED_POSTS: `${API_V1}/communication/posts/me/bookmarks`,
   MY_BUG_REPORTS: `${API_V2}/report/proposal-or-bug`,
   ISSUE_BUG_REPORT_FILE_KEY: `${API_V2}/report/proposal-or-bug/issue-file-key`,
+  ISSUE_PROFILE_FILE_KEY: `${API_V2}/members/profile/issue-file-key`,
 } as const;
 
 /**
