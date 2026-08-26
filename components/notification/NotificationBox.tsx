@@ -1,11 +1,11 @@
 'use client';
+
 import React from 'react';
 import { NotificationList } from './NotificationList';
 import { NotificationTab } from './NotificationTab';
 import { useGetNotificationsQuery } from '@/lib/hooks/notification/useGetNotificationsQuery';
-import { ChevronLeft } from 'lucide-react';
-import Link from 'next/link';
 import { useReadAllNotificationMutation } from '@/lib/hooks/notification/useReadAllNotificationMutation';
+import { cn } from '@/lib/utils/tailwindHelper';
 
 interface NotificationBoxProps {
   isMobile: boolean;
@@ -32,8 +32,6 @@ export const NotificationBox = ({ isMobile }: NotificationBoxProps) => {
   const handleClickTab = (tabState: 'all' | 'unread') => () => {
     setTabState(tabState);
   };
-
-  // if (!data) return;
 
   const notifications = React.useMemo(() => {
     if (!data?.pages) return [];
@@ -78,18 +76,14 @@ export const NotificationBox = ({ isMobile }: NotificationBoxProps) => {
     notifications.length === 0 || isReadAllRequestPending || !doesUnreadExist;
 
   return (
-    <div className="relative">
+    <div
+      className={cn(
+        'relative',
+        isMobile && 'flex h-[calc(100dvh-61px)] flex-col'
+      )}
+    >
       {isMobile ? (
         <div className="sticky top-0 bg-white">
-          <Link
-            href="/"
-            replace
-            className="flex w-fit items-center gap-2.5 px-3.25 py-4"
-          >
-            <ChevronLeft size={28} />
-            <p className="typo-semibold14 py-[11.5px] text-[18px]">알림</p>
-          </Link>
-
           <NotificationTab
             tabState={tabState}
             handleClickTab={handleClickTab}
