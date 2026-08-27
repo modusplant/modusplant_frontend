@@ -24,6 +24,13 @@ export interface ProfileUpdateRequest {
 }
 
 /**
+ * 프로필 수정(덮어쓰기) API 응답 — GET(ProfileData)과 달리 이미지 필드명이 imagePath로 내려옴
+ */
+export interface ProfileOverwriteData extends Omit<ProfileData, 'imageUrl'> {
+  imagePath: string | null;
+}
+
+/**
  * 프로필 폼 데이터 (클라이언트 상태)
  */
 export interface ProfileFormData {

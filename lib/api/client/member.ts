@@ -1,6 +1,10 @@
 import { clientApiInstance } from '@/lib/api/instances/clientInstance';
 import { ApiResponse } from '@/lib/types/common';
-import { ProfileData, AuthInfo } from '@/lib/types/member';
+import {
+  ProfileData,
+  AuthInfo,
+  ProfileOverwriteData,
+} from '@/lib/types/member';
 import {
   MEMBER_ENDPOINTS,
   COMMENT_ENDPOINTS,
@@ -28,10 +32,19 @@ export const memberApi = {
    * 프로필 수정 (덮어쓰기)
    * Content-Type: multipart/form-data
    */
-  async updateProfile(formData: FormData): Promise<ApiResponse<ProfileData>> {
-    return clientApiInstance.put<ProfileData>(
-      MEMBER_ENDPOINTS.PROFILE(),
-      formData
+  async updateProfile(payload: {
+    nickname: string;
+    introduction: string;
+    fileKey?: string;
+  }): Promise<ApiResponse<ProfileOverwriteData>> {
+    const queryString = buildQueryString({
+      nickname: payload.nickname,
+      introduction: payload.introduction,
+      fileKey: payload.fileKey,
+    });
+
+    return clientApiInstance.put<ProfileOverwriteData>(
+      `${MEMBER_ENDPOINTS.UPDATE_PROFILE()}${queryString}`
     );
   },
 
