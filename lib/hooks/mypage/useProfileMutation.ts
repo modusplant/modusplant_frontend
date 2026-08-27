@@ -3,7 +3,7 @@ import { memberApi } from '@/lib/api/client/member';
 import { ProfileOverwriteData } from '@/lib/types/member';
 import { ApiResponse } from '@/lib/types/common';
 import { useAuthStore } from '@/lib/store/authStore';
-import { buildSingleImageFilename } from '@/lib/constants/write';
+import { buildProfileImageFilename } from '@/lib/constants/write';
 import { showModal } from '@/lib/store/modalStore';
 import { getFullImageUrl } from '@/lib/utils/image';
 import {
@@ -42,7 +42,7 @@ export function useProfileMutation() {
         ? (
             await uploadProfileImage(
               imageFile,
-              buildSingleImageFilename(imageFile)
+              buildProfileImageFilename(imageFile)
             )
           ).fileKey
         : shouldDeleteImage
