@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 
 export interface CarouselControlsProps {
@@ -6,7 +6,6 @@ export interface CarouselControlsProps {
   currentIndex: number;
   totalSlides: number;
   onPlay: () => void;
-  onPause: () => void;
   onPrev: () => void;
   onNext: () => void;
 }
@@ -19,7 +18,6 @@ export default function CarouselControls({
   currentIndex,
   totalSlides,
   onPlay,
-  onPause,
   onPrev,
   onNext,
 }: CarouselControlsProps) {
@@ -28,24 +26,27 @@ export default function CarouselControls({
       <div className="mx-auto flex w-full max-w-7xl justify-end gap-2 px-4 md:px-6 lg:px-8">
         {/* 재생/일시중지 */}
         <button
-          onClick={onPause}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-black/60 transition-colors hover:bg-black/80"
-          aria-label="일시정지"
-        >
-          <Image
-            src="/icon/pause.png"
-            alt="일시정지"
-            width={10}
-            height={12}
-            loading="lazy"
-          />
-        </button>
-        <button
           onClick={onPlay}
           className="flex h-8 w-8 items-center justify-center rounded-full bg-black/60 transition-colors hover:bg-black/80"
-          aria-label="재생"
+          aria-label={isPlaying ? '일시정지' : '재생'}
         >
-          <Play color="white" size={18} />
+          {isPlaying ? (
+            <Image
+              src="/icon/pause.svg"
+              alt="일시정지"
+              width={10}
+              height={12}
+              loading="lazy"
+            />
+          ) : (
+            <Image
+              src="/icon/play.svg"
+              alt="재생"
+              width={10}
+              height={12}
+              loading="lazy"
+            />
+          )}
         </button>
 
         {/* 좌우 화살표 및 인덱스 */}

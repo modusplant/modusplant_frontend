@@ -13,15 +13,15 @@ export default function HeroBannerContent({
   description = '모두의식물에서 함께 가꾸는 특별한 일상을 시작하세요.',
 }: HeroBannerContentProps) {
   return (
-    <div className="absolute inset-x-0 top-1/2 -translate-y-1/2">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 md:px-6 lg:px-8">
-        <span className="font-emphasis text-2xl font-bold text-neutral-100 text-shadow-lg">
+    <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 break-keep">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 md:gap-6 md:px-6 lg:px-8">
+        <span className="font-emphasis text-lg font-bold text-neutral-100 text-shadow-lg md:text-2xl">
           {title}
         </span>
-        <span className="font-emphasis text-3xl font-bold tracking-tighter text-neutral-100 text-shadow-lg md:text-4xl lg:text-[44px]">
+        <span className="font-emphasis text-[22px] font-bold tracking-tighter text-neutral-100 text-shadow-lg md:text-4xl lg:text-[44px]">
           {subtitle}
         </span>
-        <span className="font-body text-base text-neutral-100 lg:text-lg">
+        <span className="font-body text-sm text-neutral-100 md:text-base lg:text-lg">
           {description}
         </span>
       </div>
