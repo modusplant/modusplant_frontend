@@ -83,20 +83,23 @@ export async function uploadFileToS3(
  * 발급받은 같은 presigned URL로 재시도하고, 그마저 서명 만료로 보이는 에러
  * (403)로 실패한 경우에만 마지막으로 presigned URL을 재발급받아 재시도한다.
  */
-export async function uploadImageFile(
+
+// 발급(issue) 방식과 무관하게 동일하게 적용되는 재시도/orphan 방지 정책.
+// (정책 설명은 기존 uploadImageFile 주석과 동일 — 그대로 이전)
+interface IssuedUpload {
+  uploadUrl: string;
+  fileKey: string;
+  filename: string;
+}
+
+export async function uploadWithRetry(
+  issue: () => Promise<IssuedUpload>,
   file: File,
-  filename: string,
   signal?: AbortSignal
 ): Promise<{ fileKey: string; filename: string }> {
-  const issue = () =>
-    issuePresignedUrls(
-      [{ filename, contentType: file.type }],
-      signal
-    ).then(([issued]) => issued);
-
   const put = (uploadUrl: string) => uploadFileToS3(uploadUrl, file, signal);
 
-  let issued;
+  let issued: IssuedUpload;
   try {
     issued = await issue();
   } catch (error) {
@@ -119,9 +122,23 @@ export async function uploadImageFile(
     if (!isLikelyExpiredSignatureError(error)) throw error;
   }
 
-  // 같은 presigned URL로 재시도까지 실패했고 서명 만료로 보이는 경우에만
-  // 재발급받아 마지막으로 재시도한다.
   issued = await issue();
   await put(issued.uploadUrl);
   return { fileKey: issued.fileKey, filename: issued.filename };
+}
+
+// 게시글 업로드 — 기존과 동일하게 동작 (외부 시그니처/동작 불변)
+export async function uploadImageFile(
+  file: File,
+  filename: string,
+  signal?: AbortSignal
+): Promise<{ fileKey: string; filename: string }> {
+  return uploadWithRetry(
+    () =>
+      issuePresignedUrls([{ filename, contentType: file.type }], signal).then(
+        ([issued]) => issued
+      ),
+    file,
+    signal
+  );
 }

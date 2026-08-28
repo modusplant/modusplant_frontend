@@ -15,28 +15,34 @@ export default function ProfileSection() {
 
   // 폼 상태 관리
   const {
+    initialNickname,
     formData,
     hasChanges,
     handleNicknameChange,
     handleIntroductionChange,
     handleImageSelect,
     handleImageDelete,
-    createFormData,
+    commitSaved,
   } = useProfileForm();
 
   // 저장 핸들러
   const handleSave = () => {
     if (!hasChanges) return;
 
-    const data = createFormData();
     updateProfile(
-      { formData: data },
+      {
+        nickname: formData.nickname,
+        introduction: formData.introduction,
+        imageFile: formData.imageFile,
+        shouldDeleteImage: formData.shouldDeleteImage,
+      },
       {
         onSuccess: () => {
           showModal({
             type: 'snackbar',
             description: '프로필이 성공적으로 수정되었습니다.',
           });
+          commitSaved();
         },
         onError: (error) => {
           showModal({
@@ -66,6 +72,7 @@ export default function ProfileSection() {
 
           {/* 닉네임 및 소개글 입력 필드 */}
           <ProfileFormFields
+            initialNickname={initialNickname}
             nickname={formData.nickname}
             introduction={formData.introduction}
             onNicknameChange={handleNicknameChange}

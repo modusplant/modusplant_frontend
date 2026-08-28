@@ -7,6 +7,7 @@ import Button from '@/components/_common/button';
 import { cn } from '@/lib/utils/tailwindHelper';
 
 interface ProfileFormFieldsProps {
+  initialNickname: string;
   nickname: string;
   introduction: string;
   onNicknameChange: (value: string) => void;
@@ -14,6 +15,7 @@ interface ProfileFormFieldsProps {
 }
 
 export default function ProfileFormFields({
+  initialNickname,
   nickname,
   introduction,
   onNicknameChange,
@@ -21,7 +23,6 @@ export default function ProfileFormFields({
 }: ProfileFormFieldsProps) {
   const [nicknameError, setNicknameError] = useState<string>('');
   const [nicknameSuccess, setNicknameSuccess] = useState<string>('');
-  const [initialNickname] = useState(nickname); // 초기 닉네임 저장
 
   // 닉네임 중복 확인 핸들러
   const handleNicknameCheck = async () => {

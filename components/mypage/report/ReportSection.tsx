@@ -13,9 +13,17 @@ import { useBugReportMutation } from '@/lib/hooks/mypage/useBugReportMutation';
 import { useBlockNavigation } from '@/lib/hooks/common/useBlockNavigation';
 import FixedBottomButton from '@/components/_common/fixedBottomButton';
 
+const MAX_CONTENT_LENGTH = 300;
+
 const reportFormSchema = z.object({
   title: z.string().min(1, '제목을 입력해주세요.'),
-  content: z.string().min(1, '내용을 입력해주세요.'),
+  content: z
+    .string()
+    .min(1, '내용을 입력해주세요.')
+    .max(
+      MAX_CONTENT_LENGTH,
+      `내용은 최대 ${MAX_CONTENT_LENGTH}자까지 입력 가능합니다.`
+    ),
   image: z.file().nullable(),
 });
 
@@ -97,6 +105,7 @@ const ReportSection = () => {
               {...register('content')}
               className="border-surface-stroke-2 text-neutral-40 typo-regular14 placeholder:text-neutral-70 focus:border-primary-50 h-[180px] w-full resize-none rounded-[10px] border bg-transparent p-4 break-keep transition-colors outline-none"
               placeholder="자세한 내용을 입력해주세요. 버그 제보의 경우 발생 상황과 재현 방법을 구체적으로 설명해주시면 더욱 도움이 됩니다."
+              maxLength={MAX_CONTENT_LENGTH}
             />
           </div>
 
