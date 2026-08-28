@@ -1,7 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
 import Badge from '@/components/_common/badge';
 import { formatRelativeTime } from '@/lib/utils/formatTime';
 import ProfileImage from '@/components/_common/profileImage';
@@ -25,19 +23,8 @@ export default function PostDetailHeader({
   viewCount,
   isUpdated,
 }: PostDetailHeaderProps) {
-  const router = useRouter();
-
   return (
     <div>
-      {/* 뒤로가기 버튼 */}
-      <button
-        onClick={() => router.back()}
-        className="border-neutral-90 hover:bg-surface-98 mb-4 rounded-full border p-2 transition-colors"
-        aria-label="뒤로가기"
-      >
-        <ArrowLeft className="h-4 w-4 text-neutral-50" />
-      </button>
-
       {/* 카테고리 배지 */}
       <div>
         <Badge variant="default" size="md" className="my-4">
@@ -46,7 +33,7 @@ export default function PostDetailHeader({
       </div>
 
       {/* 제목 */}
-      <h1 className="text-neutral-10 mb-2 text-[28px] leading-tight font-bold">
+      <h1 className="text-neutral-10 mb-2 text-[22px] leading-tight font-bold md:text-[28px]">
         {title}
       </h1>
 
