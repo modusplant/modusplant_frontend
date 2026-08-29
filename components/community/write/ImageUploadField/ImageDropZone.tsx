@@ -24,7 +24,8 @@ export default function ImageDropZone({
       onDrop={onDrop}
     >
       <p className="text-neutral-60 text-sm">
-        이미지를 드래그하여 업로드하거나 버튼을 클릭하세요
+        이미지를 드래그하여 업로드하거나
+        <br className="md:hidden" /> 버튼을 클릭하세요
       </p>
     </div>
   );

@@ -22,7 +22,7 @@ export default function CommentReplies({
   }
 
   return (
-    <div className="mt-4 ml-14 space-y-4">
+    <div className="mt-4 ml-7.5 space-y-4 md:ml-14">
       {children.map((childComment) => (
         <CommentItemComponent
           key={childComment.path}

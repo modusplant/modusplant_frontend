@@ -23,7 +23,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
   return (
     <div className="border-surface-stroke mt-16 border-t pt-12">
-      <h2 className="text-neutral-20 mb-8 text-[28px] font-bold">
+      <h2 className="text-neutral-20 mb-8 text-xl md:text-[28px] font-bold">
         댓글 {totalCount.toLocaleString()}개
       </h2>
 
