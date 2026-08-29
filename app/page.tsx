@@ -1,6 +1,6 @@
 import HeroBanner from '@/components/home/heroBanner';
 import PostList from '@/components/home/postList';
-import ScrollToTop from '@/components/home/scrollToTop';
+import WriteToButton from '@/components/home/writeToButton';
 import { serverPostApi } from '@/lib/api/server/post';
 import { homeMetadata } from '@/lib/metadata/home';
 
@@ -19,18 +19,18 @@ export default async function Home() {
       <main className="relative mb-4 w-full py-8 md:py-12 lg:mb-9 lg:py-16">
         <div className="mx-auto flex w-full max-w-330 flex-col px-4 md:px-6 lg:px-8">
           {/* 섹션 타이틀 - header와 h1 태그 사용 */}
-          <header className="flex flex-col gap-2.5">
-            <p className="font-emphasis text-primary-50 text-xl font-bold">
+          <header className="flex flex-col gap-1.5 md:gap-2.5">
+            <p className="font-emphasis text-primary-50 text-[17px] font-bold md:text-xl">
               ModusConnect
             </p>
-            <h1 className="font-emphasis text-3xl font-bold">
+            <h1 className="font-emphasis text-2xl font-bold md:text-3xl">
               우리들의 식물 이야기
             </h1>
           </header>
           <PostList initialData={initialData.data} />
         </div>
       </main>
-      <ScrollToTop />
+      <WriteToButton />
     </div>
   );
 }
