@@ -19,7 +19,7 @@ export const NotificationList = ({
   observerRootContainer,
 }: NotificationListProps) => {
   // 최대 10개 노출 그 이상은 무한 스크롤 적용
-  const reactiveHeight = isMobile ? 'h-100dvh' : 'h-83';
+  const reactiveHeight = isMobile ? 'flex-1 overflow-y-auto' : 'h-83';
   if (data.length === 0) {
     return tabState === 'all' ? (
       <EmptyListBox className={reactiveHeight}>
