@@ -85,7 +85,6 @@ export default function PostCard({ post, className }: PostCardProps) {
               post.secondaryCategory}
           </Badge>
         </div>
-
         <div className="flex flex-col gap-1.5">
           {/* 제목 */}
           <h3 className="text-neutral-20 line-clamp-1 text-lg font-semibold md:text-[17px]">
@@ -99,14 +98,15 @@ export default function PostCard({ post, className }: PostCardProps) {
             </p>
           )}
         </div>
-
         {/* 메타 정보 */}
         <div className="text-neutral-60 flex items-center justify-between text-sm">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             {/* 작성자 / 통계 (좋아요, 댓글) / 날짜 */}
             <span className="text-neutral-60 max-w-20">{post.nickname}</span>
             <span> | </span>
+
             <button
+              aria-label={`좋아요 ${likeCount}개`}
               className="flex items-center gap-1"
               onClick={(e) => {
                 e.preventDefault();
@@ -115,7 +115,7 @@ export default function PostCard({ post, className }: PostCardProps) {
               disabled={isLiking}
             >
               <Heart
-                className="md:h-4 md:w-4"
+                className="h-5 w-5"
                 color={isLiked ? 'red' : 'currentColor'}
                 fill={isLiked ? 'red' : 'none'}
               />
@@ -123,10 +123,12 @@ export default function PostCard({ post, className }: PostCardProps) {
             </button>
 
             <span className="flex items-center gap-1">
-              <MessageSquare className="md:h-4 md:w-4" />
+              <MessageSquare className="h-5 w-5" />
               <span>{post.commentCount}</span>
             </span>
+
             <button
+              aria-label={isBookmarked ? '북마크 취소' : '북마크'}
               onClick={(e) => {
                 e.preventDefault();
                 handleBookmark();
@@ -136,7 +138,7 @@ export default function PostCard({ post, className }: PostCardProps) {
               <Bookmark
                 fill={isBookmarked ? 'currentColor' : 'none'}
                 className={cn(
-                  'md:h-4 md:w-4',
+                  'h-5 w-5',
                   isBookmarked ? 'text-primary-50' : 'text-neutral-60'
                 )}
               />

@@ -92,14 +92,14 @@ export default function CommentItem({
   return (
     <>
       {isDeleted ? (
-        <DeletedComment />
+        <DeletedComment id={comment.path} />
       ) : (
         <div id={comment.path} className="mt-6 flex gap-4">
           <div className="relative h-7.5 w-7.5">
             <ProfileImage imageSrc={profileImagePath} />
           </div>
 
-          <div className="w-full">
+          <div className="flex-1">
             <CommentHeader
               nickname={nickname}
               postUlid={postId}
@@ -157,11 +157,12 @@ export default function CommentItem({
       )}
 
       <CommentReplies
-        children={children || []}
         postId={postId}
         refetch={refetch}
         CommentItemComponent={CommentItem}
-      />
+      >
+        {children || []}
+      </CommentReplies>
     </>
   );
 }

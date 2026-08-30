@@ -41,7 +41,6 @@ export default function HeroBanner({
     handleNext,
     handlePrev,
     handlePlay,
-    handlePause,
     getDisplayIndex,
   } = useCarousel(images, { autoPlayInterval });
 
@@ -49,7 +48,7 @@ export default function HeroBanner({
     <section
       id="hero-banner"
       className={cn(
-        'bg-surface-98 relative h-[70vh] w-full overflow-hidden',
+        'bg-surface-98 relative h-[92.3vw] w-full overflow-hidden md:h-[70vh]',
         className
       )}
     >
@@ -95,7 +94,6 @@ export default function HeroBanner({
         currentIndex={getDisplayIndex()}
         totalSlides={totalSlides}
         onPlay={handlePlay}
-        onPause={handlePause}
         onPrev={handlePrev}
         onNext={handleNext}
       />

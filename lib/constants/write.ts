@@ -39,6 +39,21 @@ function extractImageFilenameIndex(filename: string): number | null {
 }
 
 /**
+ * 프로필 이미지 전용 파일명 생성 — 매번 고유한 값을 부여해 CDN/Next.js 이미지 캐시가
+ * 새 이미지로 갱신되지 않는 문제를 방지한다. 프로필은 `/member/{userId}/profile/{filename}`
+ * 고정 경로를 덮어쓰는 구조라(`extractFileKeyFromImageUrl` 참고) 파일명이 고정되면
+ * S3 키/URL도 고정되고 캐시가 절대 안 바뀐다.
+ *
+ * ⚠️ 프로필처럼 "고정 경로를 덮어쓰는" 업로드에만 사용할 것. 매 제출마다 서버가
+ * 새 fileKey/경로를 발급하는 업로드(예: 건의/버그 제보)에는 캐시 고착 문제가 없고,
+ * 오히려 백엔드가 파일명 포맷(`image_{index}.ext`)을 엄격히 검증해 400을 반환할 수 있다.
+ */
+export function buildProfileImageFilename(file: File): string {
+  const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+  return `image_${Date.now()}.${ext}`;
+}
+
+/**
  * 신규로 추가되는 파일들에 API 규칙에 맞는 파일명을 부여한다.
  * 남아있는 이미지들의 filename에서 이미 쓰인 인덱스를 파악해 겹치지 않는
  * 가장 작은 인덱스부터 채운다 (삭제 후 재추가 시 인덱스 재사용으로 인한
@@ -50,7 +65,9 @@ export function assignNewImageFilenames(
 ): string[] {
   const usedIndices = new Set(
     currentImages
-      .map((image) => (image.filename ? extractImageFilenameIndex(image.filename) : null))
+      .map((image) =>
+        image.filename ? extractImageFilenameIndex(image.filename) : null
+      )
       .filter((index): index is number => index !== null)
   );
 

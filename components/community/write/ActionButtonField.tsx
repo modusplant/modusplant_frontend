@@ -1,6 +1,7 @@
 import { WriteFormData } from '@/lib/schemas/writeForm';
 import { useFormContext, useFormState, useWatch } from 'react-hook-form';
 import WriteButton from './_common/WriteButton';
+import { cn } from '@/lib/utils/tailwindHelper';
 
 interface ActionButtonFieldProps {
   isEditMode: boolean;
@@ -30,7 +31,11 @@ export const ActionButtonField = ({
           <WriteButton
             type="button"
             variant="default"
-            className="flex-inline gap-2.5"
+            className={cn(
+              'flex-inline',
+              'gap-2 md:gap-2.5',
+              draftCount ? 'px-3.5 md:px-4' : 'px-5'
+            )}
             onClick={onClickLoadDraft}
           >
             <span>불러오기</span>
