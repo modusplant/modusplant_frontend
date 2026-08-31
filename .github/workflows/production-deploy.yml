@@ -1,0 +1,75 @@
+name: Vercel Production Deployment
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+on:
+  # Actions 탭에서 "Run workflow" 버튼으로 수동 배포
+  workflow_dispatch:
+  # main에 머지/푸시되면 자동으로 운영 배포
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-production:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install Vercel CLI
+        run: pnpm add -g vercel@50.38.3
+
+      - name: Deploy to Vercel (Production)
+        id: deploy
+        # 토큰 방식이라 커밋 작성자/역할과 무관하게 배포됨.
+        # 우선 기존 프리뷰 토큰을 재사용 — 별도 운영 토큰을 만들면
+        # 아래 secrets 이름만 VERCEL_PRODUCTION_DEPLOYMENT_TOKEN 등으로 교체.
+        run: |
+          PROD_URL=$(vercel deploy --prod --yes --token=${{ secrets.VERCEL_PREVIEW_DEPLOYMENT_TOKEN }})
+          echo "prod_url=$PROD_URL" >> $GITHUB_OUTPUT
+          echo "✅ Production 배포 완료: $PROD_URL"
+
+      - name: Send Production URL to Slack
+        if: success()
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "🚀 *Production 배포 완료*",
+              "attachments": [
+                {
+                  "color": "#0070f3",
+                  "fields": [
+                    {
+                      "title": "브랜치",
+                      "value": "main",
+                      "short": true
+                    },
+                    {
+                      "title": "트리거",
+                      "value": "${{ github.event_name }}",
+                      "short": true
+                    },
+                    {
+                      "title": "커밋",
+                      "value": "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>",
+                      "short": false
+                    },
+                    {
+                      "title": "Production URL",
+                      "value": "${{ steps.deploy.outputs.prod_url }}",
+                      "short": false
+                    }
+                  ]
+                }
+              ]
+            }
