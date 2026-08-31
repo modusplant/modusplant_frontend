@@ -33,6 +33,21 @@ export async function proxy(request: NextRequest) {
   const shouldRefreshToken =
     !!refreshToken && (!accessToken || isTokenExpired(accessToken));
 
+  // 관리자 인증 Route 검증
+  const { pathname } = request.nextUrl;
+  if (pathname.startsWith('/admin')) {
+    const token = request.cookies.get('accessToken')?.value;
+
+    if (!token) {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+
+    const payload = decodeJWT(token);
+    if (payload?.roles !== 'ADMIN') {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
+  }
+
   if (shouldRefreshToken) {
     try {
       const cookieHeader = request.headers.get('cookie') || '';
