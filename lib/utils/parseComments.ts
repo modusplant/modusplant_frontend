@@ -2,6 +2,11 @@ import { Comment } from '@/lib/types/comment';
 
 /**
  * 플랫 배열로 받은 댓글을 계층 구조(트리)로 변환
+ *
+ * 이 함수 자체는 depth를 제한하지 않는다. 신규 답글의 2-depth 제한은
+ * generateCommentPath에서 생성 시점에 강제되지만, 마이그레이션 전까지
+ * API가 내려줄 수 있는 기존 3-depth 이상의 레거시 댓글도 깨지지 않고
+ * 그대로 트리로 표시할 수 있어야 하므로 depth 제약 없이 범용으로 동작한다.
  * @param flatComments API에서 받은 플랫 배열 형태의 댓글 목록
  * @returns 트리 구조로 변환된 댓글 목록 (최상위 댓글만 포함)
  *
@@ -69,6 +74,11 @@ export function buildCommentTree(flatComments: Comment[]): Comment[] {
 
 /**
  * 새 답글의 path 생성 (부모 path 기준)
+ *
+ * UI/데이터 depth를 2-depth까지로 제한하는 정책에 따라, 답글 대상(parentPath)이
+ * 이미 2-depth 이상이면 그 아래로 depth를 늘리지 않고 최상위 댓글(root) 기준의
+ * 새 2-depth 형제 path를 생성한다. 그대로 parentPath 뒤에 이어붙이면 3-depth
+ * 이상이 되어 백엔드의 depth 제약 조건 위반으로 거부되기 때문.
  * @param parentPath 부모 댓글의 path (없으면 null = 최상위 댓글)
  * @param siblingCount 같은 depth의 형제 댓글 개수
  * @returns 새 댓글의 path
@@ -76,8 +86,8 @@ export function buildCommentTree(flatComments: Comment[]): Comment[] {
  * @example
  * generateCommentPath(null, 0) // "1" (첫 번째 최상위 댓글)
  * generateCommentPath(null, 2) // "3" (세 번째 최상위 댓글)
- * generateCommentPath("1", 0) // "1.1" (1번 댓글의 첫 답글)
- * generateCommentPath("1.1", 2) // "1.1.3" (1.1번 댓글의 세 번째 답글)
+ * generateCommentPath("1", 0) // "1.1" (1번 댓글의 첫 답글, 2-depth)
+ * generateCommentPath("1.1", 2) // "1.3" (1.1번 댓글에 대한 답글이지만 3-depth로 내려가지 않고, root "1" 밑의 새 2-depth 형제로 생성)
  */
 export function generateCommentPath(
   parentPath: string | null,
@@ -88,8 +98,12 @@ export function generateCommentPath(
     return (siblingCount + 1).toString();
   }
 
+  const parentDepth = parentPath.split('.').length;
+  // 답글 대상이 이미 2-depth 이상이면, 그 댓글의 최상위 댓글(root) 기준으로 새 path를 만든다
+  const basePath = parentDepth >= 2 ? getRootPath(parentPath) : parentPath;
+
   // 답글 (1부터 시작)
-  return `${parentPath}.${siblingCount + 1}`;
+  return `${basePath}.${siblingCount + 1}`;
 }
 
 /**
