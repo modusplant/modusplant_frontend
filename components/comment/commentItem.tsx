@@ -18,13 +18,23 @@ interface CommentItemProps {
   comment: Comment;
   postId: string;
   refetch: () => void;
+  rootChildrenCount?: number;
 }
 
 export default function CommentItem({
   comment,
   postId,
   refetch,
+  rootChildrenCount,
 }: CommentItemProps) {
+  // 답글 path/개수 계산은 항상 "내가 속한 최상위 댓글(root)의 children 개수" 기준으로 해야 한다.
+  // 내가 root(depth 0)면 내 children 개수가 곧 그 값이고, root의 자손이면 재귀를 타고
+  // 내려오며 전달받은 rootChildrenCount를 그대로 쓴다(자손 자신의 children 개수를 세면 안 됨).
+  const resolvedRootChildrenCount =
+    comment.depth === 0
+      ? comment.children?.length || 0
+      : (rootChildrenCount ?? 0);
+
   const {
     content: initialContent,
     createdAt,
@@ -143,7 +153,7 @@ export default function CommentItem({
                 <CommentInput
                   postId={postId}
                   parentPath={path}
-                  siblingCount={children?.length || 0}
+                  siblingCount={resolvedRootChildrenCount}
                   refetch={() => {
                     setShowReplyForm(false);
                     refetch();
@@ -160,6 +170,7 @@ export default function CommentItem({
         postId={postId}
         refetch={refetch}
         CommentItemComponent={CommentItem}
+        rootChildrenCount={resolvedRootChildrenCount}
       >
         {children || []}
       </CommentReplies>

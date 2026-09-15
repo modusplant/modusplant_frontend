@@ -8,7 +8,10 @@ interface CommentRepliesProps {
     comment: Comment;
     postId: string;
     refetch: () => void;
+    rootChildrenCount?: number;
   }>;
+  /** 최상위 댓글(root)의 children 개수. 재계산하지 않고 그대로 자손에게 물려준다. */
+  rootChildrenCount?: number;
 }
 
 export default function CommentReplies({
@@ -16,6 +19,7 @@ export default function CommentReplies({
   postId,
   refetch,
   CommentItemComponent,
+  rootChildrenCount,
 }: CommentRepliesProps) {
   if (!children || children.length === 0) {
     return null;
@@ -29,6 +33,7 @@ export default function CommentReplies({
           comment={childComment}
           postId={postId}
           refetch={refetch}
+          rootChildrenCount={rootChildrenCount} // 재계산 없이 그대로 전달
         />
       ))}
     </div>
