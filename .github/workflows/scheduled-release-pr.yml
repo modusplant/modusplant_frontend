@@ -1,0 +1,60 @@
+name: Scheduled Release PR
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' # 매주 월요일 09:00(KST) 실행, 아래 step에서 격주 여부 필터링
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  release-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 격주 여부 확인
+        id: check_week
+        run: |
+          base_date="2026-09-07"  # 기준일(첫 릴리즈 날짜)
+          diff_days=$(( ( $(date -d "today" +%s) - $(date -d "$base_date" +%s) ) / 86400 ))
+          week_number=$(( diff_days / 7 ))
+          if [ $(( week_number % 2 )) -ne 0 ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 날짜 생성
+        if: steps.check_week.outputs.skip == 'false'
+        id: date
+        run: echo "today=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
+
+      - name: Create Release PR (develop → main)
+        if: steps.check_week.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set +e
+          output=$(gh pr create \
+            --repo "${{ github.repository }}" \
+            --base main \
+            --head develop \
+            --title "Release ${{ steps.date.outputs.today }}" \
+            --body "정기 자동 릴리즈 PR입니다. develop의 변경사항을 main에 반영합니다." 2>&1)
+          exit_code=$?
+          echo "$output"
+
+          if [ $exit_code -ne 0 ]; then
+            if echo "$output" | grep -qE "No commits between|already exists"; then
+              echo "⚠️ PR을 생성하지 않았습니다 (develop-main 차이 없음, 또는 이미 열린 PR 존재)"
+              exit 0
+            fi
+            echo "❌ PR 생성 중 예상치 못한 오류가 발생했습니다"
+            exit $exit_code
+          fi
