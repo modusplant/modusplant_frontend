@@ -1,10 +1,6 @@
 import { clientApiInstance } from '@/lib/api/instances/clientInstance';
 import { ApiResponse } from '@/lib/types/common';
-import {
-  ProfileData,
-  AuthInfo,
-  ProfileOverwriteData,
-} from '@/lib/types/member';
+import { ProfileData, AuthInfo } from '@/lib/types/member';
 import {
   MEMBER_ENDPOINTS,
   COMMENT_ENDPOINTS,
@@ -36,14 +32,14 @@ export const memberApi = {
     nickname: string;
     introduction: string;
     fileKey?: string;
-  }): Promise<ApiResponse<ProfileOverwriteData>> {
+  }): Promise<ApiResponse<ProfileData>> {
     const queryString = buildQueryString({
       nickname: payload.nickname,
       introduction: payload.introduction,
       fileKey: payload.fileKey,
     });
 
-    return clientApiInstance.put<ProfileOverwriteData>(
+    return clientApiInstance.put<ProfileData>(
       `${MEMBER_ENDPOINTS.UPDATE_PROFILE()}${queryString}`
     );
   },
