@@ -9,14 +9,16 @@ interface ProfileFileKeyResponse {
 
 /**
  * 프로필 이미지 URL에서 fileKey(스토리지 오브젝트 키)를 추출
- * URL 구조: https://{host}/{bucket}/member/{userId}/profile/{filename}
+ * URL 구조: https://{host}/{bucket}/member/{userId}/profile/{filename}(?서명 쿼리스트링)
+ * S3 서명(X-Amz-Signature 등) 쿼리스트링이 포함될 수 있어 먼저 제거한 뒤 fileKey를 추출한다
  */
 export function extractFileKeyFromImageUrl(
   imageUrl: string | null | undefined
 ): string | undefined {
   if (!imageUrl) return undefined;
-  const index = imageUrl.indexOf('/member/');
-  return index === -1 ? undefined : imageUrl.slice(index + 1);
+  const [pathWithoutQuery] = imageUrl.split('?');
+  const index = pathWithoutQuery.indexOf('/member/');
+  return index === -1 ? undefined : pathWithoutQuery.slice(index + 1);
 }
 
 /**
