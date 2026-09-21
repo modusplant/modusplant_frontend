@@ -2,7 +2,7 @@ name: Scheduled Release PR
 
 on:
   schedule:
-    - cron: '0 0 * * 1' # 매주 월요일 09:00(KST) 실행, 아래 step에서 격주 여부 필터링
+    - cron: '7 0 * * 1' # 매주 월요일 09:07(KST) 실행, 아래 step에서 격주 여부 필터링
   workflow_dispatch:
 
 permissions:
