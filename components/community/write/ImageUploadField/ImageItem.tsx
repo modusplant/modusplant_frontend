@@ -22,16 +22,21 @@ const ImageItem = ({
 
   return (
     <div className="group relative h-30 w-30 shrink-0">
-      <Image
-        onClick={handleClickImage}
-        src={src}
-        alt={`업로드 이미지 ${id}`}
-        className={cn(
-          'rounded-lg object-cover',
-          status === 'uploading' && 'opacity-50'
-        )}
-        fill
-      />
+      {src ? (
+        <Image
+          onClick={handleClickImage}
+          src={src}
+          alt={`업로드 이미지 ${id}`}
+          className={cn(
+            'rounded-lg object-cover',
+            status === 'uploading' && 'opacity-50'
+          )}
+          fill
+        />
+      ) : (
+        <div className="bg-surface-98 absolute inset-0 rounded-lg" />
+      )}
+
       {status === 'uploading' && (
         <div className="absolute inset-0 z-10 flex items-center justify-center">
           <Loader2 className="h-6 w-6 animate-spin text-white" />
