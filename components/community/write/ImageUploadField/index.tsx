@@ -12,6 +12,7 @@ import {
   MAXIMUM_FILE_COUNT,
   MAXIMUM_FILE_SIZE,
   assignNewImageFilenames,
+  splitDuplicateFiles,
 } from '@/lib/constants/write';
 import { useDnD } from '@/lib/hooks/community/useDnD';
 import ImageItem from './ImageItem';
@@ -100,14 +101,22 @@ const ImageUploadField = () => {
     });
 
     const currentImages = getValues('images');
-    const nextCount = currentImages.length + validatedFiles.length;
+    const { uniqueFiles, hasDuplicate } = splitDuplicateFiles(
+      currentImages,
+      validatedFiles
+    );
+
+    const nextCount = currentImages.length + uniqueFiles.length;
     if (nextCount > MAXIMUM_FILE_COUNT) {
       showErrorModal(ERROR_MSGS['MAX_COUNT']);
       return;
     }
 
-    const filenames = assignNewImageFilenames(currentImages, validatedFiles);
-    const newImages: WriteImageData[] = validatedFiles.map((file, i) => ({
+    if (hasDuplicate) showErrorModal(ERROR_MSGS['DUPLICATE_IMAGE']);
+    if (uniqueFiles.length === 0) return;
+
+    const filenames = assignNewImageFilenames(currentImages, uniqueFiles);
+    const newImages: WriteImageData[] = uniqueFiles.map((file, i) => ({
       id: createUuid(),
       content: file,
       isThumbnail: false,

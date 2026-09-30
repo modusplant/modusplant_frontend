@@ -14,6 +14,7 @@ export const ERROR_MSGS = {
   UPLOAD_IN_PROGRESS: '이미지 업로드가 완료된 후 게시할 수 있습니다.',
   LEGACY_IMAGE_UNSUPPORTED:
     '기존 이미지를 처리할 수 없습니다. 이미지를 삭제 후 다시 등록해주세요.',
+  DUPLICATE_IMAGE: '같은 이미지는 한 번만 추가할 수 있습니다.',
 };
 export type ErrorType = keyof typeof ERROR_MSGS;
 
@@ -24,6 +25,39 @@ export const MAXIMUM_FILE_COUNT = 10;
 export const DRAFT_INVALID_MESSAGE = '임시저장 입력값이 올바르지 않습니다.';
 export const DRAFT_CATEGORY_WARNING_MESSAGE =
   '카테고리 정보를 일부 불러오지 못했습니다.';
+
+/**
+ * 같은 파일 판별: 이름·크기·수정시각·타입이 모두 같으면 동일 파일로 본다
+ */
+function getFileIdentity(file: File): string {
+  return `${file.name}:${file.size}:${file.lastModified}:${file.type}`;
+}
+
+/**
+ * 이미 추가된 이미지(File)와 같은 파일, 그리고 한 번에 선택한 파일끼리 중복된
+ * 파일을 걸러낸다. 수정/임시저장 불러오기로 들어온 기존 이미지(content가 URL
+ * 문자열)는 원본 File 정보가 없어 비교 대상에서 제외한다.
+ */
+export function splitDuplicateFiles(
+  currentImages: Pick<WriteImageData, 'content'>[],
+  files: File[]
+): { uniqueFiles: File[]; hasDuplicate: boolean } {
+  const seen = new Set(
+    currentImages
+      .map(({ content }) => content)
+      .filter((content): content is File => content instanceof File)
+      .map(getFileIdentity)
+  );
+
+  const uniqueFiles = files.filter((file) => {
+    const identity = getFileIdentity(file);
+    if (seen.has(identity)) return false;
+    seen.add(identity);
+    return true;
+  });
+
+  return { uniqueFiles, hasDuplicate: uniqueFiles.length !== files.length };
+}
 
 /**
  * 파일명 생성 규칙 (Presigned URL 방식)

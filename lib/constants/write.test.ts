@@ -3,6 +3,7 @@ import {
   assignNewImageFilenames,
   buildImageApiFilename,
   ERROR_MSGS,
+  splitDuplicateFiles,
   validateImagesForSubmit,
 } from '@/lib/constants/write';
 import { WriteImageData } from '@/lib/schemas/writeForm';
@@ -77,6 +78,120 @@ describe('assignNewImageFilenames', () => {
       'image_0.jpg',
       'image_1.jpg',
     ]);
+  });
+});
+
+describe('splitDuplicateFiles', () => {
+  const LAST_MODIFIED = 1727500000000;
+
+  // 버그 재현: 같은 사진을 여러 번 추가하면 filename/fileKey는 모두 다르게 발급되지만
+  // 게시글 등록 시 백엔드가 400(invalid_file_input)을 반환한다.
+  // 이미 추가된 사진과 같은 파일은 업로드 전에 걸러내야 한다.
+  it('이미 추가된 이미지와 같은 파일을 다시 추가하면 제외한다', () => {
+    const file = new File(['a'], 'a.jpg', {
+      type: 'image/jpeg',
+      lastModified: LAST_MODIFIED,
+    });
+    // 같은 파일을 다시 선택하면 브라우저는 내용이 같은 새 File 객체를 만든다
+    const sameFile = new File(['a'], 'a.jpg', {
+      type: 'image/jpeg',
+      lastModified: LAST_MODIFIED,
+    });
+
+    const result = splitDuplicateFiles([{ content: file }], [sameFile]);
+
+    expect(result.uniqueFiles).toEqual([]);
+    expect(result.hasDuplicate).toBe(true);
+  });
+
+  it('한 번에 같은 파일이 여러 개 들어오면 하나만 남긴다', () => {
+    const file = new File(['a'], 'a.jpg', {
+      type: 'image/jpeg',
+      lastModified: LAST_MODIFIED,
+    });
+    const sameFile = new File(['a'], 'a.jpg', {
+      type: 'image/jpeg',
+      lastModified: LAST_MODIFIED,
+    });
+
+    const result = splitDuplicateFiles([], [file, sameFile]);
+
+    expect(result.uniqueFiles).toEqual([file]);
+    expect(result.hasDuplicate).toBe(true);
+  });
+
+  it('중복이 섞여 있으면 중복만 제외하고 나머지는 남긴다', () => {
+    const existing = new File(['a'], 'a.jpg', {
+      type: 'image/jpeg',
+      lastModified: LAST_MODIFIED,
+    });
+    const duplicate = new File(['a'], 'a.jpg', {
+      type: 'image/jpeg',
+      lastModified: LAST_MODIFIED,
+    });
+    const newFile = new File(['b'], 'b.jpg', {
+      type: 'image/jpeg',
+      lastModified: LAST_MODIFIED,
+    });
+
+    const result = splitDuplicateFiles(
+      [{ content: existing }],
+      [duplicate, newFile]
+    );
+
+    expect(result.uniqueFiles).toEqual([newFile]);
+    expect(result.hasDuplicate).toBe(true);
+  });
+
+  // 이름만 같은 다른 사진(예: 다른 폴더의 같은 이름 파일, iOS의 image.jpg)은
+  // 크기가 달라 다른 파일로 취급되어야 한다.
+  it('이름은 같지만 크기가 다른 파일은 다른 파일로 취급한다', () => {
+    const file = new File(['a'], 'image.jpg', {
+      type: 'image/jpeg',
+      lastModified: LAST_MODIFIED,
+    });
+    const otherPhoto = new File(['bigger content'], 'image.jpg', {
+      type: 'image/jpeg',
+      lastModified: LAST_MODIFIED,
+    });
+
+    const result = splitDuplicateFiles([{ content: file }], [otherPhoto]);
+
+    expect(result.uniqueFiles).toEqual([otherPhoto]);
+    expect(result.hasDuplicate).toBe(false);
+  });
+
+  it('이름·크기가 같아도 수정 시각이 다르면 다른 파일로 취급한다', () => {
+    const file = new File(['a'], 'a.jpg', {
+      type: 'image/jpeg',
+      lastModified: LAST_MODIFIED,
+    });
+    const otherFile = new File(['b'], 'a.jpg', {
+      type: 'image/jpeg',
+      lastModified: LAST_MODIFIED + 1,
+    });
+
+    const result = splitDuplicateFiles([{ content: file }], [otherFile]);
+
+    expect(result.uniqueFiles).toEqual([otherFile]);
+    expect(result.hasDuplicate).toBe(false);
+  });
+
+  // 수정/임시저장 불러오기로 들어온 기존 이미지는 content가 URL 문자열이라
+  // File 정보가 없으므로 비교 대상에서 제외된다.
+  it('URL 문자열 content(기존 이미지)는 비교 대상에서 제외한다', () => {
+    const file = new File(['a'], 'a.jpg', {
+      type: 'image/jpeg',
+      lastModified: LAST_MODIFIED,
+    });
+
+    const result = splitDuplicateFiles(
+      [{ content: 'https://cdn.example.com/a.jpg' }],
+      [file]
+    );
+
+    expect(result.uniqueFiles).toEqual([file]);
+    expect(result.hasDuplicate).toBe(false);
   });
 });
 
