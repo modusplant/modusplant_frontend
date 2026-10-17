@@ -41,7 +41,7 @@ const PostWritePage = () => {
   const [draftPostId, setDraftPostId] = useState<string | null>(null);
 
   const { post } = usePostQuery(postId);
-  const { createPost, updatePost } = usePostWrite();
+  const { createPost, updatePost, isPending } = usePostWrite();
 
   const { drafts, draftCount } = useDraftListQuery();
   const { post: draftPost } = usePostQuery(draftPostId);
@@ -100,6 +100,8 @@ const PostWritePage = () => {
   }, [draftPost, resetForm]);
 
   const onValid = (data: WriteFormData) => {
+    if (isPending) return;
+
     if (
       !validateImagesForSubmit(data.images, (description) =>
         showModal({ type: 'snackbar', description })
@@ -115,6 +117,8 @@ const PostWritePage = () => {
   };
 
   const handleDraftSave = () => {
+    if (isPending) return;
+
     const values = getValues();
     const parseResult = DraftWriteFormSchema.safeParse(values);
 
@@ -162,6 +166,7 @@ const PostWritePage = () => {
           <ActionButtonField
             isEditMode={isEditMode}
             draftCount={draftCount}
+            isPending={isPending}
             onClickLoadDraft={() => setIsDraftPopupOpen(true)}
             onClickSaveDraft={handleDraftSave}
           />

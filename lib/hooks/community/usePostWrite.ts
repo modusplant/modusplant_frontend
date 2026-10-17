@@ -3,13 +3,14 @@
 import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postApi } from '@/lib/api/client/post';
-import { PostWritePayload } from '@/lib/types/post';
+import { PostWritePayload, UpdatePostParams } from '@/lib/types/post';
 import { showModal } from '@/lib/store/modalStore';
 
 /**
  * 게시글 작성/수정 커스텀 훅
  * @param postId 수정 모드일 경우 게시글 ID
  */
+
 export default function usePostWrite() {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -44,7 +45,7 @@ export default function usePostWrite() {
   });
 
   // 게시글 수정 Mutation
-  type UpdatePostParams = { postId: string; payload: PostWritePayload };
+
   const updatePostMutation = useMutation({
     mutationFn: ({ postId, payload }: UpdatePostParams) =>
       postApi.updatePost(postId, payload),
@@ -63,5 +64,6 @@ export default function usePostWrite() {
   return {
     createPost: createPostMutation.mutate,
     updatePost: updatePostMutation.mutate,
+    isPending: createPostMutation.isPending || updatePostMutation.isPending,
   };
 }
