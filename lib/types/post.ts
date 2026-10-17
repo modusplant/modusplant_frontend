@@ -183,3 +183,4 @@ export interface GetMyPostsResponseData {
   hasNext: boolean;
   hasPrevious: boolean;
 }
+export type UpdatePostParams = { postId: string; payload: PostWritePayload };

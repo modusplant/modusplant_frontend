@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils/tailwindHelper';
 interface ActionButtonFieldProps {
   isEditMode: boolean;
   draftCount: number;
+  isPending: boolean;
   onClickLoadDraft: () => void;
   onClickSaveDraft: () => void;
 }
@@ -13,6 +14,7 @@ interface ActionButtonFieldProps {
 export const ActionButtonField = ({
   isEditMode,
   draftCount,
+  isPending,
   onClickLoadDraft,
   onClickSaveDraft,
 }: ActionButtonFieldProps) => {
@@ -52,13 +54,13 @@ export const ActionButtonField = ({
             type="button"
             variant="default"
             onClick={onClickSaveDraft}
-            disabled={!title && !textContent && images.length === 0}
+            disabled={(!title && !textContent && images.length === 0) || isPending}
           >
             임시저장
           </WriteButton>
         )}
-        <WriteButton type="submit" disabled={!isValid || isSubmitting}>
-          {isSubmitting
+        <WriteButton type="submit" disabled={!isValid || isSubmitting || isPending}>
+          {isSubmitting || isPending
             ? isEditMode
               ? '수정 중...'
               : '등록 중...'
