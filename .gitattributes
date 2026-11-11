@@ -1,0 +1,5 @@
+# Use CRLF in working-tree text files; let Git detect binary files.
+* text=auto eol=crlf
+
+# POSIX shell hooks require LF to execute correctly.
+.husky/* text eol=lf
