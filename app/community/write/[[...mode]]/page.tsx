@@ -113,7 +113,7 @@ const PostWritePage = () => {
 
     // 수정 모드 여부에 따라 적절한 Mutation 호출
     if (postId) return updatePost({ postId, payload });
-    createPost(payload);
+    return createPost(payload);
   };
 
   const handleDraftSave = () => {
