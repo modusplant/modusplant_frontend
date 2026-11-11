@@ -62,8 +62,18 @@ export default function usePostWrite() {
   });
 
   return {
-    createPost: createPostMutation.mutate,
-    updatePost: updatePostMutation.mutate,
-    isPending: createPostMutation.isPending || updatePostMutation.isPending,
+    createPost: (payload: PostWritePayload) =>
+      createPostMutation.mutateAsync(payload).catch(() => {
+      }),
+    updatePost: (params: UpdatePostParams) =>
+      updatePostMutation.mutateAsync(params).catch(() => {
+      }),
+    isPending:
+      createPostMutation.isPending ||
+      updatePostMutation.isPending ||
+      (createPostMutation.isSuccess &&
+        createPostMutation.variables.isPublished) ||
+      (updatePostMutation.isSuccess &&
+        updatePostMutation.variables.payload.isPublished),
   };
 }
