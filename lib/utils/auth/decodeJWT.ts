@@ -6,7 +6,7 @@ export interface JWTPayload {
   sub: string;
   nickname: string;
   email: string;
-  role: string;
+  roles: string;
   exp: number; // Unix timestamp (초 단위)
 }
 
