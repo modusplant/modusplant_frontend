@@ -3,7 +3,18 @@ services:
     container_name: modusplant_frontend
     image: node:24-alpine
     working_dir: /app
-    command: sh -c "npm install -g pnpm@9 && pnpm install --frozen-lockfile && pnpm dev"
+    command:
+      - sh
+      - -ec
+      - |
+        # Reuse the build cache only within the same container.
+        if ! cmp -s /etc/hostname /app/.next/.container-id; then
+          find /app/.next -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+          cp /etc/hostname /app/.next/.container-id
+        fi
+        npm install -g pnpm@9
+        pnpm install --frozen-lockfile
+        exec pnpm dev
     ports:
       - '3000:3000'
     env_file:
@@ -15,14 +26,23 @@ services:
     volumes:
       - .:/app
       - node_modules:/app/node_modules
-      - next_cache:/app/.next
+      - type: volume
+        target: /app/.next
+        volume:
+          nocopy: true
     extra_hosts:
       - host.docker.internal:host-gateway
     restart: always
     networks:
       - nginx_proxy
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://localhost:3000').then(r => { if (!r.ok) process.exit(1) }).catch(() => process.exit(1))"]
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:3000').then(r => { if (!r.ok) process.exit(1) }).catch(() => process.exit(1))",
+        ]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -30,7 +50,6 @@ services:
 
 volumes:
   node_modules:
-  next_cache:
 
 networks:
   nginx_proxy:
