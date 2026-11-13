@@ -54,6 +54,9 @@ dependency-graph*.svg
 AGENTS.md
 CLAUDE.md
 
+# mcp
+.playwright-mcp/
+
 .eslintcache
 *storybook.log
 storybook-static
