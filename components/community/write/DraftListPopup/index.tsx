@@ -51,7 +51,7 @@ export const DraftListPopup = ({
         aria-modal="true"
         aria-label="임시저장 글 목록"
         tabIndex={-1}
-        className="border-surface-stroke w-full max-w-2xl rounded-2xl border bg-neutral-100"
+        className="border-surface-stroke w-full max-w-2xl overflow-hidden rounded-2xl border bg-neutral-100"
         onClick={(e) => e.stopPropagation()}
       >
         <DraftListPopupHeader onClose={onClose} />
