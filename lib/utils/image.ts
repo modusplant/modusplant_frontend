@@ -12,8 +12,8 @@ export function getFullImageUrl(src: string | undefined): string | undefined {
   }
 
   // full URL이 아닌 경우 prefix 추가
-  const hostname = process.env.NEXT_PUBLIC_IMAGE_HOSTNAME;
-  const path = process.env.NEXT_PUBLIC_IMAGE_PATH || '';
+  const hostname = process.env.IMAGE_HOSTNAME;
+  const path = process.env.IMAGE_PATH || '';
 
   if (hostname) {
     return `https://${hostname}${path}${src}`;
