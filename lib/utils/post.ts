@@ -1,5 +1,5 @@
 import { PostData, ContentPart } from '@/lib/types/post';
-import { getFullImageUrl } from '@/lib/utils/image';
+import { getDisplayImageUrl } from '@/lib/utils/image';
 import Post1 from '@/public/post/image_01.png';
 import Post2 from '@/public/post/image_02.png';
 import Post3 from '@/public/post/image_03.png';
@@ -14,7 +14,7 @@ export function getThumbnail(post: PostData): string {
   const imageContent = post.content.find((c) => c.type === 'image');
 
   if (imageContent?.src) {
-    return imageContent.src;
+    return getDisplayImageUrl(imageContent.src)!;
   }
 
   // postId의 마지막 문자를 사용하여 1-4 사이의 숫자로 변환
@@ -44,6 +44,6 @@ export function getImageContent(content: ContentPart[]): ContentPart[] {
     .filter((item) => item.type === 'image')
     .map((item) => ({
       ...item,
-      src: getFullImageUrl(item.src),
+      src: getDisplayImageUrl(item.src),
     }));
 }

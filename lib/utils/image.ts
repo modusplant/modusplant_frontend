@@ -1,25 +1,19 @@
 /**
- * 이미지 URL을 full URL로 변환
- * @param src 이미지 소스 경로
- * @returns full URL
+ * 저장된 이미지 경로를 브라우저에서 표시할 URL로 변환
  */
-export function getFullImageUrl(src: string | undefined): string | undefined {
+export function getDisplayImageUrl(src: string | undefined): string | undefined {
   if (!src) return undefined;
 
-  // URL이 이미 full URL인지 확인 (http:// 또는 https://로 시작)
-  if (src.startsWith('http://') || src.startsWith('https://')) {
+  if (
+    src.startsWith('http://') ||
+    src.startsWith('https://') ||
+    src.startsWith('/api/image-proxy') ||
+    src.startsWith('/image-proxy/')
+  ) {
     return src;
   }
 
-  // full URL이 아닌 경우 prefix 추가
-  const hostname = process.env.NEXT_PUBLIC_IMAGE_HOSTNAME;
-  const path = process.env.NEXT_PUBLIC_IMAGE_PATH || '';
-
-  if (hostname) {
-    return `https://${hostname}${path}${src}`;
-  }
-
-  return src;
+  return `/image-proxy/${encodeURIComponent(src)}`;
 }
 
 /**
@@ -30,20 +24,11 @@ export function getFullImageUrl(src: string | undefined): string | undefined {
 export function getProxiedImageUrl(
   src: string | undefined
 ): string | undefined {
-  if (!src) return undefined;
+  const url = getDisplayImageUrl(src);
+  if (!url || url.startsWith('/')) return url;
 
-  // 이미 프록시 URL인 경우 그대로 반환
-  if (src.startsWith('/api/image-proxy')) {
-    return src;
-  }
-
-  // full URL을 먼저 가져옴
-  const fullUrl = getFullImageUrl(src);
-  if (!fullUrl) return undefined;
-
-  // API Route를 통한 프록시 경로로 변환
-  // URL 전체를 쿼리 파라미터로 전달 (presigned URL의 쿼리 파라미터 보존)
-  return `/api/image-proxy?url=${encodeURIComponent(fullUrl)}`;
+  // presigned URL의 쿼리 파라미터 보존
+  return `/api/image-proxy?url=${encodeURIComponent(url)}`;
 }
 
 export function createUuid() {

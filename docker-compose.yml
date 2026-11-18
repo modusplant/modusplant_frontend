@@ -21,7 +21,7 @@ services:
       - .env.local
     environment:
       BASE_URL: http://host.docker.internal:80
-      NEXT_PUBLIC_IMAGE_HOSTNAME: host.docker.internal
+      IMAGE_HOSTNAME: host.docker.internal
       WATCHPACK_POLLING: 'true'
     volumes:
       - .:/app

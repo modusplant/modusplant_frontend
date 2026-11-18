@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { commentApi } from '@/lib/api/client/comment';
 import { Comment } from '@/lib/types/comment';
-import { getFullImageUrl } from '@/lib/utils/image';
+import { getDisplayImageUrl } from '@/lib/utils/image';
 
 interface UseCommentsQueryProps {
   postId: string;
@@ -32,7 +32,7 @@ export function useCommentsQuery({
       return rawComments.map((comment) => ({
         ...comment,
         profileImagePath:
-          getFullImageUrl(comment.profileImagePath) || comment.profileImagePath,
+          getDisplayImageUrl(comment.profileImagePath) || comment.profileImagePath,
       }));
     },
   });
