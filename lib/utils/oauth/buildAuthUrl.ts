@@ -29,13 +29,13 @@ export function buildAuthUrl({
     }
   > = {
     kakao: {
-      clientId: process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID!,
+      clientId: process.env.KAKAO_CLIENT_ID!,
       redirectUrl,
       baseUrl: 'https://kauth.kakao.com/oauth/authorize',
       params: { response_type: 'code' },
     },
     google: {
-      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
+      clientId: process.env.GOOGLE_CLIENT_ID!,
       redirectUrl,
       baseUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
       params: { response_type: 'code', scope: 'email profile' },
