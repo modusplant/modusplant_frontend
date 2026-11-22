@@ -9,8 +9,8 @@ export const useDeleteDraftMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['draftList'] });
     },
-    onError: (error) => {
-      // console.error('게시글 삭제 실패:', error);
+    onError: () => {
+      // 게시글 삭제 실패
     },
   });
 };

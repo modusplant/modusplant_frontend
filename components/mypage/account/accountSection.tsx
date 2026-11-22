@@ -70,6 +70,8 @@ export default function AccountSection() {
       authCode: signoutCode,
       authProvider: signoutProvider,
     });
+    // 회원탈퇴는 되돌릴 수 없는 작업 — mount 직후 1회만 처리(재실행 금지)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const openSignoutModal = () => {

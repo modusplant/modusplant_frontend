@@ -34,7 +34,7 @@ async function refreshAccessToken(): Promise<string> {
       try {
         errorBody = await response.text();
         console.error('[ServerRefreshToken] 에러 응답 본문:', errorBody);
-      } catch (e) {
+      } catch {
         console.error('[ServerRefreshToken] 응답 본문 읽기 실패');
       }
 
@@ -98,7 +98,7 @@ export const serverApiInstance = createApi({
     try {
       const newAccessToken = await refreshAccessToken();
       return { action: 'retry', token: newAccessToken } as const;
-    } catch (e) {
+    } catch {
       // 여기 도달하는 경우는 refreshToken 자체가 만료/무효라서
       // 백엔드가 갱신을 거부한 경우다 (쿠키 쓰기 실패는 위에서 이미 흡수됨).
       await deleteCookie(ACCESS_TOKEN_COOKIE_NAME);

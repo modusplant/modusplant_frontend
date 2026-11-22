@@ -1,7 +1,7 @@
 /**
  * API 공통 응답 구조
  */
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   status: number;
   code: string;
   message: string;

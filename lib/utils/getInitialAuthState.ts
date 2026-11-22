@@ -1,11 +1,12 @@
 import { memberApi } from '@/lib/api/server/member';
 import { decodeJWT } from '@/lib/utils/auth/decodeJWT';
+import { User } from '@/lib/types/auth';
 
 /**
  * 서버에서 초기 인증 상태 결정
  * Middleware에서 토큰 갱신이 완료된 상태에서 쿠키만 읽음
  */
-export async function getInitialAuthState(): Promise<any | null> {
+export async function getInitialAuthState(): Promise<User | null> {
   try {
     const { cookies } = await import('next/headers');
 

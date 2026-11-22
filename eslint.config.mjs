@@ -16,6 +16,8 @@ const eslintConfig = defineConfig([
     'out/**',
     'build/**',
     'next-env.d.ts',
+    // 설치된 pi 패키지(ponytail 등)는 린트 대상 아님
+    '.pi/**',
   ]),
   prettierConfig,
   ...storybook.configs['flat/recommended'],

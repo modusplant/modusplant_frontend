@@ -68,7 +68,6 @@ export const NotificationItem = ({
     actorNickname,
     postId,
     commentPath,
-    contentType,
     contentPreview,
     createdAt,
   } = data;

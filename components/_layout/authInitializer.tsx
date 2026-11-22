@@ -22,6 +22,7 @@ export default function AuthInitializer({ initialUser }: AuthInitializerProps) {
       });
     }
     // initialUser가 null이면 zustand의 기본값(미인증)이 유지됨
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // 의존성 배열 비움 - 한 번만 실행 (hydration 직후)
 
   return null;

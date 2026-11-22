@@ -70,7 +70,7 @@ export const NotificationBox = ({ isMobile }: NotificationBoxProps) => {
         observer.unobserve(currentTarget);
       }
     };
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage, isMobile]);
 
   const shouldReadAllDisabled =
     notifications.length === 0 || isReadAllRequestPending || !doesUnreadExist;
