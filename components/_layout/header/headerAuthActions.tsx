@@ -71,9 +71,10 @@ export default function HeaderAuthActions({
             )}
           </button>
         }
-        children={<NotificationBox isMobile={false} />}
         className="-right-28.75 h-105 w-95 overflow-hidden p-0"
-      />
+      >
+        <NotificationBox isMobile={false} />
+      </Dropdown>
 
       {/* 프로필 드롭다운 */}
       <Dropdown

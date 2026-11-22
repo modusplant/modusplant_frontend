@@ -42,7 +42,7 @@ export const NotificationTab = ({
   );
 };
 
-interface NotificationTabButtonProps extends React.HtmlHTMLAttributes<HTMLButtonElement> {}
+type NotificationTabButtonProps = React.HtmlHTMLAttributes<HTMLButtonElement>;
 
 const NotificationTabButton = ({
   children,
