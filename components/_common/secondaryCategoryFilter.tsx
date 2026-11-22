@@ -100,6 +100,8 @@ export default function SecondaryCategoryFilter({
         onCategoriesChange([]);
       }
     }
+    // 1차 카테고리 변경 시에만 초기화 — onCategoriesChange 재생성 시 선택 리셋 방지
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [primaryCategoryId]);
 
   // 선택된 카테고리 표시 라벨
