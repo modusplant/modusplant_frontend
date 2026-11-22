@@ -35,7 +35,7 @@ export default function ProfileFormFields({
         setNicknameError('');
         setNicknameSuccess('사용 가능한 닉네임입니다.');
       }
-    } catch (error) {
+    } catch {
       setNicknameError('닉네임 확인에 실패했습니다.');
       setNicknameSuccess('');
     }

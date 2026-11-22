@@ -9,8 +9,8 @@ export const useDeleteSearchHistory = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['searchHistory'] });
     },
-    onError: (error) => {
-      // console.error('검색 기록 전체 삭제 실패:', error);
+    onError: () => {
+      // 검색 기록 전체 삭제 실패
     },
   });
 };

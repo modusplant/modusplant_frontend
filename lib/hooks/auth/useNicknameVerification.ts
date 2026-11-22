@@ -37,7 +37,7 @@ export const useNicknameVerification = () => {
       setLastCheckedValue(nickname);
 
       return res;
-    } catch (error) {
+    } catch {
       const errorMessage = '닉네임 확인에 실패했습니다.';
 
       setVerificationState({

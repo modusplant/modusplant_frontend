@@ -11,7 +11,8 @@ export default function PasswordSection({
   watch,
   className,
 }: PasswordSectionProps) {
-  const [passwordError, setPasswordError] = useState<string>('');
+  // shortcut: setPasswordError가 호출된 적 없어 passwordError는 항상 '' — 에러 표시 로직 미구현, 비밀번호 검증 UX 작업 시 연결 필요
+  const [passwordError] = useState<string>('');
   const [confirmError, setConfirmError] = useState<string>('');
 
   const password = watch?.('password') || '';

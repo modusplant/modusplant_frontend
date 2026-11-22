@@ -24,12 +24,10 @@ async function refreshAccessToken(): Promise<string> {
     });
 
     if (!response.ok) {
-      let errorBody = null;
       try {
-        errorBody = await response.text();
-        // console.error('[RefreshToken] 에러 응답 본문:', errorBody);
-      } catch (e) {
-        // console.error('[RefreshToken] 응답 본문 읽기 실패');
+        await response.text();
+      } catch {
+        // 응답 본문 읽기 실패는 무시
       }
 
       throw new ApiError(
@@ -82,7 +80,7 @@ export const clientApiInstance = createApi({
     try {
       await refreshAccessToken();
       return { action: 'retry' } as const;
-    } catch (e) {
+    } catch {
       deleteCookie(ACCESS_TOKEN_COOKIE_NAME, { path: '/' });
       deleteCookie('rememberMe', { path: '/' });
       return { action: 'fail' } as const;

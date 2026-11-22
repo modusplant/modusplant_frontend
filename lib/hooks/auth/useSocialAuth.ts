@@ -69,8 +69,8 @@ export function useSocialAuth() {
         clearSignupData();
         router.replace('/');
       }
-    } catch (error) {
-      // console.error('연동 실패:', error);
+    } catch {
+      // 연동 실패
       showModal({
         type: 'snackbar',
         description: '연동에 실패하였습니다.',
@@ -86,8 +86,8 @@ export function useSocialAuth() {
         clearSignupData();
         router.replace('/login');
       }
-    } catch (error) {
-      // console.error('취소 실패:', error);
+    } catch {
+      // 취소 실패
       showModal({
         type: 'snackbar',
         description: '처리 중 오류가 발생했습니다.',
@@ -139,8 +139,8 @@ export function useSocialAuth() {
           router.replace('/');
         }
       }
-    } catch (error) {
-      // console.error('소셜 회원가입 실패', error);
+    } catch {
+      // 소셜 회원가입 실패
       showModal({
         type: 'snackbar',
         description: '회원가입 중 오류가 발생했습니다.',

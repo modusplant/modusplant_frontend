@@ -8,7 +8,7 @@ interface RootErrorPageProps {
   reset: () => void;
 }
 
-export default function RootErrorPage({ error, reset }: RootErrorPageProps) {
+export default function RootErrorPage({ reset }: RootErrorPageProps) {
   return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="flex flex-col items-center justify-center gap-5 py-15">

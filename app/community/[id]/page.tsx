@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: PostPageProps) {
     }
 
     return createPostMetadata(response.data);
-  } catch (error) {
+  } catch {
     return errorPostMetadata;
   }
 }
@@ -44,7 +44,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
     // TODO: Error: Avoid constructing JSX within try/catch 해결하기
     return <PostDetail postId={id} initialData={response.data} />;
-  } catch (error) {
+  } catch {
     notFound();
   }
 }

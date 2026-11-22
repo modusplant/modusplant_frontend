@@ -86,7 +86,7 @@ export default function PostActions({
         type: 'snackbar',
       });
       router.replace('/');
-    } catch (error) {
+    } catch {
       showModal({
         title: '게시글 삭제 실패',
         description: '게시글 삭제 중 오류가 발생했습니다. 다시 시도해주세요.',
