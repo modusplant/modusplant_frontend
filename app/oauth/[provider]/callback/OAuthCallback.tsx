@@ -60,10 +60,12 @@ export const OauthCallback = ({
           try {
             await OauthApi.mypageSocialLink(code, provider);
             router.replace('/mypage/account');
-          } catch (error: any) {
+          } catch (error) {
             sessionStorage.setItem(
               'linkError',
-              error.message || '소셜 연동에 실패했습니다.'
+              error instanceof Error
+                ? error.message
+                : '소셜 연동에 실패했습니다.'
             );
             router.replace('/mypage/account');
           }
@@ -77,10 +79,12 @@ export const OauthCallback = ({
             sessionStorage.setItem('unlinkSuccess', 'true');
             router.replace('/login');
             logout();
-          } catch (error: any) {
+          } catch (error) {
             sessionStorage.setItem(
               'linkError',
-              error.message || '소셜 연동 해제에 실패했습니다.'
+              error instanceof Error
+                ? error.message
+                : '소셜 연동 해제에 실패했습니다.'
             );
             router.replace('/mypage/account');
           }
@@ -92,10 +96,12 @@ export const OauthCallback = ({
           try {
             await OauthApi.mypageSocialUnlink(code, provider);
             router.replace('/mypage/account?signout=pending');
-          } catch (error: any) {
+          } catch (error) {
             sessionStorage.setItem(
               'linkError',
-              error.message || '소셜 연동 해제에 실패했습니다.'
+              error instanceof Error
+                ? error.message
+                : '소셜 연동 해제에 실패했습니다.'
             );
             router.replace('/mypage/account');
           }

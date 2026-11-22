@@ -98,11 +98,13 @@ export default function SignupForm() {
           });
         }
       }
-    } catch (error: any) {
-      // console.error('회원가입 오류:', error);
+    } catch (error) {
       showModal({
         type: 'snackbar',
-        description: error.message || '회원가입 중 오류가 발생했습니다.',
+        description:
+          error instanceof Error
+            ? error.message
+            : '회원가입 중 오류가 발생했습니다.',
       });
     }
   };

@@ -4,6 +4,7 @@ import { useAuthStore } from '@/lib/store/authStore';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useSocialSignupStateStore } from '@/lib/store/socialSignupStateStore';
 import { type AuthProviderParam } from '@/lib/constants/oauth';
+import { ApiError } from '@/lib/types/common';
 
 export const requestOAuthLogin = async ({
   code,
@@ -41,12 +42,13 @@ export const requestOAuthLogin = async ({
         .setSignupData({ email, nickname, type, provider });
       router.replace('/signup/social');
     }
-  } catch (error: any) {
+  } catch (error) {
+    const apiError = error as ApiError;
     sessionStorage.setItem(
       'authError',
-      error.message || '카카오 로그인에 실패했습니다.'
+      apiError.message || '카카오 로그인에 실패했습니다.'
     );
-    sessionStorage.setItem('authCode', error.code);
+    sessionStorage.setItem('authCode', apiError.code);
     router.replace('/login');
   }
 };

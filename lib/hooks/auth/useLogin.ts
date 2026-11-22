@@ -36,11 +36,13 @@ export function useLogin() {
         login(user);
         router.push('/');
       }
-    } catch (error: any) {
+    } catch (error) {
       // 로그인 시도 횟수 증가
       incrementLoginAttempts();
 
-      setServerError(error.message || '로그인 중 오류가 발생했습니다.');
+      setServerError(
+        error instanceof Error ? error.message : '로그인 중 오류가 발생했습니다.'
+      );
     } finally {
       setIsLoading(false);
     }

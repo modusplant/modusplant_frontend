@@ -32,7 +32,7 @@ interface CreateApiOptions {
   onUnauthorized?: () => Promise<UnauthorizedResult> | UnauthorizedResult;
 }
 
-async function requestCore<T = any>(
+async function requestCore<T = unknown>(
   endpoint: string,
   config: RequestConfig,
   opts: CreateApiOptions
@@ -123,12 +123,12 @@ async function requestCore<T = any>(
 
 export function createApi(options: CreateApiOptions) {
   return {
-    get: <T = any>(endpoint: string, opts: ApiRequestOptions = {}) =>
+    get: <T = unknown>(endpoint: string, opts: ApiRequestOptions = {}) =>
       requestCore<T>(endpoint, { ...opts, method: 'GET' }, options),
 
-    post: <T = any>(
+    post: <T = unknown>(
       endpoint: string,
-      body?: any,
+      body?: unknown,
       opts: ApiRequestOptions = {}
     ) =>
       requestCore<T>(
@@ -146,9 +146,9 @@ export function createApi(options: CreateApiOptions) {
         options
       ),
 
-    put: <T = any>(
+    put: <T = unknown>(
       endpoint: string,
-      body?: any,
+      body?: unknown,
       opts: ApiRequestOptions = {}
     ) =>
       requestCore<T>(
@@ -166,9 +166,9 @@ export function createApi(options: CreateApiOptions) {
         options
       ),
 
-    patch: <T = any>(
+    patch: <T = unknown>(
       endpoint: string,
-      body?: any,
+      body?: unknown,
       opts: ApiRequestOptions = {}
     ) =>
       requestCore<T>(
@@ -186,7 +186,7 @@ export function createApi(options: CreateApiOptions) {
         options
       ),
 
-    delete: <T = any>(endpoint: string, opts: ApiRequestOptions = {}) =>
+    delete: <T = unknown>(endpoint: string, opts: ApiRequestOptions = {}) =>
       requestCore<T>(endpoint, { ...opts, method: 'DELETE' }, options),
   };
 }

@@ -63,7 +63,7 @@ export const authApi = {
             ? '인증 메일이 발송되었습니다.'
             : response.message,
       };
-    } catch (error: any) {
+    } catch (error) {
       throw error;
     }
   },
@@ -90,10 +90,13 @@ export const authApi = {
           ? '이메일 인증이 완료되었습니다.'
           : '인증에 실패했습니다.',
       };
-    } catch (error: any) {
+    } catch (error) {
       return {
         success: false,
-        message: error.message || '인증 코드 확인에 실패했습니다.',
+        message:
+          error instanceof Error
+            ? error.message
+            : '인증 코드 확인에 실패했습니다.',
       };
     }
   },
@@ -118,11 +121,14 @@ export const authApi = {
           ? '이미 사용중인 닉네임입니다.'
           : '사용 가능한 닉네임입니다.',
       };
-    } catch (error: any) {
+    } catch (error) {
       return {
         success: false,
         available: false,
-        message: error.message || '닉네임 확인에 실패했습니다.',
+        message:
+          error instanceof Error
+            ? error.message
+            : '닉네임 확인에 실패했습니다.',
       };
     }
   },
