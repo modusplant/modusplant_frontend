@@ -59,7 +59,7 @@ export default function EmailSection({
             disabled={isVerified}
             className={cn(
               'w-full',
-              errors.email && 'border-system-alert',
+              (errors.email || duplicateEmailError) && 'border-system-alert',
               isVerified && 'border-primary-50'
             )}
           />

@@ -192,6 +192,8 @@ export const useEmailVerification = ({
           if (error.code === 'already_registered_basic_email') {
             setDuplicateEmailError('이미 사용 중인 이메일입니다.');
           } else {
+            // 소셜 연동 이메일: 모달을 닫아도 입력칸에 거부 상태가 남도록 인라인 에러도 고정
+            setDuplicateEmailError(getSocialErrorTitle(error.code));
             showModal({
               type: 'two-button',
               title: getSocialErrorTitle(error.code),
