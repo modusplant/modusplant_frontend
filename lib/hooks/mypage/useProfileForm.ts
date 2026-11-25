@@ -68,15 +68,19 @@ export function useProfileForm() {
     setHasChanges(true);
   }, []);
 
-  const commitSaved = useCallback(() => {
-    setInitialNickname(formData.nickname);
-    setHasChanges(false);
-    setFormData((prev) => ({
-      ...prev,
-      imageFile: null,
-      shouldDeleteImage: false,
-    }));
-  }, [formData.nickname]);
+  const commitSaved = useCallback(
+    (introduction: string) => {
+      setInitialNickname(formData.nickname);
+      setHasChanges(false);
+      setFormData((prev) => ({
+        ...prev,
+        introduction,
+        imageFile: null,
+        shouldDeleteImage: false,
+      }));
+    },
+    [formData.nickname]
+  );
 
   return {
     initialNickname,

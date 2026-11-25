@@ -37,12 +37,12 @@ export default function ProfileSection() {
         shouldDeleteImage: formData.shouldDeleteImage,
       },
       {
-        onSuccess: () => {
+        onSuccess: (response) => {
           showModal({
             type: 'snackbar',
             description: '프로필이 성공적으로 수정되었습니다.',
           });
-          commitSaved();
+          commitSaved(response.data?.introduction ?? formData.introduction);
         },
         onError: (error) => {
           showModal({
