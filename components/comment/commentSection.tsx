@@ -6,6 +6,7 @@ import CommentList from './commentList';
 import CommentInput from './commentInput';
 import BlurOverlay from '../_layout/blurOverlay';
 import { useAuthStore } from '@/lib/store/authStore';
+import { cn } from '@/lib/utils/tailwindHelper';
 
 interface CommentSectionProps {
   postId: string;
@@ -23,7 +24,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
   return (
     <div className="border-surface-stroke mt-16 border-t pt-12">
-      <h2 className="text-neutral-20 mb-8 text-xl md:text-[28px] font-bold">
+      <h2 className="text-neutral-20 mb-8 text-xl font-bold md:text-[28px]">
         댓글 {totalCount.toLocaleString()}개
       </h2>
 
@@ -34,7 +35,12 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         currentCommentCount={rootCount}
       />
 
-      <div className="relative min-h-[30vh] overflow-hidden">
+      <div
+        className={cn(
+          'relative min-h-[30vh]',
+          !isAuthenticated && 'overflow-hidden'
+        )}
+      >
         {/* 댓글 목록 */}
         {isLoading ? (
           <div className="text-neutral-60 py-12 text-center">
